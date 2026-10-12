@@ -1,0 +1,88 @@
+{
+  "mucKiem": "ky",
+  "ghiChuMuc": "ky = kiểm kỹ (vào máy soạn thử); vua = sửa trên giả lập; nhanh = chỉ đọc báo cáo. Bắt đầu 'ky' vì các ngày 11–12/10 lỗi dày; 3 ngày liền không lỗi mới → hạ 1 mức.",
+  "loi": [
+    {
+      "ma": "dang-khong-an",
+      "moTa": "Video bấm Đăng không ăn, hộp đăng vẫn mở (12/10 07:49 Máy Giao)",
+      "gap": [
+        "2026-10-12"
+      ],
+      "suaO": "6.15",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "thu-nho-khuat",
+      "moTa": "Nút Chỉnh sửa hình thu nhỏ bị cuộn khuất",
+      "gap": [
+        "2026-10-10"
+      ],
+      "suaO": "6.9",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "sai-ten-hop",
+      "moTa": "Hộp soạn chưa hiện tên trang (dòng 100% chen vào)",
+      "gap": [
+        "2026-10-10"
+      ],
+      "suaO": "6.9",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "the-khong-nhan",
+      "moTa": "Thẻ không được nhận khi gắn",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.11",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "luc-khac",
+      "moTa": "Hộp nhắc Lúc khác / Gọi ngay chặn nút Đăng",
+      "gap": [
+        "2026-10-11",
+        "2026-10-12"
+      ],
+      "suaO": "6.11",
+      "lapLaiSauSua": [
+        "2026-10-12"
+      ]
+    },
+    {
+      "ma": "nen-do-con-anh",
+      "moTa": "Bài 2 sửa nền đỏ báo vẫn còn ảnh — chưa rõ gốc",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.11 (dự phòng API)",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "cmt-trung",
+      "moTa": "Bài 2 bị 2 comment trùng (máy cũ giữ may:CAO)",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.13",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "video-nhan-nham",
+      "moTa": "Video 3 bị nhận nhầm là bài của Video 2 (cùng thân bài, chỉ khác câu mở đầu; 1 thước phim hiện 2 lần trong danh sách Facebook) → Video 3 không được đăng, phải đăng tay 18:22",
+      "gap": [
+        "2026-10-12"
+      ],
+      "suaO": "6.17",
+      "lapLaiSauSua": []
+    }
+  ],
+  "danhGiaTuan": [],
+  "nhatKyNgay": [
+    {
+      "ngay": "2026-10-12",
+      "tomTat": "Video 1 kẹt nút Đăng (đã có dự phòng 6.15); Video 3 nhận nhầm bài Video 2 → đăng tay; Máy Giao 17:59 lỗi tư cách 'Trầm Hương Thủ Đức Sơn Mộc Hương'"
+    }
+  ]
+}
