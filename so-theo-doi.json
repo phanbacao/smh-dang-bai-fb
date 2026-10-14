@@ -1,92 +1,106 @@
 {
-  "mucKiem": "ky",
-  "ghiChuMuc": "ky = kiểm kỹ (vào máy soạn thử); vua = sửa trên giả lập; nhanh = chỉ đọc báo cáo. Bắt đầu 'ky' vì các ngày 11–12/10 lỗi dày; 3 ngày liền không lỗi mới → hạ 1 mức.",
-  "loi": [
-    {
-      "ma": "dang-khong-an",
-      "moTa": "Video bấm Đăng không ăn, hộp đăng vẫn mở (12/10 07:49 Máy Giao)",
-      "gap": [
-        "2026-10-12"
-      ],
-      "suaO": "6.15",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "thu-nho-khuat",
-      "moTa": "Nút Chỉnh sửa hình thu nhỏ bị cuộn khuất",
-      "gap": [
-        "2026-10-10"
-      ],
-      "suaO": "6.9",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "sai-ten-hop",
-      "moTa": "Hộp soạn chưa hiện tên trang (dòng 100% chen vào)",
-      "gap": [
-        "2026-10-10"
-      ],
-      "suaO": "6.9",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "the-khong-nhan",
-      "moTa": "Thẻ không được nhận khi gắn",
-      "gap": [
-        "2026-10-11"
-      ],
-      "suaO": "6.11",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "luc-khac",
-      "moTa": "Hộp nhắc Lúc khác / Gọi ngay chặn nút Đăng",
-      "gap": [
-        "2026-10-11",
-        "2026-10-12"
-      ],
-      "suaO": "6.11",
-      "lapLaiSauSua": [
-        "2026-10-12"
-      ]
-    },
-    {
-      "ma": "nen-do-con-anh",
-      "moTa": "Bài 2 sửa nền đỏ báo vẫn còn ảnh — chưa rõ gốc",
-      "gap": [
-        "2026-10-11"
-      ],
-      "suaO": "6.11 (dự phòng API)",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "cmt-trung",
-      "moTa": "Bài 2 bị 2 comment trùng (máy cũ giữ may:CAO)",
-      "gap": [
-        "2026-10-11"
-      ],
-      "suaO": "6.13",
-      "lapLaiSauSua": []
-    },
-    {
-      "ma": "video-nhan-nham",
-      "moTa": "Video 3 bị nhận nhầm là bài của Video 2 (cùng thân bài, chỉ khác câu mở đầu; 1 thước phim hiện 2 lần trong danh sách Facebook) → Video 3 không được đăng, phải đăng tay 18:22",
-      "gap": [
-        "2026-10-12"
-      ],
-      "suaO": "6.17",
-      "lapLaiSauSua": []
-    }
-  ],
-  "danhGiaTuan": [],
-  "nhatKyNgay": [
-    {
-      "ngay": "2026-10-12",
-      "tomTat": "Video 1 kẹt nút Đăng (đã có dự phòng 6.15); Video 3 nhận nhầm bài Video 2 → đăng tay; Máy Giao 17:59 lỗi tư cách 'Trầm Hương Thủ Đức Sơn Mộc Hương'"
-    },
-    {
-      "ngay": "2026-10-14",
-      "tomTat": "Ra bản 6.18: tự chụp hiện trường khi lỗi, báo cáo tối 21:30, nhắc sheet ngày mai lúc 16:00, chuẩn bị trước giờ đăng 10 phút, đối chiếu sau đăng 15 phút, nút Cập nhật ngay, 🛟 cho cả 2 máy, thông báo tự ẩn sau 1 phút, thử nguồn cập nhật Google Drive."
-    }
-  ]
+ "mucKiem": "ky",
+ "ghiChuMuc": "ky = kiểm kỹ (vào máy soạn thử); vua = sửa trên giả lập; nhanh = chỉ đọc báo cáo. Bắt đầu 'ky' vì các ngày 11–12/10 lỗi dày; 3 ngày liền không lỗi mới → hạ 1 mức.",
+ "loi": [
+  {
+   "ma": "dang-khong-an",
+   "moTa": "Video bấm Đăng không ăn, hộp đăng vẫn mở (12/10 07:49 Máy Giao)",
+   "gap": [
+    "2026-10-12"
+   ],
+   "suaO": "6.15",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "thu-nho-khuat",
+   "moTa": "Nút Chỉnh sửa hình thu nhỏ bị cuộn khuất",
+   "gap": [
+    "2026-10-10"
+   ],
+   "suaO": "6.9",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "sai-ten-hop",
+   "moTa": "Hộp soạn chưa hiện tên trang (dòng 100% chen vào)",
+   "gap": [
+    "2026-10-10"
+   ],
+   "suaO": "6.9",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "the-khong-nhan",
+   "moTa": "Thẻ không được nhận khi gắn",
+   "gap": [
+    "2026-10-11"
+   ],
+   "suaO": "6.11",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "luc-khac",
+   "moTa": "Hộp nhắc Lúc khác / Gọi ngay chặn nút Đăng",
+   "gap": [
+    "2026-10-11",
+    "2026-10-12"
+   ],
+   "suaO": "6.11",
+   "lapLaiSauSua": [
+    "2026-10-12"
+   ]
+  },
+  {
+   "ma": "nen-do-con-anh",
+   "moTa": "Bài 2 sửa nền đỏ báo vẫn còn ảnh — chưa rõ gốc",
+   "gap": [
+    "2026-10-11"
+   ],
+   "suaO": "6.11 (dự phòng API)",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "cmt-trung",
+   "moTa": "Bài 2 bị 2 comment trùng (máy cũ giữ may:CAO)",
+   "gap": [
+    "2026-10-11"
+   ],
+   "suaO": "6.13",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "video-nhan-nham",
+   "moTa": "Video 3 bị nhận nhầm là bài của Video 2 (cùng thân bài, chỉ khác câu mở đầu; 1 thước phim hiện 2 lần trong danh sách Facebook) → Video 3 không được đăng, phải đăng tay 18:22",
+   "gap": [
+    "2026-10-12"
+   ],
+   "suaO": "6.17",
+   "lapLaiSauSua": []
+  },
+  {
+   "ma": "manifest-dinh-chu",
+   "moTa": "Facebook dính chữ ở chỗ xuống dòng → so câu mở đầu (6.17) không khớp → manifest bị coi là chưa lên sau 20 phút",
+   "trangThai": "đã sửa 6.19",
+   "ngay": "2026-10-14"
+  }
+ ],
+ "danhGiaTuan": [],
+ "nhatKyNgay": [
+  {
+   "ngay": "2026-10-12",
+   "tomTat": "Video 1 kẹt nút Đăng (đã có dự phòng 6.15); Video 3 nhận nhầm bài Video 2 → đăng tay; Máy Giao 17:59 lỗi tư cách 'Trầm Hương Thủ Đức Sơn Mộc Hương'"
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.18: tự chụp hiện trường khi lỗi, báo cáo tối 21:30, nhắc sheet ngày mai lúc 16:00, chuẩn bị trước giờ đăng 10 phút, đối chiếu sau đăng 15 phút, nút Cập nhật ngay, 🛟 cho cả 2 máy, thông báo tự ẩn sau 1 phút, thử nguồn cập nhật Google Drive."
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.18.1/6.18.2: thử cập nhật qua Lark (Facebook chặn chạy mã kiểu thường, kiểu blob chạy được; cất mã vào ô sheet được; Lark Drive thiếu quyền). Sửa: lượt thử không còn làm Lark tạm ngừng 60 phút."
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.19: đăng 3 kênh (kênh 2 Trầm Hương Thủ Đức tab em39qJ, kênh 3 SMH Trầm Chuẩn tab 4OtbFA — dòng có Ngày đăng hôm nay + Trạng thái ĐÃ DUYỆT), video kênh 2/3 đăng trước kênh 1 5–15 phút, cùng trang cách ≥30 phút; comment như video kênh 1 (tick CTA Zalo theo kênh); chỉ thả cảm xúc; ghi ĐÃ ĐĂNG (G) + link (J); nhắc 16:00 cho kênh 2/3; tự lấy mã đọc trang kênh 2/3 từ /me/accounts; chưa có mã thì xác nhận bằng nhìn trang, Máy Cao không đăng thay kênh 2/3. Sửa thêm: nhận bài khi Facebook dính chữ ở chỗ xuống dòng (manifest)."
+  }
+ ]
 }

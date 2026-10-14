@@ -63,3 +63,10 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Mở `https://github.com/phanbacao/smh-dang-bai-fb/upload/main` → tìm `input[type=file]` → dùng công cụ tải file (gắn đủ các file) → ghi lời commit. Nút **Commit changes**: lớp an toàn của Claude KHÔNG cho tự bấm → để nguyên tab và nhắn anh Cao đúng 1 câu: **"Anh bấm nút xanh Commit changes trên tab GitHub đang mở trên Máy Cao."** File trùng tên sẽ được thay.
 - Nếu không gắn được file: chép các file đó vào `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\tai-len-github\` và nhắn anh Cao đúng 1 câu: "Anh mở github.com/phanbacao/smh-dang-bai-fb → uploading an existing file → kéo các file trong thư mục tai-len-github vào → Commit changes."
 - Sau khi đẩy: kiểm `https://raw.githubusercontent.com/phanbacao/smh-dang-bai-fb/main/trangthai.json` (trễ ~5 phút). Tampermonkey trên 2 máy tự kiểm tra cập nhật mỗi ngày → tự lên bản mới. Xoá `cho-duyet\` sau khi đã lên.
+
+
+## (6.19) 3 kênh — lưu ý khi kiểm tra
+- Kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài như cũ). Kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" (tab `em39qJ`: H ngày, I video, E caption, G trạng thái, J link). Kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (tab `4OtbFA`: H, I, D caption, G, J).
+- Kênh 2/3 chỉ đăng dòng có Ngày đăng = hôm nay VÀ Trạng thái "ĐÃ DUYỆT"; đăng xong ghi "ĐÃ ĐĂNG" + link. Giờ: trước bài đầu kênh 1 khoảng 5–15 phút, cùng trang cách ≥ 30 phút.
+- Mã khoá: kênh 2/3 cần mã trang riêng (lấy từ `/me/accounts` khi mã dán vào là mã NGƯỜI DÙNG). Popup báo "Mã khoá chưa đọc được trang kênh N" → nhắc anh Cao dán lại mã người dùng. Khi chưa có mã: Máy Giao xác nhận bài bằng cách nhìn trang; Máy Cao KHÔNG đăng thay kênh 2/3.
+- Slot kênh 2/3 có khoá dạng `k2a, k2b…, k3a…` trong báo cáo (`tomTatSlot`).
