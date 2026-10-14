@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.18.1
+// @version      6.18.2
 // @description  Tự đăng 9 bài mỗi ngày (3 bài viết, 3 video, 3 manifest) lên fanpage "Vòng Trầm Hương Sơn Mộc Hương ." — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -46,7 +46,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.18.1';
+  const PHIEN_BAN = '6.18.2';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -5459,7 +5459,17 @@
   //               (3) cất mã vào ô sheet (Z20:Z29, thử xong xoá sạch)  (4) cất mã thành file trong Lark Drive của ứng dụng
   // =====================================================================
   const O_NAP = ['Z20', 'Z21', 'Z22', 'Z23', 'Z24', 'Z25', 'Z26', 'Z27', 'Z28', 'Z29'];
-  const ketThuNap = () => lay('thunap6', null);
+  const ketThuNap = () => lay('thunap6b', null);
+  function thuBlob(src) {
+    return new Promise((res) => {
+      const w = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window; const ten = '__smhThu' + Math.random().toString(36).slice(2);
+      const u = URL.createObjectURL(new Blob(['window["' + ten + '"] = function () {\n' + src + '\n};'], { type: 'text/javascript' }));
+      const s = document.createElement('script'); const het = setTimeout(() => res(false), 15000);
+      s.onload = () => { clearTimeout(het); const ok = typeof w[ten] === 'function'; try { delete w[ten]; } catch (e) { /* */ } URL.revokeObjectURL(u); s.remove(); res(ok); };
+      s.onerror = () => { clearTimeout(het); res(false); };
+      s.src = u; (document.head || document.documentElement).appendChild(s);
+    });
+  }
   async function sha(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, '0')).join('').slice(0, 16); }
   async function nenB64(s) {
     const st = new Blob([s]).stream().pipeThrough(new CompressionStream('gzip'));
@@ -5482,16 +5492,19 @@
   }
   async function thuNapBan() {
     const kq = { luc: Date.now(), may: MAY, ban: PHIEN_BAN, buoc: {} };
-    const xong = (k, ok, chi) => { kq.buoc[k] = { ok, chi: String(chi || '').slice(0, 300) }; ghi(`Thử nạp bản — ${k}: ${ok ? 'ĐƯỢC' : 'CHƯA ĐƯỢC'}${chi ? ' (' + chi + ')' : ''}`); luu('thunap6', kq); };
+    const xong = (k, ok, chi) => { kq.buoc[k] = { ok, chi: String(chi || '').slice(0, 300) }; ghi(`Thử nạp bản — ${k}: ${ok ? 'ĐƯỢC' : 'CHƯA ĐƯỢC'}${chi ? ' (' + chi + ')' : ''}`); luu('thunap6b', kq); };
     ghi('Thử nạp bản (cách 2): bắt đầu — chỉ thử, không đổi cách chạy hiện tại');
     // (1) chạy mã nạp về
-    let src = '';
+    let src = ''; try { src = (GM_info && GM_info.scriptSource) || ''; } catch (e) { /* */ }
     try {
       const f = new Function('a', 'b', 'return a + b'); if (f(40, 2) !== 42) throw new Error('kết quả sai');
-      src = (GM_info && GM_info.scriptSource) || '';
       const t0 = Date.now(); if (src) new Function(src); // chỉ dịch thử, KHÔNG chạy
-      xong('1. Tampermonkey cho chạy mã nạp về', true, src ? `dịch thử ${Math.round(src.length / 1024)} KB mã trong ${Date.now() - t0} ms` : 'không đọc được mã gốc để dịch thử (chỉ thử mã nhỏ)');
-    } catch (e) { xong('1. Tampermonkey cho chạy mã nạp về', false, e.message); }
+      xong('1a. Chạy mã nạp về (kiểu thường)', true, src ? `dịch thử ${Math.round(src.length / 1024)} KB mã trong ${Date.now() - t0} ms` : 'chỉ thử mã nhỏ');
+    } catch (e) { xong('1a. Chạy mã nạp về (kiểu thường)', false, /unsafe-eval|Content Security/i.test(e.message) ? 'Facebook chặn kiểu này' : e.message); }
+    try { // (6.18.2) kiểu Facebook cho phép: nạp mã qua "blob" — chỉ ĐỊNH NGHĨA hàm bọc ngoài, không chạy
+      const t0 = Date.now(); const ok = await thuBlob(src || 'var x = 1;');
+      xong('1b. Chạy mã nạp về (kiểu blob)', ok, ok ? `nạp ${Math.round((src || ' ').length / 1024)} KB mã trong ${Date.now() - t0} ms (chỉ nạp, không chạy)` : 'trình duyệt không nạp được');
+    } catch (e) { xong('1b. Chạy mã nạp về (kiểu blob)', false, e.message); }
     if (!src) src = 'thu-nap-' + 'x'.repeat(600000);
     // (2) nén / giải nén
     let b64 = '', h0 = '';
@@ -5520,7 +5533,9 @@
     }
     // (4) cất thành file trong Lark Drive của ứng dụng rồi tải lại
     try {
-      const r0 = await goiLark('GET', 'https://open.larksuite.com/open-apis/drive/explorer/v2/root_folder/meta');
+      // (6.18.2) gọi thẳng, KHÔNG qua cổng chặn Lark — ứng dụng chưa có quyền Drive thì chỉ báo ở đây, không làm Máy Cao ngưng đọc sheet 60 phút
+      const r0 = await goiTho('GET', 'https://open.larksuite.com/open-apis/drive/explorer/v2/root_folder/meta', null, { Authorization: 'Bearer ' + (await larkToken()) });
+      if (r0.json && r0.json.code === 99991672) throw new Error('ứng dụng Lark chưa được cấp quyền Drive (mã 99991672) — không ảnh hưởng việc đăng bài');
       const thuMuc = r0.json && r0.json.data && r0.json.data.token; if (!thuMuc) throw new Error('không lấy được thư mục của ứng dụng');
       const fd = new FormData(); const tep = new Blob([src], { type: 'text/plain' });
       fd.append('file_name', 'smh-thu-nap.txt'); fd.append('parent_type', 'explorer'); fd.append('parent_node', thuMuc); fd.append('size', String(tep.size)); fd.append('file', tep, 'smh-thu-nap.txt');
@@ -5533,7 +5548,7 @@
       luu('thunap_tep6', ma);
       xong('4. Cất mã thành file Lark Drive', dung, `tải lên ${Math.round(tUp / 1000)} giây · tải về ${Math.round((Date.now() - t1) / 1000)} giây${dung ? ' · khớp 100%' : ' · tải về KHÔNG khớp (mã ' + dl.status + ')'}`);
     } catch (e) { xong('4. Cất mã thành file Lark Drive', false, e.message); }
-    kq.xong = Date.now(); luu('thunap6', kq);
+    kq.xong = Date.now(); luu('thunap6b', kq);
     const ok = Object.values(kq.buoc).filter((b) => b.ok).length;
     ghi(`Thử nạp bản (cách 2): xong — ${ok}/${Object.keys(kq.buoc).length} việc được`);
     return true;
