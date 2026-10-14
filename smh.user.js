@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.18
+// @version      6.18.1
 // @description  Tự đăng 9 bài mỗi ngày (3 bài viết, 3 video, 3 manifest) lên fanpage "Vòng Trầm Hương Sơn Mộc Hương ." — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -46,7 +46,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.18';
+  const PHIEN_BAN = '6.18.1';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -3956,13 +3956,13 @@
     dangdo: 'Đang làm tiếp việc dở', dang: 'Đang đăng bài', chotay: 'Chạy thử: chờ bấm Đăng', khanh: 'Đang đọc trang ' + CAI_DAT.KHANH_TEN,
     docsheet: 'Đang đọc Lark sheet', dotrang: 'Đang kiểm tra bài trên trang', kiemcmt: 'Đang kiểm tra comment', taisan: 'Đang tải sẵn đồ đăng',
     baocao: 'Đang gửi báo cáo ngày', suavideo: 'Đang kiểm tra / gắn thẻ + cảm xúc video', danmf: 'Đang dán ảnh manifest vào sheet', yeucau: 'Đang làm việc bạn vừa bấm trên popup', taoanh: 'Đang tạo ảnh manifest', nhac: 'Đang lấy nhạc nền',
-    suckhoe: 'Đang tự kiểm tra buổi sáng (mã khoá Facebook, Lark sheet, trang)', baocaoloi: 'Đang ghi báo cáo lỗi lên Lark sheet', duyet: 'Đang ghi duyệt bản mới', baoclaude: 'Đang gửi lỗi cho Claude', chuanbi: 'Đang kiểm tra chuẩn bị cho bài sắp đăng', doichieu: 'Đang đối chiếu bài vừa đăng với sheet', nhacsheet: 'Đang nhắc nhóm bổ sung sheet ngày mai',
+    suckhoe: 'Đang tự kiểm tra buổi sáng (mã khoá Facebook, Lark sheet, trang)', baocaoloi: 'Đang ghi báo cáo lỗi lên Lark sheet', duyet: 'Đang ghi duyệt bản mới', baoclaude: 'Đang gửi lỗi cho Claude', chuanbi: 'Đang kiểm tra chuẩn bị cho bài sắp đăng', doichieu: 'Đang đối chiếu bài vừa đăng với sheet', nhacsheet: 'Đang nhắc nhóm bổ sung sheet ngày mai', thunap: 'Đang thử nạp bản qua Lark (cách 2)',
   };
   const tenDangDo = (dd) => (dd ? (dd.buoc === 'kiem_bai' ? `Đang chờ Facebook xác nhận ${dd.ten || 'bài vừa đăng'}` : dd.raSoat ? `Đang gửi bù comment ${dd.ten || ''}` : `Đang comment ${dd.ten || ''}`) : HD_TEN.dangdo);
   let hdChay = null; // việc tab này đang chạy
   let bamNutLuc = 0; // lúc người dùng bấm nút gần nhất → việc bắt đầu ngay sau đó hiện thanh hoạt động NGAY (không chờ 0,7 giây)
   // ước lượng thời gian 1 việc (mili giây): học từ 5 lần gần nhất của chính việc đó (theo tên), chưa có thì dùng mức mặc định theo loại
-  const UOC_MAC_DINH = { chuanbi: 15000, doichieu: 4000, nhacsheet: 15000, suckhoe: 8000, baocaoloi: 5000, duyet: 4000, docsheet: 15000, dotrang: 6000, taisan: 60000, suavideo: 60000, yeucau: 25000, dang: 90000, dangdo: 60000, kiemcmt: 30000, khanh: 120000, chotay: 60000, taoanh: 20000, danmf: 15000, nhac: 10000, baocao: 8000, nhac_dang: 10000, dang_do: 60000 };
+  const UOC_MAC_DINH = { thunap: 60000, chuanbi: 15000, doichieu: 4000, nhacsheet: 15000, suckhoe: 8000, baocaoloi: 5000, duyet: 4000, docsheet: 15000, dotrang: 6000, taisan: 60000, suavideo: 60000, yeucau: 25000, dang: 90000, dangdo: 60000, kiemcmt: 30000, khanh: 120000, chotay: 60000, taoanh: 20000, danmf: 15000, nhac: 10000, baocao: 8000, nhac_dang: 10000, dang_do: 60000 };
   const UOC_THEO_TEN = [[/đọc lại lark sheet|đọc sheet/i, 15000], [/kiểm comment 3 bài/i, 45000], [/kiểm comment video 24/i, 60000], [/kiểm comment/i, 25000], [/kiểm tra bài trên trang/i, 20000], [/tải sẵn/i, 90000], [/gửi tin thử/i, 5000], [/manifest/i, 240000], [/video/i, 150000], [/bài 1|bài 2|bài 3|twist/i, 60000]];
   function uocLuong(key, ten) {
     const hoc = (lay('tg_hoc6', {}) || {})[String(ten || key).replace(/\s+\(.*$/, '')];
@@ -5306,6 +5306,7 @@
     else if (LA_CAO && lay('duyet6', '') && cuHon(PHIEN_BAN, lay('duyet6', ''))) h += `<div class="dong"><span>Đã duyệt</span><span>bản ${esc(lay('duyet6', ''))} — chờ Claude chuyển thành bản chính thức tối nay, sau đó Tampermonkey tự cập nhật</span></div>`;
     { const cn = lay('capnhat6', null); h += `<div class="dong"><span>Nguồn cập nhật</span><span>${cn ? (cn.ok ? '🟢 đọc được · bản trên nguồn: ' + esc(cn.ban || '?') + ' (kiểm lúc ' + gioStr(new Date(cn.luc)) + ')' : '🔴 chưa đọc được (' + esc(cn.loi || '') + ')') : 'chưa kiểm'}</span></div>`; }
     { const dv = lay('drive6', null); h += `<div class="dong"><span>Thử nguồn Google Drive</span><span>${dv ? (dv.ok ? '🟢 Tampermonkey đọc được file trên Drive (bản ' + esc(dv.ban) + ')' : '🔴 chưa đọc được: ' + esc(dv.loi || '')) : 'chưa thử'}</span></div>`; }
+    h += khungThuNap();
     h += `<div class="dong"><span>Thấy lỗi?</span><span><button class="nut" data-a="baoclaude">🛟 Báo lỗi này cho Claude</button></span></div>`;
     return h + '</div>';
   }
@@ -5450,6 +5451,119 @@
     const cn = lay('capnhat6', null); if (!cn || !cn.ok || !cn.ban || !cuHon(PHIEN_BAN, cn.ban)) return '';
     return `<button class="tg chip-duyet" data-a="capnhatngay" data-link="${esc(CAI_DAT.LINK_CAP_NHAT)}" title="Bản ${esc(cn.ban)} đã được duyệt. Tampermonkey sẽ tự cập nhật trong vòng 6 tiếng — bấm để cập nhật ngay">⬆ Bản ${esc(cn.ban)} — Cập nhật ngay</button>`;
   }
+
+  // =====================================================================
+  //  (6.18.1) THỬ "CÁCH 2": cất bản mới trong Lark → các máy tự nạp sau khi anh Cao duyệt
+  //  Chỉ THỬ, không đổi cách chạy hiện tại. Chạy trên Máy Cao, 1 lần (hoặc khi bấm nút trong tab Hệ thống).
+  //  Kiểm 4 việc: (1) Tampermonkey có cho chạy mã nạp về không  (2) nén/giải nén mã
+  //               (3) cất mã vào ô sheet (Z20:Z29, thử xong xoá sạch)  (4) cất mã thành file trong Lark Drive của ứng dụng
+  // =====================================================================
+  const O_NAP = ['Z20', 'Z21', 'Z22', 'Z23', 'Z24', 'Z25', 'Z26', 'Z27', 'Z28', 'Z29'];
+  const ketThuNap = () => lay('thunap6', null);
+  async function sha(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, '0')).join('').slice(0, 16); }
+  async function nenB64(s) {
+    const st = new Blob([s]).stream().pipeThrough(new CompressionStream('gzip'));
+    const u8 = new Uint8Array(await new Response(st).arrayBuffer());
+    let bin = ''; for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  async function giaiNenB64(b64) {
+    const bin = atob(b64); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    const st = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return await new Response(st).text();
+  }
+  function goiTep(method, url, data, responseType) { // gọi Lark có tệp (multipart) / tải tệp về
+    return new Promise(async (resolve) => {
+      let t; try { t = await larkToken(); } catch (e) { resolve({ status: 0, loi: e.message }); return; }
+      GM_xmlhttpRequest({ method, url, data, responseType, timeout: 120000, headers: { Authorization: 'Bearer ' + t },
+        onload: (r) => resolve({ status: r.status, text: responseType ? null : r.responseText, resp: r.response }),
+        onerror: () => resolve({ status: 0, loi: 'mất kết nối' }), ontimeout: () => resolve({ status: 0, loi: 'quá lâu' }) });
+    });
+  }
+  async function thuNapBan() {
+    const kq = { luc: Date.now(), may: MAY, ban: PHIEN_BAN, buoc: {} };
+    const xong = (k, ok, chi) => { kq.buoc[k] = { ok, chi: String(chi || '').slice(0, 300) }; ghi(`Thử nạp bản — ${k}: ${ok ? 'ĐƯỢC' : 'CHƯA ĐƯỢC'}${chi ? ' (' + chi + ')' : ''}`); luu('thunap6', kq); };
+    ghi('Thử nạp bản (cách 2): bắt đầu — chỉ thử, không đổi cách chạy hiện tại');
+    // (1) chạy mã nạp về
+    let src = '';
+    try {
+      const f = new Function('a', 'b', 'return a + b'); if (f(40, 2) !== 42) throw new Error('kết quả sai');
+      src = (GM_info && GM_info.scriptSource) || '';
+      const t0 = Date.now(); if (src) new Function(src); // chỉ dịch thử, KHÔNG chạy
+      xong('1. Tampermonkey cho chạy mã nạp về', true, src ? `dịch thử ${Math.round(src.length / 1024)} KB mã trong ${Date.now() - t0} ms` : 'không đọc được mã gốc để dịch thử (chỉ thử mã nhỏ)');
+    } catch (e) { xong('1. Tampermonkey cho chạy mã nạp về', false, e.message); }
+    if (!src) src = 'thu-nap-' + 'x'.repeat(600000);
+    // (2) nén / giải nén
+    let b64 = '', h0 = '';
+    try {
+      h0 = await sha(src); b64 = await nenB64(src); const lai = await giaiNenB64(b64);
+      if (await sha(lai) !== h0) throw new Error('giải nén ra khác bản gốc');
+      xong('2. Nén mã', true, `${Math.round(src.length / 1024)} KB → ${Math.round(b64.length / 1024)} KB`);
+    } catch (e) { xong('2. Nén mã', false, e.message); }
+    // (3) cất vào ô sheet Z20:Z29 rồi đọc lại, xong xoá sạch
+    if (b64) {
+      try {
+        const cu = await docBang(CAI_DAT.TAB_BAI, 'Z20:Z29');
+        if (cu.some((r) => chuO((r || [])[0]))) throw new Error('ô Z20:Z29 đang có chữ khác — không ghi đè');
+        const manh = []; for (let i = 0; i < b64.length; i += 40000) manh.push(b64.slice(i, i + 40000));
+        if (manh.length > O_NAP.length) throw new Error(`mã nén cần ${manh.length} ô, chỉ dành ${O_NAP.length} ô`);
+        const t0 = Date.now();
+        for (let i = 0; i < manh.length; i++) await ghiO(CAI_DAT.TAB_BAI, O_NAP[i], 'NAP|' + manh[i]);
+        const tGhi = Date.now() - t0, t1 = Date.now();
+        const v = await docBang(CAI_DAT.TAB_BAI, 'Z20:Z29');
+        const ghep = v.map((r) => chuO((r || [])[0])).filter((s) => s.startsWith('NAP|')).map((s) => s.slice(4)).join('');
+        const tDoc = Date.now() - t1;
+        let dung = false; try { dung = (await sha(await giaiNenB64(ghep))) === h0; } catch (e) { /* */ }
+        try { await ghiNhieuO(CAI_DAT.TAB_BAI, O_NAP.slice(0, manh.length).map((o) => [o, ''])); } catch (e) { ghi('Thử nạp bản: xoá ô Z20:Z29 chưa được — ' + e.message); }
+        xong('3. Cất mã vào ô sheet', dung, `${manh.length} ô · ghi ${Math.round(tGhi / 1000)} giây · đọc lại ${Math.round(tDoc / 1000)} giây${dung ? ' · đọc lại khớp 100%' : ' · đọc lại KHÔNG khớp'} · đã xoá ô thử`);
+      } catch (e) { xong('3. Cất mã vào ô sheet', false, e.message); }
+    }
+    // (4) cất thành file trong Lark Drive của ứng dụng rồi tải lại
+    try {
+      const r0 = await goiLark('GET', 'https://open.larksuite.com/open-apis/drive/explorer/v2/root_folder/meta');
+      const thuMuc = r0.json && r0.json.data && r0.json.data.token; if (!thuMuc) throw new Error('không lấy được thư mục của ứng dụng');
+      const fd = new FormData(); const tep = new Blob([src], { type: 'text/plain' });
+      fd.append('file_name', 'smh-thu-nap.txt'); fd.append('parent_type', 'explorer'); fd.append('parent_node', thuMuc); fd.append('size', String(tep.size)); fd.append('file', tep, 'smh-thu-nap.txt');
+      const t0 = Date.now(); const up = await goiTep('POST', 'https://open.larksuite.com/open-apis/drive/v1/files/upload_all', fd);
+      let j = null; try { j = JSON.parse(up.text); } catch (e) { /* */ }
+      if (!j || j.code !== 0) throw new Error('tải lên chưa được (mã ' + (j ? j.code + ' ' + (j.msg || '') : up.status + ' ' + (up.loi || '')) + ')');
+      const ma = j.data.file_token; const tUp = Date.now() - t0, t1 = Date.now();
+      const dl = await goiTep('GET', 'https://open.larksuite.com/open-apis/drive/v1/files/' + ma + '/download', null, 'text');
+      const dung = dl.status === 200 && (await sha(String(dl.resp || ''))) === h0;
+      luu('thunap_tep6', ma);
+      xong('4. Cất mã thành file Lark Drive', dung, `tải lên ${Math.round(tUp / 1000)} giây · tải về ${Math.round((Date.now() - t1) / 1000)} giây${dung ? ' · khớp 100%' : ' · tải về KHÔNG khớp (mã ' + dl.status + ')'}`);
+    } catch (e) { xong('4. Cất mã thành file Lark Drive', false, e.message); }
+    kq.xong = Date.now(); luu('thunap6', kq);
+    const ok = Object.values(kq.buoc).filter((b) => b.ok).length;
+    ghi(`Thử nạp bản (cách 2): xong — ${ok}/${Object.keys(kq.buoc).length} việc được`);
+    return true;
+  }
+  function chayThuNap(tay) {
+    if (!LA_CAO || dangChay || dangBan) return false;
+    if (!tay && ketThuNap()) return false;
+    if (!coBiMat()) return false;
+    theoDoi('thunap', thuNapBan, 'Đang thử nạp bản qua Lark (cách 2)').catch((e) => ghi('Thử nạp bản lỗi: ' + e.message)).finally(() => { try { veBangNgay(); } catch (e) { /* */ } });
+    return true;
+  }
+  function khungThuNap() {
+    if (!LA_CAO) return '';
+    const k = ketThuNap();
+    let h = `<div class="dong" style="flex-direction:column;align-items:flex-start;gap:4px"><span><b>🧪 Thử cập nhật qua Lark (cách 2)</b> — chỉ thử, không đổi cách chạy</span>`;
+    if (k) for (const [ten, b] of Object.entries(k.buoc)) h += `<span>${b.ok ? '🟢' : '🔴'} ${esc(ten)}: ${esc(b.chi)}</span>`;
+    h += `<span>${k ? (k.xong ? 'Thử lúc ' + gioStr(new Date(k.luc)) : '⏳ đang thử…') : 'chưa thử — script tự thử khi rảnh'} <button class="nut" data-a="thunap">${k ? 'Thử lại' : 'Thử ngay'}</button></span></div>`;
+    return h;
+  }
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest && ev.target.closest('#smhfb [data-a="thunap"]'); if (!a) return;
+    if (chayThuNap(true)) nhacNho('Đang thử nạp bản qua Lark — khoảng 1 phút', 'cho'); else nhacNho('Script đang bận việc khác — thử lại sau ít phút', 'vang', 6000);
+  });
+  window.addEventListener('message', (e) => { // Claude gọi thử từ xa + đọc kết quả
+    const d = e && e.data; if (!d || e.origin !== location.origin) return;
+    if (d.smhThuNap) chayThuNap(true);
+    if (d.smhThuNap || d.smhKetThuNap) { let el = document.getElementById('smhfb-thunap'); if (!el) { el = document.createElement('textarea'); el.id = 'smhfb-thunap'; el.style.display = 'none'; document.body.appendChild(el); } el.value = JSON.stringify({ ban: PHIEN_BAN, kq: ketThuNap() }); }
+  });
+  // tự thử 1 lần khi rảnh (Máy Cao, tab chính, không đang chạy việc nào) — kiểm mỗi 2 phút, bắt đầu sau 3 phút từ lúc mở trang
+  setTimeout(() => { setInterval(() => { try { if (laTabChinh() && !hdChay) chayThuNap(false); } catch (e) { /* */ } }, 120000); }, 60000);
 
   // =====================================================================
   //  KHỞI ĐỘNG
