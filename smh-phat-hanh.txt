@@ -1,0 +1,8 @@
+// ==UserScript==
+// @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
+// @namespace    smh-dang-bai-fb-kenh1-chay-that
+// @version      0.0
+// @description  File phat hanh (cho Claude ghi de khi anh Cao duyet ban moi). Ban 0.0 = chua co ban moi.
+// @match        https://www.facebook.com/vongtramhuongsonmochuong-khong-dung
+// @grant        none
+// ==/UserScript==
