@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.19
+// @version      6.19.1
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -46,7 +46,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.19';
+  const PHIEN_BAN = '6.19.1';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -549,12 +549,12 @@
   }
   // tự lấy mã kênh 2, 3 (6 giờ/lần khi còn thiếu): chỉ được nếu mã đang cài là mã người dùng
   async function tuDoMaKenh(ep) {
-    if (!fbToken()) return false;
+    if (!fbToken() && !lay('fb_token_nguoi', '')) return false;
     const thieu = [2, 3].filter((c) => !coApiKenh(c)); if (!thieu.length) return false;
     const k = lay('kenh_ma6', null); if (!ep && k && Date.now() - (k.thu || k.luc || 0) < 6 * 3600e3) return false;
     luu('kenh_ma6', Object.assign({}, k || {}, { thu: Date.now() }));
     try {
-      const acc = await goiFb('/me/accounts?fields=id,name,access_token&limit=100', fbToken());
+      const acc = await goiFb('/me/accounts?fields=id,name,access_token&limit=100', lay('fb_token_nguoi', '') || fbToken()); // (6.19.1) giữ mã người dùng → trang mới thêm sau này tự lấy được mã, không phải dán lại
       const thay = luuMaKenh(acc.data || []);
       const con = [2, 3].filter((c) => !coApiKenh(c));
       if (con.length) { luu('kenh_ma6', { luc: Date.now(), thu: Date.now(), ok: false, loi: `Nick của mã khoá không quản lý trang kênh ${con.join(', ')}.` }); ghi(`Mã khoá Facebook: chưa thấy trang kênh ${con.join(', ')} trong danh sách trang của nick này`); }
@@ -979,7 +979,7 @@
         const acc = await goiFb('/me/accounts?fields=id,name,access_token&limit=100', t);
         const pg = (acc.data || []).find((x) => x.id === CAI_DAT.FB_PAGE_ID);
         if (pg && pg.access_token) { maTrang = pg.access_token; ghi('Mã dán vào là mã người dùng → đã đổi sang mã của trang ' + pg.name); }
-        try { const kq = luuMaKenh(acc.data || []); if (kq.length) ghi('Đã lấy thêm mã đọc trang ' + kq.join(', ')); } catch (e2) { /* */ }
+        try { if ((acc.data || []).length) { luu('fb_token_nguoi', t); luu('fb_token_nguoi_luc', Date.now()); } const kq = luuMaKenh(acc.data || []); if (kq.length) ghi('Đã lấy thêm mã đọc trang ' + kq.join(', ')); } catch (e2) { /* */ }
       } catch (e) { /* mã của trang thì không có danh sách trang — dùng luôn */ }
       const j = await goiFb(`/${CAI_DAT.FB_PAGE_ID}?fields=name`, maTrang);
       let cmtOk = null;
@@ -2175,6 +2175,17 @@
     kt.keTiep = true; kt.den = den(kt);
     return L;
   }
+  // (6.19) nhìn trang (không cần mã khoá): bài có chữ này đã có trên trang chưa → { link } | null
+  async function daCoTrenTrangDom(text) {
+    if (!text) return null;
+    window.scrollTo(0, 0); await sleep(1200);
+    for (let i = 0; i < 6; i++) {
+      const k = cacKhungBai().find((x) => khungKhop(x, text));
+      if (k) { const a = Array.from(k.khung.querySelectorAll('a[href]')).map((x) => x.href).find((h) => /\/(reel|videos|posts)\//.test(h)) || ''; window.scrollTo(0, 0); return { link: a.replace(/[?#].*$/, '').replace(/\/+$/, '') }; }
+      window.scrollBy(0, 1200); await sleep(1500);
+    }
+    window.scrollTo(0, 0); return null;
+  }
   const lucBuKenh = (L, x) => { const c = x.kenh || 1; const t = Math.max(0, ...L.filter((y) => y.xong && y.r.luc && (y.kenh || 1) === c).map((y) => y.r.luc)); return t ? t + (c > 1 ? CAI_DAT.KENH_CACH_PHUT : CAI_DAT.CACH_BU_PHUT) * 60000 : 0; };
   // trang đang mở thuộc kênh nào (0 = không phải trang nào trong 3 kênh)
   const kenhCuaDuong = () => { const p = location.pathname.toLowerCase().replace(/\/+$/, ''); for (const c of [1, 2, 3]) if (CAI_DAT.KENH[c].duong.includes(p)) return c; return 0; };
@@ -2460,10 +2471,6 @@
     if (LA_CAO && !ep) batDau = Math.max(it.den + CAI_DAT.CAO_TRE_PHUT * 60000, moLuc + CAI_DAT.CAO_CHO_MO_PHUT * 60000);
     if (!ep && now < batDau) return false;
     { const kt = kenhCuaDuong(); if (!ep && kt && kt !== (it.kenh || 1) && coSuaKenhCho(kt)) return false; }
-    if (LA_CAO && !ep && (it.kenh || 1) > 1 && !coApi()) { // (6.19) Máy Cao không biết Máy Giao đã đăng chưa (chưa đọc được trang) → không đăng thay, tránh trùng
-      capNhatTT((s) => { Object.assign(ttSlot(s, it.k), { tt: 'bo', lyDo: 'Máy Cao chưa có mã khoá đọc được trang kênh ' + it.kenh + ' → không đăng thay (tránh trùng với Máy Giao)' }); });
-      ghi(`${it.ten}: Máy Cao chưa đọc được trang ${CAI_DAT.TEN_NGAN} qua Facebook nên không biết Máy Giao đã đăng chưa → không đăng thay (tránh trùng)`); return true;
-    } // (6.19) thả cảm xúc xong video kênh 2/3 đang mở rồi mới chuyển trang
     if (document.visibilityState !== 'visible') { tabAnNhac(it); return false; }
     if (!ep && dangHoan()) return false;
     if (!ep && !choNhanSu('dang_' + it.k, `đăng ${it.ten} (hẹn ${gioStr(new Date(it.den))})`)) return false;
@@ -2499,6 +2506,12 @@
           return false;
         }
       }
+    }
+    else if ((it.kenh || 1) > 1) { // (6.19) chưa có mã khoá đọc được trang kênh 2/3 → mở trang, nhìn xem video đã có chưa (máy kia / đăng tay) rồi mới đăng
+      if (!dungTrang()) { ghi(`${it.ten}: mở trang ${CAI_DAT.TEN_NGAN} để xem video đã lên chưa (tránh đăng trùng)`); veTrang(); return true; }
+      const co = await daCoTrenTrangDom(nd.text);
+      if (co) { capNhatTT((s) => { Object.assign(ttSlot(s, it.k), { tt: 'co_san', luc: Date.now(), may: 'khac', link: co.link || '', lyDo: '' }); }); ghi(`${it.ten} đã có trên trang ${CAI_DAT.TEN_NGAN} (máy khác / đăng tay) → không đăng`); return true; }
+      ghi(`${it.ten}: đã xem trang ${CAI_DAT.TEN_NGAN} — chưa có video này → đăng`);
     }
     // 2 máy cùng bật: Máy Cao (dự phòng) hoặc Máy Giao trễ quá 15 phút phải giữ chỗ trước
     if (LA_CAO || now > it.den + CAI_DAT.GIAO_GIU_CHO_SAU_PHUT * 60000) {
@@ -4257,7 +4270,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6']);
+    const GIU = new Set(['fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;
@@ -4792,11 +4805,6 @@
     if (MAY && !nhacInfo()) ds.push({ k: 'nhac', chu: 'Máy này chưa có nhạc nền cho video manifest', nut: [['🎵 Tải nhạc', 'xemmanifest', '', 'chinh']] });
     if (!coApi()) ds.push({ k: 'chuama', chu: 'Chưa cài mã khoá Facebook (script chưa dò được bài trên trang)', nut: [['🔑 Cài mã khoá', 'caima', '', 'chinh']] });
     else { const luc = lay('fb_token_luc', 0); const n = luc ? Math.floor((Date.now() - luc) / 864e5) : 0; if (n >= CAI_DAT.MA_KHOA_HAN_NGAY - 10) ds.push({ k: 'hetma', chu: `Mã khoá Facebook đã dùng ${n} ngày — nên lấy mã mới`, nut: [['🔑 Đổi mã khoá', 'caima', '', 'chinh']] }); }
-    if (coApi()) for (const c of [2, 3]) { // (6.19)
-      if (!LICH.concat(lichNgay(ngayMai())).some((x) => x.kenh === c) || coApiKenh(c)) continue;
-      const mk = lay('kenh_ma6', null);
-      ds.push({ k: 'makenh' + c, chu: `Mã khoá Facebook chưa đọc được trang kênh ${c} (${CAI_DAT.KENH[c].ngan}) — script vẫn đăng, nhưng chưa tự kiểm được bài/comment trên trang này.${mk && mk.loi ? ' ' + mk.loi : ''} Bấm "Đổi mã khoá" và dán mã NGƯỜI DÙNG (nick quản lý cả 3 trang).`, nut: [['🔑 Đổi mã khoá', 'caima', '', 'chinh']] });
-    }
     const g = chanLark(); if (g) ds.push({ k: 'lark', chu: g.msg + ' — script vẫn đăng bằng dữ liệu đã tải sẵn', nut: [] });
     else if (!duLieu()) ds.push({ k: 'chuadoc', chu: 'Chưa đọc được Lark sheet lần nào', nut: [['📥 Đọc sheet', 'docsheet', '', 'chinh']] });
     return ds;
@@ -5555,6 +5563,7 @@
     else if (LA_CAO && lay('duyet6', '') && cuHon(PHIEN_BAN, lay('duyet6', ''))) h += `<div class="dong"><span>Đã duyệt</span><span>bản ${esc(lay('duyet6', ''))} — chờ Claude chuyển thành bản chính thức tối nay, sau đó Tampermonkey tự cập nhật</span></div>`;
     { const cn = lay('capnhat6', null); h += `<div class="dong"><span>Nguồn cập nhật</span><span>${cn ? (cn.ok ? '🟢 đọc được · bản trên nguồn: ' + esc(cn.ban || '?') + ' (kiểm lúc ' + gioStr(new Date(cn.luc)) + ')' : '🔴 chưa đọc được (' + esc(cn.loi || '') + ')') : 'chưa kiểm'}</span></div>`; }
     { const dv = lay('drive6', null); h += `<div class="dong"><span>Thử nguồn Google Drive</span><span>${dv ? (dv.ok ? '🟢 Tampermonkey đọc được file trên Drive (bản ' + esc(dv.ban) + ')' : '🔴 chưa đọc được: ' + esc(dv.loi || '')) : 'chưa thử'}</span></div>`; }
+    h += `<div class="dong"><span>Mã đọc 3 trang</span><span>${[1, 2, 3].map((c) => `K${c} ${coApiKenh(c) ? '🟢' : '⚪'}`).join(' · ')}${[2, 3].some((c) => !coApiKenh(c)) ? '<br><span class="mo">⚪ = chưa đọc được trang đó qua Facebook: script vẫn đăng, tự mở trang nhìn để tránh đăng trùng (chỉ chưa tự kiểm comment được)</span>' : ''}</span></div>`;
     h += khungThuNap();
     h += `<div class="dong"><span>Thấy lỗi?</span><span><button class="nut" data-a="baoclaude">🛟 Báo lỗi này cho Claude</button></span></div>`;
     return h + '</div>';

@@ -101,6 +101,10 @@
   {
    "ngay": "2026-10-14",
    "tomTat": "Ra bản 6.19: đăng 3 kênh (kênh 2 Trầm Hương Thủ Đức tab em39qJ, kênh 3 SMH Trầm Chuẩn tab 4OtbFA — dòng có Ngày đăng hôm nay + Trạng thái ĐÃ DUYỆT), video kênh 2/3 đăng trước kênh 1 5–15 phút, cùng trang cách ≥30 phút; comment như video kênh 1 (tick CTA Zalo theo kênh); chỉ thả cảm xúc; ghi ĐÃ ĐĂNG (G) + link (J); nhắc 16:00 cho kênh 2/3; tự lấy mã đọc trang kênh 2/3 từ /me/accounts; chưa có mã thì xác nhận bằng nhìn trang, Máy Cao không đăng thay kênh 2/3. Sửa thêm: nhận bài khi Facebook dính chữ ở chỗ xuống dòng (manifest)."
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.19.1: kênh 2/3 khi chưa có mã khoá đọc trang → trước khi đăng tự mở trang nhìn xem video đã lên chưa (tránh trùng, kể cả đăng tay); Máy Cao đăng thay kênh 2/3 được; bỏ cảnh báo bắt dán mã khoá."
   }
  ]
 }
