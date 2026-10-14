@@ -82,6 +82,30 @@
    "moTa": "Facebook dính chữ ở chỗ xuống dòng → so câu mở đầu (6.17) không khớp → manifest bị coi là chưa lên sau 20 phút",
    "trangThai": "đã sửa 6.19",
    "ngay": "2026-10-14"
+  },
+  {
+   "ma": "bu-sai-tu-cach",
+   "moTa": "Gửi bù comment kênh 2/3: ô bình luận đứng tên nick cá nhân / trang kênh khác → không chuyển tư cách, tải lại 4 lần rồi bỏ; vẫn đếm 'đã gửi bù' → báo nhầm 'gửi bù 2 lần vẫn thiếu' (Máy Cao 14/10 19:38)",
+   "trangThai": "đã sửa 6.19.2",
+   "ngay": "2026-10-14"
+  },
+  {
+   "ma": "kiem-cmt-lap",
+   "moTa": "Chờ nhân sự rảnh để gửi bù → hỏi Facebook lại mỗi vài giây (9 lần/80 giây); lượt 19:00 vẫn kiểm bài đã báo cần comment tay",
+   "trangThai": "đã sửa 6.19.2",
+   "ngay": "2026-10-14"
+  },
+  {
+   "ma": "ma-kenh1-bi-thay",
+   "moTa": "Bấm Đổi mã khoá lúc script đang làm kênh 2 → mã kênh 1 bị thay bằng mã trang kênh 2 → Facebook báo 190 (Máy Giao 14/10 19:22)",
+   "trangThai": "đã sửa 6.19.2",
+   "ngay": "2026-10-14"
+  },
+  {
+   "ma": "cai-giua-ngay-k",
+   "moTa": "Cài 6.19 giữa ngày: video kênh 2/3 (giờ 06:2x) đã đăng tay từ chiều → script định đăng lại ngay (Máy Giao 19:22, may có Tạm dừng). Thêm: hỏi Facebook lỗi → nhìn trang; trễ >1 giờ → nhìn trang; sheet ĐÃ ĐĂNG → không đăng",
+   "trangThai": "đã sửa 6.19.2",
+   "ngay": "2026-10-14"
   }
  ],
  "danhGiaTuan": [],
@@ -105,6 +129,10 @@
   {
    "ngay": "2026-10-14",
    "tomTat": "Ra bản 6.19.1: kênh 2/3 khi chưa có mã khoá đọc trang → trước khi đăng tự mở trang nhìn xem video đã lên chưa (tránh trùng, kể cả đăng tay); Máy Cao đăng thay kênh 2/3 được; bỏ cảnh báo bắt dán mã khoá."
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.19.2 (tổng kiểm tra 3 kênh): gửi bù tự chuyển tư cách trang; đếm gửi bù đúng; không kiểm comment lặp; dò trùng chắc hơn (API lỗi → nhìn trang, sheet ĐÃ ĐĂNG, bỏ bài đã thuộc ô khác); mã khoá luôn theo kênh 1 + tự lấy lại khi 190; nút Kiểm tra bài/kiểm comment gồm cả kênh 2/3; giữ chỗ không nhường nhầm. 77/77 kịch bản giả lập đạt."
   }
  ]
 }

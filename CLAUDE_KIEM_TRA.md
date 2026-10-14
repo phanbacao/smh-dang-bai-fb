@@ -68,5 +68,17 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 ## (6.19) 3 kênh — lưu ý khi kiểm tra
 - Kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài như cũ). Kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" (tab `em39qJ`: H ngày, I video, E caption, G trạng thái, J link). Kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (tab `4OtbFA`: H, I, D caption, G, J).
 - Kênh 2/3 chỉ đăng dòng có Ngày đăng = hôm nay VÀ Trạng thái "ĐÃ DUYỆT"; đăng xong ghi "ĐÃ ĐĂNG" + link. Giờ: trước bài đầu kênh 1 khoảng 5–15 phút, cùng trang cách ≥ 30 phút.
-- Mã khoá: kênh 2/3 cần mã trang riêng (lấy từ `/me/accounts` khi mã dán vào là mã NGƯỜI DÙNG). Popup báo "Mã khoá chưa đọc được trang kênh N" → nhắc anh Cao dán lại mã người dùng. Khi chưa có mã: Máy Giao xác nhận bài bằng cách nhìn trang; Máy Cao KHÔNG đăng thay kênh 2/3.
+- Mã khoá: kênh 2/3 cần mã trang riêng (lấy từ `/me/accounts` khi mã dán vào là mã NGƯỜI DÙNG). Popup báo "Mã khoá chưa đọc được trang kênh N" → nhắc anh Cao dán lại mã người dùng. Khi chưa có mã (hoặc mã lỗi): cả 2 máy NHÌN TRANG trước khi đăng để tránh trùng (6.19.2: áp dụng cho cả kênh 1 khi hỏi Facebook lỗi).
 - Slot kênh 2/3 có khoá dạng `k2a, k2b…, k3a…` trong báo cáo (`tomTatSlot`).
+
+## (6.19.2) Tổng kiểm tra 3 kênh — những điểm đã sửa (đối chiếu khi đọc nhật ký)
+- Gửi bù comment: ô bình luận đứng tên nick cá nhân / trang kênh khác → script chuyển tư cách sang trang của bài (menu tài khoản, hoặc nút "Chuyển ngay" trên trang) rồi mở lại bài. Thử 2 lần không được → ghi lý do, không tải lại liên tục.
+- "Đã gửi bù N lần" chỉ đếm khi comment thật sự gửi được (`guiBu`); mở bài mà chưa comment được tính riêng (`buHong`, tối đa 2 rồi báo nhóm). Bài đã báo "cần comment tay" (`baoBu`) không kiểm lại nữa (kể cả lượt 19:00) cho tới khi bấm "Kiểm lại".
+- Đang chờ nhân sự rảnh để gửi bù: dùng lại kết quả kiểm vừa có (`buCho`, 20 phút) — không hỏi Facebook lại mỗi vài giây.
+- Tin báo ghi rõ thiếu gì: "comment thông tin trang" / "comment mời nhóm Zalo" / "N comment ảnh".
+- Dò trùng trước khi đăng: hỏi Facebook lỗi → nhìn trang; video kênh 2/3 trễ > 1 giờ → nhìn trang thêm 1 lần; sheet kênh 2/3 đã ghi "ĐÃ ĐĂNG" → không đăng lại. Dò trùng lần cuối bỏ qua các bài đã thuộc ô khác.
+- Mã khoá: nút Đổi/Kiểm tra mã khoá luôn làm với trang kênh 1 (trước đây bấm lúc script đang làm kênh 2 → mã kênh 1 bị thay bằng mã trang kênh 2 → lỗi 190). Dán nhầm mã riêng của trang kênh 2/3 → chỉ lưu cho kênh đó. Facebook báo 190 → bỏ mã đó và tự lấy lại từ mã người dùng (10 phút/lần).
+- Dò trang lỗi → vẫn ghi thời điểm thử (không gọi lại mỗi 15 giây). Kênh 2/3 không gán video lạ theo thứ tự.
+- Nút "Kiểm tra bài trên trang" kiểm cả 3 kênh; nút kiểm comment 3 bài / 24 giờ thêm video kênh 2/3.
+- Giữ chỗ (ô Z1): máy kia giữ ô của bài KHÁC thì không phải nhường.
+- Kịch bản giả lập mới: `giaomuon`, `giaomuonma` (cài bản mới giữa ngày, video kênh 2/3 đã đăng tay), `bucao`, `bugiao`, `bucaomenu` (đang ở nick cá nhân, gửi bù phải chuyển tư cách; menu thiếu nút → "Chuyển ngay").
