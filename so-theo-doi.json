@@ -106,6 +106,24 @@
    "moTa": "Cài 6.19 giữa ngày: video kênh 2/3 (giờ 06:2x) đã đăng tay từ chiều → script định đăng lại ngay (Máy Giao 19:22, may có Tạm dừng). Thêm: hỏi Facebook lỗi → nhìn trang; trễ >1 giờ → nhìn trang; sheet ĐÃ ĐĂNG → không đăng",
    "trangThai": "đã sửa 6.19.2",
    "ngay": "2026-10-14"
+  },
+  {
+   "ma": "lich-co-dinh-3-video",
+   "moTa": "Sheet có hơn 3 video/manifest trong ngày → dòng thứ 4 trở đi không lên lịch; đăng tay thì bị xếp 'ngoài lịch' (14/10 tối 4 video)",
+   "trangThai": "đã sửa 6.19.3",
+   "ngay": "2026-10-14"
+  },
+  {
+   "ma": "soan-k-mat-yeu-cau",
+   "moTa": "Bấm Soạn bài kênh 2 ngày mai: đổi trang/tư cách làm trang tải lại → mất yêu cầu soạn, popup báo Xong sai",
+   "trangThai": "đã sửa 6.19.3",
+   "ngay": "2026-10-14"
+  },
+  {
+   "ma": "nhan-theo-thu-tu-sai",
+   "moTa": "Video đăng tay của dòng sheet chưa đọc bị gán vào ô Video 3 chưa tới giờ → Video 3 không đăng, video kia bị đăng trùng (giả lập themgiua)",
+   "trangThai": "đã sửa 6.19.3",
+   "ngay": "2026-10-14"
   }
  ],
  "danhGiaTuan": [],
@@ -133,6 +151,10 @@
   {
    "ngay": "2026-10-14",
    "tomTat": "Ra bản 6.19.2 (tổng kiểm tra 3 kênh): gửi bù tự chuyển tư cách trang; đếm gửi bù đúng; không kiểm comment lặp; dò trùng chắc hơn (API lỗi → nhìn trang, sheet ĐÃ ĐĂNG, bỏ bài đã thuộc ô khác); mã khoá luôn theo kênh 1 + tự lấy lại khi 190; nút Kiểm tra bài/kiểm comment gồm cả kênh 2/3; giữ chỗ không nhường nhầm. 77/77 kịch bản giả lập đạt."
+  },
+  {
+   "ngay": "2026-10-14",
+   "tomTat": "Ra bản 6.19.3: lịch theo dòng sheet (Video/Manifest 4+ tự lên lịch, tới 22:30), ghim dòng cho mọi video/manifest/kênh 2-3, giờ đăng 2 máy giống nhau + Máy Giao liếc ô giữ chỗ, Soạn/Đăng ngay giữ yêu cầu qua tải lại, ghi ĐÃ ĐĂNG đúng dòng + ghi bù, chống trùng video xử lý lâu và ảnh comment, kho thẻ video riêng từng kênh. 85/85 kịch bản giả lập đạt."
   }
  ]
 }

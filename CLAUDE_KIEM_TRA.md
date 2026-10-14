@@ -82,3 +82,14 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Nút "Kiểm tra bài trên trang" kiểm cả 3 kênh; nút kiểm comment 3 bài / 24 giờ thêm video kênh 2/3.
 - Giữ chỗ (ô Z1): máy kia giữ ô của bài KHÁC thì không phải nhường.
 - Kịch bản giả lập mới: `giaomuon`, `giaomuonma` (cài bản mới giữa ngày, video kênh 2/3 đã đăng tay), `bucao`, `bugiao`, `bucaomenu` (đang ở nick cá nhân, gửi bù phải chuyển tư cách; menu thiếu nút → "Chuyển ngay").
+
+## (6.19.3) Lịch theo dòng sheet + sửa lỗi rà soát
+- Kênh 1: sheet có hơn 3 video / 3 manifest trong ngày → tự thêm ô Video 4, 5… / Manifest 4… (khoá `v4`, `m4`…, `it.them = true`), xếp giờ vào khoảng trống trong ngày (đọc sheet giữa ngày thì từ giờ hiện tại), được đăng tới `GIO_CHOT_THEM` 22:30.
+- Mọi ô video / manifest / kênh 2, 3 được GHIM vào dòng sheet (`ngay6_<ngày>.gan` = số dòng + 40 ký tự đầu của chữ) → thêm/xoá/đổi thứ tự dòng không làm lệch bài. Dòng của bài đã làm bị xoá → ô giữ nguyên ("mất dòng"), không gán dòng khác.
+- Giờ đăng bốc theo ngày (2 máy ra cùng giờ). Máy Giao đúng giờ vẫn liếc ô giữ chỗ Z1 trước khi đăng. `NHUONG_PHUT` 40.
+- Bài đăng tay chữ khác sheet chỉ được "nhận theo thứ tự" cho ô ĐÃ tới giờ (`theoThuTu`); sau đọc sheet mà chữ khớp ô khác → chuyển đúng ô.
+- Soạn / Đăng ngay: giữ yêu cầu qua tải lại trang, đổi trang + tư cách trước; quá 15 phút chưa làm được → báo và huỷ. Soạn bị gián đoạn vẫn là SOẠN.
+- Ghi "ĐÃ ĐĂNG": chỉ dòng cùng ngày, chưa ĐÃ ĐĂNG; lỗi → hàng chờ `ghij_cho6`, 10 phút/lần ghi bù (tối đa 6). Soạn bài ngày mai rồi đăng hôm nay → ghi ĐÃ ĐĂNG vào dòng ngày mai.
+- Video >20 phút chưa thấy qua mã khoá → nhìn trang trước khi đăng lại. Comment ảnh: hỏi Facebook số ảnh đã có trước khi gửi. Máy Giao kiểm bài "máy khác" từ phút 20 (Máy Cao 35).
+- Kho thẻ video riêng từng kênh (`the6.video`, `video2`, `video3`; mẫu `THE_VIDEO_K2/K3`), tab Comment & Thẻ có 3 nút chọn kênh.
+- Kịch bản giả lập mới: `soanmaik`, `soanan`, `themvideo`, `themgiua`.
