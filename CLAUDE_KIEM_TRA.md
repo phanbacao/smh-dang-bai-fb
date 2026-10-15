@@ -93,3 +93,11 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Video >20 phút chưa thấy qua mã khoá → nhìn trang trước khi đăng lại. Comment ảnh: hỏi Facebook số ảnh đã có trước khi gửi. Máy Giao kiểm bài "máy khác" từ phút 20 (Máy Cao 35).
 - Kho thẻ video riêng từng kênh (`the6.video`, `video2`, `video3`; mẫu `THE_VIDEO_K2/K3`), tab Comment & Thẻ có 3 nút chọn kênh.
 - Kịch bản giả lập mới: `soanmaik`, `soanan`, `themvideo`, `themgiua`.
+
+## (6.20) Báo cáo chỉ số tuần fb kênh 1 (Máy Cao, thứ 6)
+- File `v6/p15_chiso.js`. Trạng thái tuần: khoá `cs6` (`tuan` = ngày thứ 6 của tuần, `guiLuc`, `het`, `loiDem`, `bao10`, `chay`, `yc`, `kqCuoi`). Link 2 nhóm Lark: `bimat6.csKQ` / `bimat6.csLoi` (cài bằng nút 🔑 trong tab, KHÔNG có trong code/GitHub).
+- Chạy cuối nhịp khi rảnh: không việc dở / soạn / yêu cầu bấm tay, nhân sự không thao tác, tab hiện, ≥ 15 phút trước bài kế tiếp (khi Tự đăng bật). Bước 0 = `damBaoTuCach()` kênh 1; bước 1–6 = 6 trang `professional_dashboard/profile_insights/{views|messaging|audience}/?date_range=LAST_7D|LAST_28D`.
+- Đọc số theo nhãn ("Lượt xem" có %, "Số người liên hệ nhắn tin", "Số người theo dõi thực"); % nhắn tin / theo dõi lấy dòng "…% từ N ngày trước"; dấu của Lượt xem theo màu chữ (xanh/đỏ).
+- Nhóm KẾT QUẢ chỉ qua `guiHookCS('kq')` (chặn khi thiếu số hoặc là tin thử). Gửi thử / lỗi / 9:30 → nhóm LỖI. Chưa cài link nhóm kết quả thì không tự mở trang.
+- Kịch bản giả lập: `chiso`, `chisoban`, `chisoloi`, `chisoloi10`, `chisonut`.
+- Sửa kèm: `bimat6` (mã Lark lưu trong máy) được giữ lại khi dọn dữ liệu hằng ngày.

@@ -124,6 +124,12 @@
    "moTa": "Video đăng tay của dòng sheet chưa đọc bị gán vào ô Video 3 chưa tới giờ → Video 3 không đăng, video kia bị đăng trùng (giả lập themgiua)",
    "trangThai": "đã sửa 6.19.3",
    "ngay": "2026-10-14"
+  },
+  {
+   "ma": "don-du-lieu-xoa-bimat",
+   "moTa": "Dọn dữ liệu hằng ngày không có 'bimat6' trong danh sách giữ → có thể xoá mã Lark đã lưu trong máy",
+   "trangThai": "đã sửa 6.20",
+   "ngay": "2026-10-15"
   }
  ],
  "danhGiaTuan": [],
@@ -155,6 +161,10 @@
   {
    "ngay": "2026-10-14",
    "tomTat": "Ra bản 6.19.3: lịch theo dòng sheet (Video/Manifest 4+ tự lên lịch, tới 22:30), ghim dòng cho mọi video/manifest/kênh 2-3, giờ đăng 2 máy giống nhau + Máy Giao liếc ô giữ chỗ, Soạn/Đăng ngay giữ yêu cầu qua tải lại, ghi ĐÃ ĐĂNG đúng dòng + ghi bù, chống trùng video xử lý lâu và ảnh comment, kho thẻ video riêng từng kênh. 85/85 kịch bản giả lập đạt."
+  },
+  {
+   "ngay": "2026-10-15",
+   "tomTat": "Ra bản 6.20 = 6.19.3 + báo cáo chỉ số tuần fb kênh 1 (Máy Cao, thứ 6 7:00–9:30, nhường việc chính, 2 nhóm Lark riêng, tab Chỉ số tuần với Soạn thử / Gửi thử / Gửi ngay). 90/90 kịch bản giả lập đạt."
   }
  ]
 }

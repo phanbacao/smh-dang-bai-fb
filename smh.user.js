@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.19.3
+// @version      6.20
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -46,7 +46,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.19.3';
+  const PHIEN_BAN = '6.20';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -95,13 +95,13 @@
     CACH_LICH_PHUT: 60,        // 2 bài liền nhau theo lịch cách ít nhất 1 tiếng
     CACH_BU_PHUT: 30,          // bài trễ thì đăng bù lần lượt, cách nhau 30 phút
     CACH_TRANG_PHUT: 20,       // cách bài gần nhất trên trang (kể cả bài đăng tay) ít nhất 20 phút
-    GIO_CHOT_THEM: '22:30',    // (6.19.3) bài kênh 1 thêm (Video 4, Manifest 4…) được đăng tới giờ này
+    GIO_CHOT_THEM: '22:30',    // (6.20) bài kênh 1 thêm (Video 4, Manifest 4…) được đăng tới giờ này
     GIO_CHOT: '21:30',         // quá giờ này bài chưa đăng thì bỏ, ghi vào báo cáo ngày
     GIO_BAO_CAO_THIEU: '21:45',// chưa đủ 9 bài thì 21:45 vẫn gửi báo cáo (ghi rõ bài chưa đăng)
     CAO_TRE_PHUT: 25,          // Máy Cao (dự phòng) chỉ ra tay khi quá giờ 25 phút mà trang vẫn chưa có bài
     CAO_CHO_MO_PHUT: 15,       // Máy Cao vừa mở lại tab: chờ 15 phút cho Máy Giao làm trước
     GIAO_GIU_CHO_SAU_PHUT: 15, // Máy Giao đăng trễ quá 15 phút thì phải "giữ chỗ" trước (tránh trùng với Máy Cao)
-    NHUONG_PHUT: 40,           // (6.15) máy kia giữ chỗ quá 40 phút mà bài chưa lên = máy đó kẹt → máy này được làm thay (6.19.3: 20 → 40 vì video có thể xử lý tới 20 phút)
+    NHUONG_PHUT: 40,           // (6.15) máy kia giữ chỗ quá 40 phút mà bài chưa lên = máy đó kẹt → máy này được làm thay (6.20: 20 → 40 vì video có thể xử lý tới 20 phút)
     THU_LAI_PHUT: 5,           // lỗi khi đăng → 5 phút sau thử lại
     SO_LAN_THU: 3,             // mỗi vòng thử tối đa 3 lần (cách nhau 5 phút)
     SO_VONG_THU: 3,            // (6.10) hết 1 vòng vẫn lỗi → nghỉ rồi thử vòng mới; tối đa 3 vòng (9 lần) trước giờ chốt
@@ -201,7 +201,7 @@
       'Sơn Mộc Hương Thủ Đức',
       'Vòng trầm hương làm quà tặng',
       'Kinh nghiệm mua vòng trầm hương',
-    ], // (6.19.3) thẻ video kênh 2 Trầm Hương Thủ Đức
+    ], // (6.20) thẻ video kênh 2 Trầm Hương Thủ Đức
     THE_VIDEO_K3: [
       'Nhang trầm hương sạch',
       'Nhang trầm hương không nhuộm màu',
@@ -219,7 +219,7 @@
       'Sơn Mộc Hương trầm chuẩn',
       'Nhang trầm sỉ lẻ CTV',
       'Mua nhang trầm hương uy tín',
-    ], // (6.19.3) thẻ video kênh 3 Sơn Mộc Hương Trầm Chuẩn (nhang)
+    ], // (6.20) thẻ video kênh 3 Sơn Mộc Hương Trầm Chuẩn (nhang)
     THE_MANIFEST: [
       'Manifest tài lộc mỗi ngày', 'Năng lượng tích cực thu hút tài chính', 'Câu khẳng định đón nhận tiền bạc', 'Manifest bình an và may mắn',
       'Lời chúc tài lộc đầu ngày', 'Năng lượng tốt đang tìm đến bạn', 'Đón nhận vận may và thịnh vượng', 'Sơn Mộc Hương manifest năng lượng',
@@ -4436,7 +4436,7 @@
   //  Thanh "đang làm gì" (dưới thanh trên cùng của popup)
   // =====================================================================
   const HD_TEN = {
-    dangdo: 'Đang làm tiếp việc dở', dang: 'Đang đăng bài', chotay: 'Chạy thử: chờ bấm Đăng', khanh: 'Đang đọc trang ' + CAI_DAT.KHANH_TEN,
+    chiso: 'Đang xem chỉ số tuần fb kênh 1', dangdo: 'Đang làm tiếp việc dở', dang: 'Đang đăng bài', chotay: 'Chạy thử: chờ bấm Đăng', khanh: 'Đang đọc trang ' + CAI_DAT.KHANH_TEN,
     docsheet: 'Đang đọc Lark sheet', dotrang: 'Đang kiểm tra bài trên trang', kiemcmt: 'Đang kiểm tra comment', taisan: 'Đang tải sẵn đồ đăng',
     baocao: 'Đang gửi báo cáo ngày', suavideo: 'Đang kiểm tra / gắn thẻ + cảm xúc video', danmf: 'Đang dán ảnh manifest vào sheet', yeucau: 'Đang làm việc bạn vừa bấm trên popup', taoanh: 'Đang tạo ảnh manifest', nhac: 'Đang lấy nhạc nền',
     suckhoe: 'Đang tự kiểm tra buổi sáng (mã khoá Facebook, Lark sheet, trang)', baocaoloi: 'Đang ghi báo cáo lỗi lên Lark sheet', duyet: 'Đang ghi duyệt bản mới', baoclaude: 'Đang gửi lỗi cho Claude', chuanbi: 'Đang kiểm tra chuẩn bị cho bài sắp đăng', doichieu: 'Đang đối chiếu bài vừa đăng với sheet', nhacsheet: 'Đang nhắc nhóm bổ sung sheet ngày mai', thunap: 'Đang thử nạp bản qua Lark (cách 2)', makenh: 'Đang lấy mã đọc trang kênh 2, 3',
@@ -4510,7 +4510,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['ghij_cho6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'nhacsheet6', 'cs6', 'ghij_cho6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;
@@ -4588,6 +4588,8 @@
       // 10) báo cáo tuần Khanh (Máy Cao)
       if (LA_CAO) await chayRanh('khanh', () => khanhTuan()).catch((e) => { luu('khanh_dang', null); ghi(CAI_DAT.KHANH_TEN + ' lỗi: ' + e.message); return false; });
       await nhacGiaHanMa().catch(() => {});
+      // (6.20) báo cáo chỉ số tuần fb kênh 1 (Máy Cao, thứ 6) — phần phụ, chỉ chạy khi rảnh, đặt cuối nhịp để mọi việc chính được làm trước
+      if (LA_CAO && !lay('dang_do', null) && !dangBan) { datKenh(1); await theoDoi('chiso', () => vongChiSo()).catch((e) => { ghi('Chỉ số tuần lỗi: ' + e.message); return false; }); datKenh(1); }
       // 11) (6.16) báo cáo lỗi kỹ thuật lên Lark (khi có lỗi mới) + xem có bản mới chờ duyệt (Máy Cao)
       if (canGhiBC() && !dangBan && !lay('dang_do', null)) await theoDoi('baocaoloi', () => ghiBaoCaoLark()).catch((e) => ghi('Ghi báo cáo lỗi lên Lark chưa được: ' + e.message));
       docTrangThaiGit(); docNguonCapNhat(); nhipBaoCaoToi();
@@ -5419,7 +5421,7 @@
     if (!el) { el = document.createElement('div'); el.id = 'smhfb'; document.body.appendChild(el); }
     const dangGo = el.contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !/^(checkbox|file|radio|button)$/.test(document.activeElement.type || '');
     const moRong = uiTab.moRong && !!MAY;
-    const tabs = [['homnay', 'Hôm nay'], ['ngaymai', 'Ngày mai'], ['saptoi', 'Sắp tới'], ['homqua', 'Hôm qua'], ['manifest', 'Manifest'], ['comment', 'Comment & Thẻ'], ['lichsu', 'Lịch sử'], ['hethong', 'Hệ thống'], ['nhatky', 'Nhật ký'], ['khanh', 'Khanh TH']].filter(([k]) => !(k === 'khanh' && !LA_CAO));
+    const tabs = [['homnay', 'Hôm nay'], ['ngaymai', 'Ngày mai'], ['saptoi', 'Sắp tới'], ['homqua', 'Hôm qua'], ['manifest', 'Manifest'], ['comment', 'Comment & Thẻ'], ['lichsu', 'Lịch sử'], ['hethong', 'Hệ thống'], ['nhatky', 'Nhật ký'], ['khanh', 'Khanh TH'], ['chiso', 'Chỉ số tuần']].filter(([k]) => !((k === 'khanh' || k === 'chiso') && !LA_CAO)); // (6.20) tab Chỉ số tuần (Máy Cao)
     const tabLuu = lay('ui_tab6', 'homnay'); const tab = tabs.some(([k]) => k === tabLuu) ? tabLuu : 'homnay';
     const t = trangThaiChung(); const dsViec = MAY ? viecCanXuLy() : [];
     if (t.den === 'xanh' && dsViec.length) t.den = 'vang';
@@ -5441,7 +5443,7 @@
     if (moRong) {
       const huy = (n) => (n ? ` <span class="chip loi">${n}</span>` : '');
       const dem = { homnay: dsViec.length, saptoi: tn.filter((x) => x.i > 0).length, manifest: nhacInfo() ? 0 : '!' };
-      const noiDung = tab === 'saptoi' ? tabSapToi() : tab === 'ngaymai' ? tabNgayMai() : tab === 'homqua' ? tabHomQua() : tab === 'manifest' ? tabManifest() : tab === 'comment' ? tabComment() : tab === 'lichsu' ? tabLichSu() : tab === 'hethong' ? tabHeThong() : tab === 'nhatky' ? tabNhatKy() : tab === 'khanh' ? tabKhanh() : tabHomNay();
+      const noiDung = tab === 'saptoi' ? tabSapToi() : tab === 'ngaymai' ? tabNgayMai() : tab === 'homqua' ? tabHomQua() : tab === 'manifest' ? tabManifest() : tab === 'comment' ? tabComment() : tab === 'lichsu' ? tabLichSu() : tab === 'hethong' ? tabHeThong() : tab === 'nhatky' ? tabNhatKy() : tab === 'khanh' ? tabKhanh() : tab === 'chiso' ? tabChiSo() : tabHomNay();
       html += `<div class="tabs">${tabs.map(([k, ten]) => `<button class="tab ${tab === k ? 'chon' : ''}" data-tab="${k}">${ten}${huy(dem[k])}</button>`).join('')}</div>
         <div class="nd${tab === 'hethong' ? ' cot2' : ''}">${noiDung}</div>
         <div class="foot"><div class="chan"><button class="nut ${tamDung() ? 'vang' : ''}" data-a="tamdung">${tamDung() ? '▶ Chạy lại' : '⏸ Tạm dừng'}</button></div>
@@ -5559,6 +5561,7 @@
     if (NHO[hd]) nhacNho(typeof NHO[hd] === 'function' ? NHO[hd]() : NHO[hd]);
     if (a.tagName === 'A') ev.preventDefault();
     if (hd === 'morong') { datMoRong(!uiTab.moRong); return; }
+    if (/^cs_/.test(hd)) { phanHoi(a); await bamChiSo(hd); return; } // (6.20) nút tab Chỉ số tuần
     if (hd === 'chon') { uiTab.chon = k; uiTab.moRong = true; uiTab.moLuc = Date.now(); luu('ui_tab6', 'homnay'); veBangNgay(); return; }
     if (hd === 'moviec') { uiTab.moRong = true; uiTab.moLuc = Date.now(); luu('ui_tab6', 'homnay'); veBangNgay(); return; }
     if (hd === 'xemsaptoi' || hd === 'xemmanifest') { uiTab.moRong = true; uiTab.moLuc = Date.now(); luu('ui_tab6', hd === 'xemsaptoi' ? 'saptoi' : 'manifest'); veBangNgay(); return; }
@@ -6092,6 +6095,266 @@
   });
   // tự thử 1 lần khi rảnh (Máy Cao, tab chính, không đang chạy việc nào) — kiểm mỗi 2 phút, bắt đầu sau 3 phút từ lúc mở trang
   setTimeout(() => { setInterval(() => { try { if (laTabChinh() && !hdChay) chayThuNap(false); } catch (e) { /* */ } }, 120000); }, 60000);
+
+  // =====================================================================
+  //  (6.20) BÁO CÁO CHỈ SỐ TUẦN FB KÊNH 1 — CHỈ MÁY CAO, PHẦN PHỤ (chỉ chạy khi script rảnh ≥ 15 phút trước việc chính)
+  //  Thứ 6 từ 7:00: mở 6 trang Công cụ chuyên nghiệp (Lượt xem / Nhắn tin / Đối tượng × 7 ngày / 28 ngày), đọc số → gửi 1 tin vào NHÓM KẾT QUẢ.
+  //  Lỗi → 5 phút thử lại; 10 lần lỗi → báo NHÓM LỖI (1 lần); 9:30 chưa gửi được → báo NHÓM LỖI rồi thôi.
+  //  Nhóm kết quả CHỈ nhận báo cáo chính thức; tin thử / tin lỗi chỉ vào nhóm lỗi.
+  // =====================================================================
+  const CS = {
+    TU: '07:00', DEN: '09:30', RANH_PHUT: 15, CHO_LOI_PHUT: 5, BAO_SAU_LOI: 10,
+    TIEU_DE: 'Báo cáo chỉ số tuần fb kênh 1',
+    BUOC: [
+      { trang: 'views', ky: '7D', ten: 'Lượt xem 7 ngày' }, { trang: 'messaging', ky: '7D', ten: 'Nhắn tin 7 ngày' }, { trang: 'audience', ky: '7D', ten: 'Theo dõi 7 ngày' },
+      { trang: 'views', ky: '28D', ten: 'Lượt xem 28 ngày' }, { trang: 'messaging', ky: '28D', ten: 'Nhắn tin 28 ngày' }, { trang: 'audience', ky: '28D', ten: 'Theo dõi 28 ngày' },
+    ],
+  };
+  const linkCS = (b) => `https://www.facebook.com/professional_dashboard/profile_insights/${b.trang}/?date_range=LAST_${b.ky}`;
+  const dangOTrangCS = () => /^\/professional_dashboard\/profile_insights\//.test(location.pathname);
+  const dungTrangCS = (b) => location.pathname.replace(/\/+$/, '') === `/professional_dashboard/profile_insights/${b.trang}` && new URLSearchParams(location.search).get('date_range') === 'LAST_' + b.ky;
+  const csTT = () => lay('cs6', null) || {};
+  const luuCS = (f) => { const c = csTT(); f(c); luu('cs6', c); return c; };
+  // tuần = thứ 2 → chủ nhật; khoá tuần = ngày thứ 6 của tuần đó
+  function tuanCS(d = new Date()) { const x = new Date(d); x.setHours(12, 0, 0, 0); const t = (x.getDay() + 6) % 7; x.setDate(x.getDate() - t + 4); return ngayStr(x); }
+  const hookCS = () => { const b = lay('bimat6', null) || {}; return { kq: b.csKQ || '', loi: b.csLoi || '' }; };
+  const LINK_HOOK_RE = /^https:\/\/open\.larksuite\.com\/open-apis\/bot\/v2\/hook\/[A-Za-z0-9-]{20,}$/;
+
+  // ---------- đọc 1 trang ----------
+  const laSo = (s) => /^[\d.,]+$/.test(s) || /^[—–-]$/.test(s);
+  const soCS = (s) => (/^[—–-]$/.test(String(s || '').trim()) ? 0 : parseInt(String(s || '0').replace(/[^\d]/g, ''), 10) || 0);
+  const sachCS = (s) => String(s || '').replace(/[\u200b-\u200f\ufeff]/g, '').trim();
+  function dauPhanTram(el) { // trang Lượt xem hay chỉ có mũi tên màu, không ghi dấu → xanh = tăng, đỏ = giảm
+    try { const m = getComputedStyle(el).color.match(/(\d+)\D+(\d+)\D+(\d+)/); if (!m) return ''; const r = +m[1], g = +m[2]; if (g > r + 40) return '+'; if (r > g + 40) return '-'; } catch (e) { /* */ }
+    return '';
+  }
+  function soTheoNhan(nhan, canPct) { // con số đứng ngay trước nhãn (trong cùng 1 khung nhỏ) — tránh lấy nhầm số trên trục biểu đồ
+    const las = Array.from(document.querySelectorAll('span,div')).filter((e) => e.childElementCount === 0 && sachCS(e.textContent) === nhan && dangHien(e) && !e.closest('[role="navigation"],#smhfb'));
+    for (const e of las) {
+      let p = e;
+      for (let i = 0; i < 5 && p; i++) {
+        p = p.parentElement; if (!p) break;
+        const dong = String(p.innerText || '').split('\n').map(sachCS).filter(Boolean);
+        if (dong.length > 5) break;
+        const iN = dong.indexOf(nhan); if (iN < 1) continue;
+        const so = dong.slice(0, iN).find(laSo); if (so == null) continue;
+        let pct = null;
+        const dp = dong.slice(0, iN).find((x) => /^[+\-−]?\d+(?:[.,]\d+)?%$/.test(x));
+        if (dp) {
+          let dau = /^[+\-−]/.test(dp) ? (dp[0] === '+' ? '+' : '-') : '';
+          if (!dau) { const els = Array.from(p.querySelectorAll('span,div')).filter((x) => sachCS(x.textContent) === dp); const el = els[els.length - 1]; if (el) dau = dauPhanTram(el); } // phần tử sâu nhất mang màu chữ
+          pct = { dau, so: dp.replace(/^[+\-−]/, '').replace('%', '') };
+        }
+        if (canPct && !pct) continue;
+        return { so: soCS(so), pct };
+      }
+    }
+    return null;
+  }
+  function khoangNgayCS(txt, ky) { // "7 ngày qua: 8 Tháng 10 - 14 Tháng 10" → {tu:'08/10/2026', den:'14/10/2026'}
+    const m = txt.match(new RegExp((ky === '7D' ? 7 : 28) + '\\s*ngày qua:\\s*(\\d{1,2}) Tháng (\\d{1,2})(?:,? (\\d{4}))?\\s*[-–]\\s*(\\d{1,2}) Tháng (\\d{1,2})(?:,? (\\d{4}))?'));
+    if (!m) return null;
+    const nay = new Date(); let nDen = m[6] ? +m[6] : nay.getFullYear(); if (!m[6] && +m[5] > nay.getMonth() + 1) nDen--;
+    let nTu = m[3] ? +m[3] : nDen; if (!m[3] && (+m[2] > +m[5] || (+m[2] === +m[5] && +m[1] > +m[4]))) nTu = nDen - 1; // tuần giao năm
+    return { tu: `${pad(m[1])}/${pad(m[2])}/${nTu}`, den: `${pad(m[4])}/${pad(m[5])}/${nDen}` };
+  }
+  function docTrangCS(b) { // null = chưa đủ số (chờ thêm) · {loi} · {so, pct, ngay}
+    const txt = document.body ? document.body.innerText : '';
+    const ngay = khoangNgayCS(txt, b.ky); if (!ngay) return null;
+    const chuaDu = /Chưa đủ dữ liệu/.test(txt);
+    if (b.trang === 'views') {
+      const x = soTheoNhan('Lượt xem', true) || soTheoNhan('Lượt xem', false);
+      if (!x) return chuaDu ? { so: 0, pct: null, ngay } : null;
+      return { so: x.so, pct: x.pct, ngay };
+    }
+    const pm = txt.match(new RegExp('([+\\-−]?\\d+(?:[.,]\\d+)?)% từ ' + (b.ky === '7D' ? 7 : 28) + ' ngày trước'));
+    const pct = pm ? { dau: /^[+]/.test(pm[1]) ? '+' : /^[-−]/.test(pm[1]) ? '-' : '', so: pm[1].replace(/^[+\-−]/, '') } : null;
+    const nhan = b.trang === 'messaging' ? 'Số người liên hệ nhắn tin' : 'Số người theo dõi thực';
+    const x = soTheoNhan(nhan, false);
+    if (!x) return chuaDu ? { so: 0, pct, ngay } : null;
+    return { so: x.so, pct, ngay };
+  }
+
+  // ---------- định dạng + gửi ----------
+  const fmtSo = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const laKhong = (p) => p && /^0+(?:[.,]0+)?$/.test(p.so);
+  function fmtPct(p, mau) {
+    if (!p) return '';
+    if (laKhong(p)) return mau ? `<font color='grey'>=0%</font>` : '=0%';
+    const s = (p.dau === '-' ? '▼' : p.dau === '+' ? '▲' : '') + p.so + '%';
+    return mau && p.dau ? `<font color='${p.dau === '-' ? 'red' : 'green'}'>${s}</font>` : s;
+  }
+  const ngayNgan = (s) => String(s || '').slice(0, 5);
+  function dongCS(kq, ky, mau) {
+    const v = kq[ky + 'views'], m = kq[ky + 'messaging'], a = kq[ky + 'audience']; const ng = (v || m || a || {}).ngay || {};
+    const o = (x, icon) => `${icon} ${x ? fmtSo(x.so) : '…'}${x && fmtPct(x.pct, mau) ? ' ' + fmtPct(x.pct, mau) : ''}`;
+    return `${ky === '7D' ? '7 ngày' : '28 ngày'} (${ngayNgan(ng.tu)}–${ngayNgan(ng.den)}): ${o(v, '👁')} · ${o(m, '💬')} · ${o(a, '👥')}`;
+  }
+  const noiDungCS = (kq, thu, mau) => `${thu ? '(GỬI THỬ) ' : ''}${CS.TIEU_DE}\n${dongCS(kq, '7D', mau)}\n${dongCS(kq, '28D', mau)}`;
+  const duSoCS = (kq) => CS.BUOC.every((b) => kq && kq[b.ky + b.trang]);
+  async function guiHookCS(nhom, kq, thu) { // nhom: 'kq' | 'loi' — 2 đường riêng, KHÔNG bao giờ đổi nhóm khi lỗi
+    const h = hookCS(); const hook = nhom === 'kq' ? h.kq : h.loi;
+    if (!hook) throw new Error(`chưa cài link ${nhom === 'kq' ? 'NHÓM KẾT QUẢ' : 'NHÓM LỖI'} (nút 🔑 Cài nhóm Lark ở tab Chỉ số tuần)`);
+    if (nhom === 'kq' && (thu || !duSoCS(kq))) throw new Error('chặn: nhóm kết quả chỉ nhận báo cáo chính thức đủ số');
+    const ok = (r) => r && r.json && (r.json.code === 0 || r.json.StatusCode === 0);
+    const the = { msg_type: 'interactive', card: { config: { wide_screen_mode: true }, header: { template: thu ? 'grey' : 'blue', title: { tag: 'plain_text', content: (thu ? '(GỬI THỬ) ' : '') + CS.TIEU_DE } }, elements: [{ tag: 'div', text: { tag: 'lark_md', content: dongCS(kq, '7D', true) + '\n' + dongCS(kq, '28D', true) } }] } };
+    let r = null; try { r = await goi('POST', hook, the); } catch (e) { /* thử dạng chữ */ }
+    if (ok(r)) return 'thẻ';
+    r = await goi('POST', hook, { msg_type: 'text', content: { text: noiDungCS(kq, thu, false) } });
+    if (ok(r)) return 'chữ';
+    throw new Error('Lark trả lời mã ' + (r && r.json ? (r.json.code || r.json.StatusCode) + ' ' + (r.json.msg || '') : r && r.status));
+  }
+  async function guiChuLoiCS(chu) { // tin chữ vào NHÓM LỖI (có chữ "fb")
+    const h = hookCS(); if (!h.loi) { ghi('Chỉ số tuần: chưa cài link NHÓM LỖI → không báo được: ' + chu); return false; }
+    try { const r = await goi('POST', h.loi, { msg_type: 'text', content: { text: /fb/i.test(chu) ? chu : '[fb] ' + chu } }); const ok = r && r.json && (r.json.code === 0 || r.json.StatusCode === 0); ghi(`Chỉ số tuần: ${ok ? 'đã báo' : 'báo chưa được'} nhóm lỗi — ${chu.slice(0, 120)}`); return ok; } catch (e) { ghi('Chỉ số tuần: báo nhóm lỗi chưa được (' + e.message + ')'); return false; }
+  }
+
+  // ---------- rảnh chưa ----------
+  function lyDoBanCS() { // '' = rảnh; ngược lại là lý do đang bận
+    if (!MAY || !LA_CAO) return 'chỉ chạy trên Máy Cao';
+    if (tamDung()) return 'đang Tạm dừng';
+    if (!laTabChinh()) return 'tab này không phải tab làm việc';
+    if (dangBan || lay('dang_do', null) || lay('cho_tay6', null) || lay('khanh_dang', null)) return 'script đang làm việc chính';
+    if ((lay('yc6', []) || []).length || (lay('hang_bu6', []) || []).length || demNguoc) return 'script đang làm việc bạn vừa bấm';
+    if (dangHoan()) return 'đang Hoãn 10 phút';
+    if (nhanSuDangDung()) return 'bạn đang dùng trang';
+    const L = tinhLich(); const sap = L.filter((x) => !x.ket && x.r.tt !== 'bo').map((x) => (x.r.ep ? Date.now() : Math.max(lucPhut(x.gioKH), lucBuKenh(L, x)))).filter((t) => Number.isFinite(t)).sort((a, b) => a - b)[0];
+    if (tuDong() && sap != null && sap - Date.now() < CS.RANH_PHUT * 60000) return `sắp tới giờ đăng bài (${gioStr(new Date(Math.max(sap, Date.now())))})`;
+    if (document.visibilityState !== 'visible') return 'tab Facebook đang bị ẩn';
+    return '';
+  }
+
+  // ---------- vòng chính (gọi cuối nhịp) ----------
+  async function vongChiSo() {
+    if (!LA_CAO || !MAY) return false;
+    const c = csTT(); const tuan = tuanCS(); const now = new Date(); const mm = phutTrongNgay(now);
+    if (c.tuan !== tuan) { luu('cs6', { tuan, kqCuoi: c.kqCuoi || null, yc: c.yc && Date.now() - c.yc.luc < 30 * 60000 ? c.yc : null }); return false; }
+    // yêu cầu bấm tay quá 30 phút chưa làm được → huỷ, báo
+    if (c.yc && Date.now() - c.yc.luc > 30 * 60000 && !c.chay) { luuCS((x) => { x.yc = null; }); ghi('Chỉ số tuần: yêu cầu bấm tay quá 30 phút chưa làm được (script bận) → huỷ'); thongBaoMay('Chưa xem được chỉ số tuần', 'Script bận quá 30 phút nên đã huỷ yêu cầu — bấm lại nếu vẫn cần.'); return false; }
+    const tuDongDenGio = now.getDay() === 5 && mm >= docGio(CS.TU) && !c.guiLuc && !c.het;
+    // 9:30 thứ 6 chưa gửi được → báo nhóm lỗi 1 lần rồi thôi (chỉ phần tự động; bấm tay vẫn làm được)
+    if (now.getDay() === 5 && mm >= docGio(CS.DEN) && !c.guiLuc && !c.het) {
+      const ban = c.lyDo && !/^lỗi/.test(c.lyDo) ? c.lyDo : lyDoBanCS(); const ly = [c.loiDem ? `đã thử ${c.loiDem} lần chưa đọc/gửi được (lỗi cuối: ${c.loiCuoi || c.lyDo || 'không rõ'})` : '', ban && !c.loiDem ? 'script bận: ' + ban : ''].filter(Boolean).join('; ') || 'không rõ';
+      luuCS((x) => { x.het = Date.now(); if (x.chay && x.chay.loai === 'tudong') x.chay = null; });
+      await guiChuLoiCS(`Tuần này không gửi được báo cáo chỉ số fb kênh 1, lý do: ${ly}`);
+      if (dangOTrangCS() && !lay('dang_do', null)) { datKenh(1); veTrang(); }
+      return false;
+    }
+    if (tuDongDenGio && !c.yc && !c.chay && !hookCS().kq) { if (c.lyDo !== 'chưa cài link NHÓM KẾT QUẢ (nút 🔑 Cài nhóm Lark)') { luuCS((x) => { x.lyDo = 'chưa cài link NHÓM KẾT QUẢ (nút 🔑 Cài nhóm Lark)'; }); ghi('Chỉ số tuần: chưa cài link NHÓM KẾT QUẢ → chưa xem chỉ số (bấm 🔑 Cài nhóm Lark ở tab Chỉ số tuần)'); } return false; } // (6.20) chưa có nơi gửi thì không mở trang vô ích
+    const viec = c.chay || (c.yc ? { loai: c.yc.loai, buoc: 0, kq: {}, batDau: Date.now() } : (tuDongDenGio && !(c.cho && Date.now() < c.cho) ? { loai: 'tudong', buoc: 0, kq: {}, batDau: Date.now() } : null));
+    if (!viec) return false;
+    const ly = lyDoBanCS();
+    if (ly) {
+      luuCS((x) => { x.lyDo = ly; });
+      if (/bị ẩn/.test(ly) && Date.now() - (window.__csAn || 0) > 15 * 60000) { window.__csAn = Date.now(); thongBaoMay('Đến giờ xem chỉ số tuần fb kênh 1 — cần mở tab Facebook', 'Tab Facebook đang bị che/thu nhỏ. Mở cửa sổ Facebook lên là script làm ngay.'); }
+      if (dangOTrangCS() && /sắp tới giờ|làm việc chính/.test(ly) && !lay('dang_do', null)) { datKenh(1); ghi('Chỉ số tuần: tạm dừng để nhường việc chính → về trang kênh 1'); veTrang(); return true; }
+      return false;
+    }
+    if (!c.chay) { luuCS((x) => { x.chay = viec; if (x.yc) x.yc = null; x.lyDo = ''; }); ghi(`Chỉ số tuần: bắt đầu xem chỉ số (${viec.loai === 'tudong' ? 'tự động thứ 6' : viec.loai === 'soan' ? 'Soạn thử' : viec.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay'})`); }
+    if (Date.now() - (viec.batDau || Date.now()) > 20 * 60000) return loiCS(viec, 'quá 20 phút chưa xem xong 6 trang');
+    datKenh(1);
+    // bước 0: đúng tư cách page kênh 1 (giống trước mỗi lần đăng bài: menu tài khoản / nút Chuyển ngay)
+    if (viec.buoc === 0) {
+      if (hdChay) hdChay.chi = 'Chỉ số tuần: kiểm tra tư cách page kênh 1';
+      let ok = false;
+      try { ok = await damBaoTuCach(); } catch (e) { return loiCS(viec, 'sai tư cách page: ' + e.message); }
+      if (!ok) return true; // đang chuyển tư cách → trang tải lại, lượt sau làm tiếp
+      luuCS((x) => { x.chay.buoc = 1; }); viec.buoc = 1;
+    }
+    const b = CS.BUOC[viec.buoc - 1];
+    if (!dungTrangCS(b)) { if (hdChay) hdChay.chi = `Chỉ số tuần ${viec.buoc}/6: mở trang ${b.ten}`; ghi(`Chỉ số tuần ${viec.buoc}/6: mở trang ${b.ten}`); await sleep(500); roiTrang(linkCS(b)); return true; }
+    if (hdChay) hdChay.chi = `Chỉ số tuần ${viec.buoc}/6: đọc ${b.ten}`;
+    let kq = null; const het = Date.now() + 25000;
+    while (Date.now() < het) { kq = docTrangCS(b); if (kq) break; await sleepThat(1000); if (lyDoBanCS()) return false; }
+    if (!kq) {
+      if (!viec.f5) { luuCS((x) => { x.chay.f5 = 1; }); ghi(`Chỉ số tuần: ${b.ten} chưa hiện đủ số → tải lại trang`); roiTrang(linkCS(b)); return true; }
+      return loiCS(viec, `không đọc được ${b.ten}`);
+    }
+    luuCS((x) => { x.chay.kq[b.ky + b.trang] = kq; x.chay.buoc++; x.chay.f5 = 0; });
+    ghi(`Chỉ số tuần ${viec.buoc}/6: ${b.ten} = ${fmtSo(kq.so)}${kq.pct ? ' ' + fmtPct(kq.pct) : ''} (${kq.ngay.tu}–${kq.ngay.den})`);
+    if (viec.buoc < 6) { const b2 = CS.BUOC[viec.buoc]; await sleep(800); roiTrang(linkCS(b2)); return true; }
+    return await xongCS();
+  }
+  async function loiCS(viec, loi) {
+    const c = luuCS((x) => { x.lan = (x.lan || 0) + 1; x.loiDem = (x.loiDem || 0) + 1; x.loiCuoi = loi; x.lyDo = 'lỗi: ' + loi; x.cho = Date.now() + CS.CHO_LOI_PHUT * 60000; if (x.chay) { x.chay.buoc = 0; x.chay.f5 = 0; x.chay.batDau = Date.now() + CS.CHO_LOI_PHUT * 60000; } if (x.chay && x.chay.loai !== 'tudong') { x.kqLoi = { loai: x.chay.loai, loi, luc: Date.now() }; x.chay = null; } else if (x.chay) { x.chay = null; } });
+    ghi(`Chỉ số tuần: lỗi (lần ${c.loiDem}) — ${loi} → ${viec.loai === 'tudong' ? CS.CHO_LOI_PHUT + ' phút sau thử lại' : 'dừng (việc bấm tay)'}`);
+    if (viec.loai === 'tudong' && c.loiDem >= CS.BAO_SAU_LOI && !c.bao10) {
+      luuCS((x) => { x.bao10 = Date.now(); });
+      const thieu = CS.BUOC.filter((b) => !(viec.kq && viec.kq[b.ky + b.trang])).map((b) => b.ten).join(', ');
+      await guiChuLoiCS(`${CS.TIEU_DE}: đã thử ${c.loiDem} lần vẫn chưa đọc được (lỗi cuối: ${loi}) — thiếu: ${thieu || 'không rõ'}. Script vẫn thử tiếp 5 phút/lần tới ${CS.DEN}.`);
+    }
+    if (dangOTrangCS() && !lay('dang_do', null)) { datKenh(1); veTrang(); }
+    return true;
+  }
+  async function xongCS() {
+    const c = csTT(); const viec = c.chay; const kq = viec.kq;
+    luuCS((x) => { x.kqCuoi = { kq, luc: Date.now(), loai: viec.loai }; x.chay = null; });
+    let thongBao = '';
+    try {
+      if (viec.loai === 'soan') thongBao = 'Soạn thử xong (không gửi Lark)';
+      else if (viec.loai === 'thu') { const kieu = await guiHookCS('loi', kq, true); thongBao = `Đã gửi thử vào NHÓM LỖI (dạng ${kieu})`; }
+      else { // tự động / Gửi ngay → NHÓM KẾT QUẢ (1 lần / tuần)
+        const c2 = csTT();
+        if (viec.loai === 'tudong' && c2.guiLuc) thongBao = 'Tuần này đã gửi rồi → không gửi lại';
+        else { const kieu = await guiHookCS('kq', kq, false); luuCS((x) => { x.guiLuc = Date.now(); x.guiLoai = viec.loai; x.lyDo = ''; }); thongBao = `Đã gửi báo cáo chính thức vào NHÓM KẾT QUẢ (dạng ${kieu})`; }
+      }
+      ghi('Chỉ số tuần: ' + thongBao + ' — ' + noiDungCS(kq, false, false).replace(/\n/g, ' · '));
+      nhacNho('Chỉ số tuần: ' + thongBao);
+    } catch (e) {
+      ghi('Chỉ số tuần: gửi Lark chưa được — ' + e.message);
+      if (viec.loai === 'tudong') { luuCS((x) => { x.cho = Date.now() + CS.CHO_LOI_PHUT * 60000; x.lyDo = 'lỗi gửi Lark: ' + e.message; x.loiDem = (x.loiDem || 0) + 1; }); }
+      else { luuCS((x) => { x.kqLoi = { loai: viec.loai, loi: 'gửi Lark: ' + e.message, luc: Date.now() }; }); nhacNho('Chỉ số tuần: gửi chưa được — ' + e.message, 'vang', 8000); }
+    }
+    datKenh(1); if (!lay('dang_do', null)) veTrang();
+    return true;
+  }
+  // ---------- popup: tab "Chỉ số tuần" ----------
+  function trangThaiCS() {
+    const c = csTT(); const now = new Date();
+    if (c.chay) return `⏳ Đang xem chỉ số: bước ${Math.max(1, c.chay.buoc)}/6${c.chay.buoc ? ' — ' + CS.BUOC[Math.max(0, c.chay.buoc - 1)].ten : ' — kiểm tra tư cách page'} (${c.chay.loai === 'tudong' ? 'tự động' : c.chay.loai === 'soan' ? 'Soạn thử' : c.chay.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay'})`;
+    if (c.yc) return `⏳ Đang chờ script rảnh để ${c.yc.loai === 'soan' ? 'soạn thử' : c.yc.loai === 'thu' ? 'gửi thử' : 'gửi ngay'}${c.lyDo ? ' — ' + c.lyDo : ''}`;
+    if (c.guiLuc) return `✅ Tuần này đã gửi lúc ${gioStr(new Date(c.guiLuc))} ${ngayStr(new Date(c.guiLuc)).slice(0, 5).replace('-', '/')}${c.guiLoai === 'ngay' ? ' (bấm Gửi ngay)' : ''}`;
+    if (c.het) return `❌ Tuần này không gửi được (đã báo nhóm lỗi lúc ${gioStr(new Date(c.het))})${c.lyDo ? ' — ' + c.lyDo : ''}`;
+    if (now.getDay() === 5 && phutTrongNgay(now) >= docGio(CS.TU)) return `⏳ ${c.loiDem ? `Đã thử ${c.loiDem} lần (lỗi: ${c.loiCuoi || ''}) — thử lại lúc ${c.cho ? gioStr(new Date(c.cho)) : 'sớm'}` : 'Đang chờ script rảnh'}${c.lyDo && !c.loiDem ? ' — ' + c.lyDo : ''}`;
+    return `Chưa tới giờ — tự chạy thứ 6 (${tuanCS().slice(0, 5).replace('-', '/')}) từ ${CS.TU}, chậm nhất ${CS.DEN}`;
+  }
+  function tabChiSo() {
+    const c = csTT(); const h = hookCS(); const k = c.kqCuoi;
+    const o = (x) => (x ? `<b>${fmtSo(x.so)}</b> ${fmtPct(x.pct) ? `<span style="color:${x.pct.dau === '-' ? 'var(--do-chu,#d93a3a)' : x.pct.dau === '+' ? '#2e9d57' : 'inherit'}">${esc(fmtPct(x.pct))}</span>` : ''}` : '<span class="mo">—</span>');
+    const ng = (ky) => { const x = k && (k.kq[ky + 'views'] || k.kq[ky + 'messaging'] || k.kq[ky + 'audience']); return x ? `${ngayNgan(x.ngay.tu)}–${ngayNgan(x.ngay.den)}` : ''; };
+    const bang = k ? `<table style="width:100%;border-collapse:collapse;margin:6px 0"><tr><th style="text-align:left;padding:4px"></th><th style="text-align:left;padding:4px">7 ngày <span class="mo">${ng('7D')}</span></th><th style="text-align:left;padding:4px">28 ngày <span class="mo">${ng('28D')}</span></th></tr>${[['views', '👁 Lượt xem'], ['messaging', '💬 Người liên hệ nhắn tin'], ['audience', '👥 Người theo dõi thực']].map(([t, ten]) => `<tr style="border-top:1px solid var(--vien,#ddd)"><td style="padding:4px">${ten}</td><td style="padding:4px">${o(k.kq['7D' + t])}</td><td style="padding:4px">${o(k.kq['28D' + t])}</td></tr>`).join('')}</table><div class="mo">Kiểm lúc ${gioStr(new Date(k.luc))} ${ngayStr(new Date(k.luc)).slice(0, 5).replace('-', '/')} (${k.loai === 'tudong' ? 'tự động' : k.loai === 'soan' ? 'Soạn thử' : k.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay'})</div>` : '<div class="mo">Chưa có lần kiểm nào.</div>';
+    const ban = !!(c.chay || c.yc);
+    const nut = (a, chu, chinh) => `<button class="nut${chinh ? ' chinh' : ''}" data-a="${a}" ${ban || !LA_CAO ? 'disabled' : ''}>${chu}</button>`;
+    return `<div class="the-nd"><h4>📊 Báo cáo chỉ số tuần fb kênh 1 <span class="mo">(${esc(CAI_DAT.KENH[1].ngan)} · chỉ Máy Cao · phần phụ, nhường việc chính)</span></h4>
+      <div class="ghichu" style="margin:6px 0"><b>Tuần này:</b> ${esc(trangThaiCS())}</div>
+      ${c.kqLoi ? `<div class="mo" style="color:var(--do-chu,#d93a3a)">Lần bấm tay gần nhất (${esc(c.kqLoi.loai === 'soan' ? 'Soạn thử' : c.kqLoi.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay')} lúc ${gioStr(new Date(c.kqLoi.luc))}): ${esc(c.kqLoi.loi)}</div>` : ''}
+      ${bang}
+      <div class="hang" style="margin-top:8px">${nut('cs_soan', '✎ Soạn thử')}${nut('cs_thu', '🧪 Gửi thử (nhóm lỗi)')}${nut('cs_ngay', '📤 Gửi ngay (nhóm kết quả)', true)}</div>
+      <div class="mo">Soạn thử: chỉ hiện ở đây, không gửi Lark · Gửi thử: gửi vào NHÓM LỖI, không tính là đã gửi tuần này · Gửi ngay: gửi báo cáo chính thức vào NHÓM KẾT QUẢ (tính là đã gửi tuần này). Cả 3 nút đều chờ script rảnh (≥ ${CS.RANH_PHUT} phút trước bài kế tiếp) rồi mới mở trang chỉ số.</div>
+      <div class="hang" style="margin-top:8px"><span>Nhóm Lark: <b>Kết quả</b> ${h.kq ? '🟢 đã cài' : '🔴 chưa cài'} · <b>Lỗi</b> ${h.loi ? '🟢 đã cài' : '🔴 chưa cài'}</span><button class="nut nho" data-a="cs_hook">🔑 Cài nhóm Lark</button></div>
+      <div class="mo">Lịch tự động: thứ 6 từ ${CS.TU}, khi script rảnh; lỗi thì ${CS.CHO_LOI_PHUT} phút thử lại, ${CS.BAO_SAU_LOI} lần lỗi báo nhóm lỗi; ${CS.DEN} chưa gửi được thì báo nhóm lỗi rồi thôi. Máy tắt / Chrome đóng thì không chạy được.</div></div>`;
+  }
+  async function bamChiSo(hd) { // nút trong tab Chỉ số tuần
+    if (hd === 'cs_hook') {
+      const kq = prompt('Dán link NHÓM KẾT QUẢ (chỉ nhận báo cáo chính thức mỗi tuần):\n(để trống = giữ link đang có)'); if (kq == null) return;
+      const loi = prompt('Dán link NHÓM LỖI (nhận tin lỗi + tin gửi thử):\n(để trống = giữ link đang có)'); if (loi == null) return;
+      const b = Object.assign({}, lay('bimat6', null) || {}); const k1 = kq.trim() || b.csKQ || '', l1 = loi.trim() || b.csLoi || '';
+      if ((k1 && !LINK_HOOK_RE.test(k1)) || (l1 && !LINK_HOOK_RE.test(l1))) { alert('Link không đúng dạng (phải bắt đầu bằng https://open.larksuite.com/open-apis/bot/v2/hook/...). Cao copy lại giúp nhé.'); return; }
+      if (k1 && k1 === l1) { alert('2 link đang giống nhau — nhóm kết quả và nhóm lỗi phải là 2 nhóm khác nhau.'); return; }
+      b.csKQ = k1; b.csLoi = l1; luu('bimat6', b); ghi('Chỉ số tuần: đã cài link nhóm Lark (kết quả ' + (k1 ? 'có' : 'chưa') + ', lỗi ' + (l1 ? 'có' : 'chưa') + ')'); nhacNho('Đã lưu link nhóm Lark cho báo cáo chỉ số tuần'); veBangNgay(); return;
+    }
+    if (!LA_CAO) { alert('Báo cáo chỉ số tuần chỉ chạy trên Máy Cao.'); return; }
+    const loai = hd === 'cs_soan' ? 'soan' : hd === 'cs_thu' ? 'thu' : 'ngay';
+    const h = hookCS();
+    if (loai === 'thu' && !h.loi) { alert('Chưa cài link NHÓM LỖI — bấm 🔑 Cài nhóm Lark trước.'); return; }
+    if (loai === 'ngay' && !h.kq) { alert('Chưa cài link NHÓM KẾT QUẢ — bấm 🔑 Cài nhóm Lark trước.'); return; }
+    const c = csTT();
+    if (loai === 'ngay' && c.tuan === tuanCS() && c.guiLuc && !confirm(`Tuần này đã gửi báo cáo lúc ${gioStr(new Date(c.guiLuc))}. Vẫn gửi thêm 1 báo cáo chính thức nữa vào NHÓM KẾT QUẢ?`)) return;
+    luuCS((x) => { if (x.tuan !== tuanCS()) { x.tuan = tuanCS(); } x.yc = { loai, luc: Date.now() }; x.kqLoi = null; });
+    ghi(`Bấm ${loai === 'soan' ? 'Soạn thử' : loai === 'thu' ? 'Gửi thử' : 'Gửi ngay'} chỉ số tuần`);
+    nhacNho(lyDoBanCS() ? `Đã nhận — chờ script rảnh (${lyDoBanCS()})` : 'Đã nhận — bắt đầu xem chỉ số');
+    veBangNgay(); setTimeout(nhip, 300);
+  }
 
   // =====================================================================
   //  KHỞI ĐỘNG
