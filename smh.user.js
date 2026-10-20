@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.26.6';
+  const PHIEN_BAN = '6.26.7';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -2018,6 +2018,8 @@
       luu('dang_do', dd);
       if (!(await cho(() => timBai(dd.bai), 20000, 1000))) { ghi('Sau khi sửa nền chưa thấy ô bình luận → tải lại trang'); roiTrang(); return true; }
     }
+    { const conSua = () => !!(gocSuaNen() || hopCaiDatNen() || dangODuongSua()); // (6.26.7) sửa nền và comment không bao giờ chạy chồng nhau
+      if (conSua()) { ghi('Màn sửa bài còn mở → đóng hẳn trước khi comment'); dongHopSua(); await cho(() => !conSua(), 12000, 500); if (conSua()) { ghi('Chưa đóng được màn sửa bài → tải lại trang rồi mới comment'); luu('dang_do', dd); roiTrang(); return true; } await sleep(1500); } }
     // trang vừa tải lại giữa lúc đang gửi 1 comment → hỏi API xem comment đó lên chưa, KHÔNG tự gửi lại
     if (dd.dangGui != null && dd.dangGui === dd.cmtIdx) {
       const it = dd.cmts[dd.cmtIdx];
@@ -2895,6 +2897,7 @@
       const khac = L.find((x) => x.k !== it.k && sanSang(x) && Date.now() >= Math.max(lucPhut(x.gioKH), lucBuKenh(L, x)));
       if (khac) { if (Math.max(it.r.thuLai || 0, it.r.choDen || 0) - Date.now() > 60000 && !window['__vuot_' + khac.k]) { window['__vuot_' + khac.k] = 1; ghi(`${it.ten} đang chờ tới ${gioStr(new Date(Math.max(it.r.thuLai || 0, it.r.choDen || 0)))} → đăng ${khac.ten} trước (không để bài lỗi chặn các bài khác)`); } it = Object.assign({}, khac, { den: Math.max(lucPhut(khac.gioKH), lucBuKenh(L, khac)) }); }
     }
+    { const tp = lay('dang_tiep6', null); if (!epIt && tp && Date.now() - (tp.t || 0) < 6 * 60000 && tp.k !== it.k) { const x = L.find((y) => y.k === tp.k && sanSang(y) && Date.now() >= Math.max(lucPhut(y.gioKH), lucBuKenh(L, y))); if (x) { if (!window['__tiep_' + x.k]) { window['__tiep_' + x.k] = 1; ghi(`Làm tiếp ${x.ten} (vừa chuyển tư cách cho bài này) trước ${it.ten}`); } it = Object.assign({}, x, { den: Math.max(lucPhut(x.gioKH), lucBuKenh(L, x)) }); } } }
     if (!it.den) it.den = Date.now();
     datKenh(it.kenh); // (6.19) mọi bước sau (tư cách, đúng trang, dò bài qua Facebook) theo kênh của bài này
     const now = Date.now(), ngay = homNay(), mm = phutTrongNgay(new Date());
@@ -3084,7 +3087,8 @@
         for (let i = 0; i < 10 && !k; i++) { window.scrollBy(0, 1000); await sleep(1500); k = timK(); if (!k) ghi(`${it.ten}: chưa thấy bài, cuộn tìm tiếp (${i + 1}/10)…`); }
         if (!k) { window.scrollTo(0, 0); ghiSua({ suaLan: (r.suaLan || 0) + 1, suaHen: now + (laKenhPhu ? 3 : 10) * 60000, suaLoi: 'chưa thấy bài trên trang' }); ghi(`${laKenhPhu ? 'Thả cảm xúc' : 'Gắn thẻ + cảm xúc'} ${it.ten}: chưa thấy bài trên trang (lần ${(r.suaLan || 0) + 1}/${toiDaSua}) → ${(r.suaLan || 0) + 1 >= toiDaSua ? 'thôi' : 'thử lại sau'}`); return; }
         const dg = baiDaGan(k);
-        if (dg.du || (laKenhPhu && dg.cx)) { ghiSua({ suaXong: Date.now(), suaLoi: '' }); ghi(`${it.ten}: đã có ${laKenhPhu ? 'cảm xúc' : 'thẻ ' + CAI_DAT.TAG_TEN + ' + cảm xúc'} trên bài → không cần sửa`); return; }
+        const tuGan = !laKenhPhu && (it.kenh || 1) > 1 && chuanTen(CAI_DAT.TAG_TEN) === chuanTen(CAI_DAT.TEN_TRANG);
+        if (dg.du || ((laKenhPhu || (tuGan && r.suaDaLuu)) && dg.cx)) { ghiSua({ suaXong: Date.now(), suaLoi: '' }); ghi(`${it.ten}: đã có ${laKenhPhu ? 'cảm xúc' : 'thẻ ' + CAI_DAT.TAG_TEN + ' + cảm xúc'} trên bài → không cần sửa`); return; }
         if ((r.suaLan || 0) >= 1 && r.suaDaLuu) ghi(`${it.ten}: lần trước đã Lưu nhưng trên bài chưa hiện đủ thẻ/cảm xúc → làm lại`);
         ghi(`Bắt đầu gắn thẻ "${CAI_DAT.TAG_TEN}" + cảm xúc cho ${it.ten}`);
         const d = await moManHinhSua(k, text);
@@ -3170,6 +3174,7 @@
     const choTay = (them) => { if (!mai && !chanLark()) ghiO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA, `KHOA|${homNay()}|${it.k}|${MAY}|${Date.now()}`).catch(() => {}); // (6.19.3) đang soạn sẵn chờ người bấm Đăng → giữ chỗ để máy kia không đăng thay
       capNhatTT((s) => { const x = ttSlot(s, it.k); if (x.tt === 'dang') x.tt = 'cho'; x.ep = 0; x.soan = false; x.daSoan = Date.now(); x.thuLai = Date.now() + 60 * 60000; }, ngayTT); luu('cho_tay6', Object.assign({ slot: it.k, ten: it.ten + (mai ? ' (ngày mai)' : ''), loai: loaiSo[it.loai], text: nd.text, hang: nd.hang, cmts, luc: Date.now(), ngay, mai, soan: !chayThu() }, them)); thongBaoMay(`Đã soạn ${mai ? 'thử' : 'sẵn'} ${it.ten}${mai ? ' của ngày mai' : ''}`, mai ? 'Xem kỹ rồi bấm Huỷ / đóng hộp. Nếu bấm Đăng thì bài lên trang NGAY HÔM NAY và ngày mai không đăng lại.' : 'Kiểm tra rồi bấm Đăng. Sau khi đăng, script tự comment.'); };
     if (hdChay) hdChay.ten = `Đang ${thu ? 'soạn' : 'đăng'} ${it.ten}${mai ? ' (ngày mai)' : ''}`;
+    if (!mai) luu('dang_tiep6', { k: it.k, t: Date.now() });
     ghi(`Bắt đầu ${thu ? 'soạn' : 'đăng'} ${it.ten}${mai ? ' (bài của ngày mai, soạn thử)' : ''}${thu ? ' (dừng trước nút Đăng, chờ bạn bấm Đăng)' : ''}`);
     if (it.loai === 'b1' || it.loai === 'b2' || it.loai === 'b3') {
       const files = [];
@@ -3425,6 +3430,31 @@
         const cho = lay('ghij_cho6', []) || []; for (const dd of g.ds) if (!cho.some((x) => x.slot === dd.slot && x.ngay === dd.ngay)) cho.push(Object.assign({}, dd, { lan: 0, luc: Date.now() - 9 * 60000 })); luu('ghij_cho6', cho);
       }
     }
+    return true;
+  }
+  // (6.26.7) tab "Bài viết kênh 1" cột G (Trạng thái): hàng nào cả 3 bài đã lên trang → ghi "Đã đăng" (cùng các mốc ghi gom 13:40 / 18:40 / 22:40; Máy Cao trễ 20 phút để Máy Giao ghi trước)
+  async function ghiTTBai(ep) {
+    if (!MAY || chanLark()) return false;
+    const mm = phutTrongNgay(new Date()); const ngay = homNay(); const lech = LA_GIAO ? 0 : 20; const st = lay('gomb6_' + ngay, {}) || {};
+    const moc = MOC_GOM.filter((g) => mm >= docGio(g) + lech && !st[g]).pop(); if (!ep && !moc) return false;
+    MOC_GOM.forEach((g) => { if (mm >= docGio(g) + lech) st[g] = Date.now(); }); luu('gomb6_' + ngay, st);
+    const d = duLieu(); const n = d && d.ngay && d.ngay[ngay]; if (!n) return false;
+    const s = trangThai(ngay); const nhom = {};
+    for (const it of LICH) {
+      if ((it.kenh || 1) !== 1 || !/^b[123]$/.test(it.loai)) continue;
+      const b = it.hangSo ? (n.bais || [])[it.hangSo] : n.bai; if (!b || !b.hang) continue;
+      (nhom[b.hang] = nhom[b.hang] || { b, ds: [] }).ds.push(it);
+    }
+    const can = Object.values(nhom).filter((g) => !/đã đăng/i.test(g.b.trangThai || '') && g.ds.every((it) => { const r = s.s[it.k]; return r && XONG.includes(r.tt); }));
+    if (!can.length) return false;
+    const v = await docBang(CAI_DAT.TAB_BAI, 'A1:H3000'); const o = []; const xong = [];
+    for (const g of can) {
+      const r = v[g.b.hang - 1] || [];
+      if (ngayO(r[7]) !== ngay || khoaSo(chuO(r[1])).slice(0, 40) !== khoaSo(g.b.bai).slice(0, 40)) { ghi(`Bài viết kênh 1: dòng ${g.b.hang} đã đổi trong sheet → không ghi "Đã đăng"`); continue; }
+      if (/đã đăng/i.test(chuO(r[6]))) continue;
+      o.push(['G' + g.b.hang, 'Đã đăng']); xong.push(`dòng ${g.b.hang} (${g.ds.map((it) => it.ten).join(', ')})`);
+    }
+    if (o.length) { await ghiNhieuO(CAI_DAT.TAB_BAI, o); ghi(`Ghi tab Bài viết kênh 1: cột G "Đã đăng" cho ${xong.join('; ')}`); }
     return true;
   }
   async function ghiKetQuaVideoNgay(dd, laThuLai) {
@@ -4224,6 +4254,7 @@
     let duoc = 0; const hong = [];
     await ganCham(800); // ô thẻ vừa hiện: chờ Facebook sẵn sàng nhận chữ
     for (const the of dsThe) {
+      if (!duoc && hong.length >= 2) { ghi(`Gắn thẻ: 2 thẻ đầu đều không được nhận → bỏ ${dsThe.length - 2} thẻ còn lại cho nhanh`); break; }
       i++; bao(`Gắn thẻ ${i}/${dsThe.length}…`);
       const rong = () => { const x = ganO('Thêm thẻ'); return x && x.value === ''; };
       let xong = false;
@@ -5172,6 +5203,7 @@
       await theoDoi('doichieu', () => doiChieuSauDang()).catch((e) => ghi('Đối chiếu sau đăng lỗi: ' + e.message));
       datKenh(1);
       await ghiGomKetQua().catch((e) => ghi('Ghi gom kết quả lỗi: ' + e.message)); // (6.20.8)
+      await ghiTTBai().catch((e) => ghi('Ghi trạng thái tab Bài viết kênh 1 lỗi: ' + e.message)); // (6.26.7)
       await ghiBuKetQua().catch(() => {}); // (6.19.3) ghi bù "ĐÃ ĐĂNG" vào sheet cho các bài trước đó ghi lỗi
       await theoDoi('nhacsheet', () => nhacSheetMai()).catch((e) => ghi('Nhắc điền sheet lỗi: ' + e.message));
       // 8) tải sẵn đồ đăng (Máy Giao)

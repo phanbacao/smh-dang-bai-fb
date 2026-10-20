@@ -245,3 +245,12 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Mọi đếm ngược 3 giây (batDemNguoc luôn 3, DEM_NGUOC_GIAY 3).
 - Tư cách: mỗi lần tìm được ô bình luận ghi tên "Bình luận dưới tên …" vào dòng "Tư cách Facebook" (ghiTuCachO, 30 giây/lần) → bảng không còn hiện tên tư cách cũ của lần kiểm trước.
 - Sim: INIT.suaMoi / suaCu / suaCuCham; kịch bản suamoi, suacu, suacucham.
+
+## 6.26.7 (20/10/2026)
+- "Comment và sửa nền đỏ Bài 2 chạy cùng lúc": code chạy tuần tự (sửa nền xong mới comment), nhưng ở 6.26.5 sửa nền lỗi "không mở được hộp" trong khi hộp sửa THẬT đang mở (kiểu mới không có "Gỡ ảnh"/Aa lúc đầu), dongHopSua bắt nhầm hộp nhỏ aria-label "Chỉnh sửa bài viết" nên không đóng → thử 3 lần rồi comment khi hộp sửa vẫn mở. 6.26.6 đã sửa nhận hộp; 6.26.7 thêm chốt: trước khi comment nếu còn hộp/màn sửa (gocSuaNen / Cài đặt bài viết / /post/edit/) → đóng hẳn (chờ 12 giây), không đóng được → tải lại trang rồi mới comment.
+- Tab "Bài viết kênh 1" cột G (Trạng thái, danh sách "Đã đăng"/"Chưa đăng"): script trước giờ KHÔNG ghi cột này (19/10, 20/10 còn "Chưa đăng"). Nay ghiTTBai(): ở mốc gom 13:40 / 18:40 / 22:40 (Máy Cao trễ 20 phút), hàng nào cả 3 bài (theo LICH, kể cả hàng bài 4–6) đã lên trang → đọc lại tab (A:H) xác nhận đúng ngày + đúng chữ cột B → ghi G = "Đã đăng".
+- Nhật ký Máy Cao 20/10:
+  - Hà Xá gắn thẻ chính trang mình: Facebook KHÔNG hiện thẻ tự gắn trên bài (chỉ "đang cảm thấy …") → vongSuaVideo kiểm "chưa đủ" → làm lại 4 lần (08:11–08:28). Nay: thẻ = tên trang mình (tuGan), đã Lưu 1 lần + có cảm xúc → xong. Sim: fake không hiện thẻ tự gắn của Hà Xá.
+  - Kênh 2 · Video 1: 8 thẻ đều "không được nhận sau 3 cách" (mất 2 phút). Nay 2 thẻ đầu đều hỏng → bỏ các thẻ còn lại. (Chưa rõ nguyên nhân thẻ không nhận trên Máy Cao — cần xem thêm.)
+  - 07:06–07:08 Máy Cao nhận Kênh 3 · Video 1 → chuyển tư cách (trang tải lại) → sau khi tải lại lại chọn Hà Xá · Video 1 (giờ hẹn sớm hơn) → chuyển tư cách lần nữa; Kênh 3 bị bỏ dở (Máy Giao đăng 07:17). Nay: luu('dang_tiep6') lúc bắt đầu đăng; trong 6 phút sau, vongDang ưu tiên làm tiếp đúng bài đó.
+  - Máy Giao giữ chỗ Hà Xá · Video 1 lúc 06:30 / 06:52 / 06:58 nhưng không đăng (Máy Cao đăng thay 07:09) → cần nhật ký Máy Giao.
