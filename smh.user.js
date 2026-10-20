@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.26.7';
+  const PHIEN_BAN = '6.27';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -193,7 +193,8 @@
       'Sơn Mộc Hương trầm chuẩn giá chuẩn',
       'Kinh nghiệm mua vòng trầm hương lần đầu',
     ],
-    THE_VIDEO_K4: [], // (6.26) kênh Trầm Hương Hà Xá: mặc định không gắn thẻ (sửa ở tab Comment & Thẻ)
+    THE_VIDEO_K4: ['Nhang trầm hương sạch', 'Nhang trầm hương Hà Xá', 'Nhang sạch không hoá chất', 'Nhang trầm hương thật giả', 'Cách chọn nhang trầm hương', 'Nhang không tăm', 'Nụ trầm hương', 'Trầm Hương Hà Xá'], // (6.26.9) kênh Trầm Hương Hà Xá (sửa ở tab Comment & Thẻ)
+    THE_NHAC_NGAY: 7, // (6.26.9) bộ thẻ để quá 7 ngày chưa sửa / chưa xác nhận → nhắc kiểm tra
     CMT_HX: 'Trầm Hương Hà Xá - Trầm Của Người Việt\n• Zalo: 0774222448\n• Web: tramhuonghaxa.com\n• Bảo hành đổi trả trong 30 ngày', // (6.26) comment cố định kênh Hà Xá (mỗi ý 1 dòng)
     THE_VIDEO_K2: [
       'Trầm hương Thủ Đức',
@@ -259,7 +260,7 @@
         tab: 'em39qJ', tenTab: 'Kênh 2 Trầm Hương Thủ Đức', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=em39qJ', cot: { cap: 4, tt: 6, ngay: 7, video: 8, link: 9 } },
       3: { so: 3, ten: 'Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn', ngan: 'SMH Trầm Chuẩn', url: 'https://www.facebook.com/sonmochuongtramchuangiachuan/', duong: ['/sonmochuongtramchuangiachuan', '/61575413185162'], pageId: '',
         tab: '4OtbFA', tenTab: 'Kênh 3 Trầm Hương SMH', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=4OtbFA', cot: { cap: 3, tt: 6, ngay: 7, video: 8, link: 9 } },
-      4: { so: 4, ten: 'Trầm Hương Hà Xá', ngan: 'Trầm Hương Hà Xá', url: 'https://www.facebook.com/100092534930523', duong: ['/100092534930523'], pageId: '', hx: true, anSo: true, ganThe: true, tag: 'Trầm Hương Hà Xá', khongDuyet: true, // (6.26) thương hiệu khác: comment riêng, gắn thẻ chính trang, có video là đăng (không cần ĐÃ DUYỆT)
+      4: { so: 4, ten: 'Trầm Hương Hà Xá', ngan: 'Trầm Hương Hà Xá', url: 'https://www.facebook.com/100092534930523', duong: ['/100092534930523'], pageId: '', hx: true, anSo: true, viTri: { go: 'trầm hương hà xá', re: 'Hà Xá', ten: 'Trầm Hương HÀ XÁ' }, ganThe: true, tag: 'Trầm Hương Hà Xá', khongDuyet: true, // (6.26) thương hiệu khác: comment riêng, gắn thẻ chính trang, có video là đăng (không cần ĐÃ DUYỆT)
         tab: 'ZSDDld', tenTab: 'Kênh Trầm Hương Hà Xá', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=ZSDDld', cot: { cap: 4, tt: 7, ngay: 8, video: 9, link: 10 } },
     },
     KENH_CACH_PHUT: 30,        // kênh 2, 3: 2 video cùng 1 trang cách nhau ít nhất 30 phút
@@ -405,7 +406,7 @@
   // phần comment chính (bỏ khối "CTA:… Link:…" ở cuối) — dùng khi so comment trên trang, để comment cũ chưa có CTA vẫn tính là đủ
   // (6.10) lần thử lại (từ lần 2): bước phụ (nền đỏ, vị trí, thẻ, nhóm, hình thu nhỏ) lỗi thì BỎ QUA bước đó và vẫn đăng — ghi chú vào báo cáo
   const thuNhe = () => (window.__smhLan || 0) >= 1 || !!window.__smhNhe; // (6.19) kênh 2, 3: bước phụ lỗi luôn bỏ qua
-  function boQuaBuoc(ten, e) { (window.__smhBoQua = window.__smhBoQua || []).push(ten); ghi(`Bỏ qua bước ${ten} (${e && e.message ? e.message : 'lỗi'}) — đây là lần thử lại nên vẫn đăng bài, ghi chú vào báo cáo`); }
+  function boQuaBuoc(ten, e) { (window.__smhBoQua = window.__smhBoQua || []).push(ten); const ly = e && e.message ? e.message : 'lỗi'; ghi(`Bỏ qua bước ${ten} (${ly}) — đã thử các cách không được, vẫn đăng bài cho đúng giờ, ghi chú vào báo cáo`); try { const tv = window.__smhViecTen || 'bài đang đăng'; baoLoi(`⚠ ${tv} (${tenKenh(KENH_HT)}): bỏ bước ${ten} (${ly}) — bài vẫn đăng`, 'boqua_' + homNay() + '_' + tv + '_' + ten).catch(() => {}); } catch (e2) { /* */ } } // (6.26.9)
   function boCTA(t) { return String(t || '').split(/\n\s*CTA:/)[0]; }
   function ghi(msg) {
     const safe = anBiMat(msg);
@@ -2562,7 +2563,16 @@
   }
   const lucBuKenh = (L, x) => { const c = x.kenh || 1; const t = Math.max(0, ...L.filter((y) => y.xong && y.r.luc && (y.kenh || 1) === c).map((y) => y.r.luc)); return t ? t + (c > 1 ? CAI_DAT.KENH_CACH_PHUT : CAI_DAT.CACH_BU_PHUT) * 60000 : 0; };
   // trang đang mở thuộc kênh nào (0 = không phải trang nào trong 3 kênh)
-  const kenhCuaDuong = () => { const p = duongNay(); for (const c of KENH_ALL) if (CAI_DAT.KENH[c].duong.includes(p)) return c; return 0; };
+  const kenhCuaDuong = () => {
+    const p = duongNay(); for (const c of KENH_ALL) if (CAI_DAT.KENH[c].duong.includes(p)) return c;
+    if (p === '/profile.php') { // (6.26.9b) Facebook mở trang dạng /profile.php KHÔNG kèm mã trang (đang ở tư cách trang đó) → nhận kênh theo tên trang trên màn hình, rồi theo tư cách vừa kiểm
+      const tenTrenTrang = [...document.querySelectorAll('h1, h2')].map((x) => chuanTen(x.innerText || '')).filter(Boolean);
+      for (const c of KENH_ALL) if (tenTrenTrang.includes(chuanTen(CAI_DAT.KENH[c].ten))) return c;
+      const tc = String((lay('suc_khoe', {}) || {}).tuCach || '').replace(/\s*\(.*\)\s*$/, '');
+      for (const c of KENH_ALL) if (tc && chuanTen(tc) === chuanTen(CAI_DAT.KENH[c].ten)) return c;
+    }
+    return 0;
+  };
   // video kênh 2, 3 vừa đăng (≤ 12 phút) còn chờ thả cảm xúc trên trang đang mở → đừng chuyển sang trang khác vội
   function coSuaKenhCho(c) {
     if (!c || c === 1 || !CAI_DAT.SUA_VIDEO_SAU_DANG) return false; const s = trangThai(); const now = Date.now();
@@ -2678,7 +2688,7 @@
   // ---- (6.11) kho thẻ: video / manifest — mỗi bài bốc 8 thẻ, các bài cùng loại trong ngày lấy bộ khác nhau ----
   function khoThe() {
     const c = lay('the6', null) || {}; const sach = (a, md) => (Array.isArray(a) ? a.map((x) => String(x).trim()).filter(Boolean) : md.slice());
-    return { video: sach(c.video, CAI_DAT.THE_VIDEO), video2: sach(c.video2, CAI_DAT.THE_VIDEO_K2), video3: sach(c.video3, CAI_DAT.THE_VIDEO_K3), video4: sach(c.video4, CAI_DAT.THE_VIDEO_K4), manifest: sach(c.manifest, CAI_DAT.THE_MANIFEST), luc: c.luc || 0, may: c.may || '' }; // (6.19.3) mỗi kênh 1 kho thẻ video
+    return { video: sach(c.video, CAI_DAT.THE_VIDEO), video2: sach(c.video2, CAI_DAT.THE_VIDEO_K2), video3: sach(c.video3, CAI_DAT.THE_VIDEO_K3), video4: (() => { const v = sach(c.video4, CAI_DAT.THE_VIDEO_K4); return v.length ? v : CAI_DAT.THE_VIDEO_K4.slice(); })(), manifest: sach(c.manifest, CAI_DAT.THE_MANIFEST), luc: c.luc || 0, may: c.may || '' }; // (6.19.3) mỗi kênh 1 kho thẻ video
   }
   function chonThe(loai, so, ngay = homNay(), kho, kenh = 1) {
     kenh = +kenh || 1; const K = kho || khoThe();
@@ -2687,6 +2697,10 @@
     const r = soNgau(seed); const thu = ds.map((x, i) => [r(), i]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
     const out = []; for (let j = 0; j < n; j++) out.push(ds[thu[((so || 0) * n + j) % thu.length]]);
     return [...new Set(out)];
+  }
+  function hanKiemThe() { // (6.26.9) → { luc: lần sửa / xác nhận gần nhất, qua: số ngày, den: true nếu đến hạn }
+    let luc = khoThe().luc || 0; if (!luc) { luc = lay('the6_bd', 0); if (!luc) { luc = Date.now(); luu('the6_bd', luc); } }
+    const qua = Math.floor((Date.now() - luc) / 864e5); return { luc, qua, den: qua >= (CAI_DAT.THE_NHAC_NGAY || 7) };
   }
   async function luuKhoThe(c) {
     const moi = { video: c.video, video2: c.video2 || [], video3: c.video3 || [], video4: c.video4 || [], manifest: c.manifest, luc: Date.now(), may: MAY };
@@ -2698,7 +2712,7 @@
     try {
       const t = chuO(san !== undefined ? san : await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_THE)).trim(); if (!t || t[0] !== '{') return false;
       const z = JSON.parse(t); const cu = lay('the6', null) || {}; luu('the6_dongbo', Date.now());
-      if ((z.luc || 0) > (cu.luc || 0) && JSON.stringify([z.video, z.manifest, z.video2, z.video3, z.video4]) !== JSON.stringify([cu.video, cu.manifest, cu.video2, cu.video3, cu.video4])) { luu('the6', z); ghi(`Cập nhật kho thẻ từ sheet (bản lưu lúc ${gioStr(new Date(z.luc))})`); return true; }
+      if ((z.luc || 0) > (cu.luc || 0)) { const khac = JSON.stringify([z.video, z.manifest, z.video2, z.video3, z.video4]) !== JSON.stringify([cu.video, cu.manifest, cu.video2, cu.video3, cu.video4]); luu('the6', z); if (khac) ghi(`Cập nhật kho thẻ từ sheet (bản lưu lúc ${gioStr(new Date(z.luc))})`); return khac; } // (6.26.9) bấm Xác nhận ở máy kia cũng cập nhật mốc kiểm tra
     } catch (e) { /* */ }
     return false;
   }
@@ -2780,8 +2794,9 @@
         for (const r of Object.values(s.s)) if (r && r.id && r.theoThuTu) dungBai(daDung, r);
         const chuaDung = (p) => !daDung.has(p.id) && !(p.link && daDung.has('L:' + linkGon(p.link)));
         const mmNow = phutTrongNgay(new Date());
-        const conMf = homNayDs.filter((p) => chuaDung(p) && !giu(p) && /#manifest/i.test(p.text || '')).sort((a, b) => a.luc - b.luc);
-        const conVd = homNayDs.filter((p) => chuaDung(p) && !giu(p) && !/#manifest/i.test(p.text || '') && laVideoApi(p) === true).sort((a, b) => a.luc - b.luc);
+        const khopSheet = (p) => (s.boTT || []).includes(p.id) || LK.some((x) => { try { const t = noiDungSlot(ngay, x.k, d).text; return !!(t && baiGiongNhat([p], t)); } catch (e) { return false; } }); // (6.26.8)
+        const conMf = homNayDs.filter((p) => chuaDung(p) && !giu(p) && !khopSheet(p) && /#manifest/i.test(p.text || '')).sort((a, b) => a.luc - b.luc);
+        const conVd = homNayDs.filter((p) => chuaDung(p) && !giu(p) && !khopSheet(p) && !/#manifest/i.test(p.text || '') && laVideoApi(p) === true).sort((a, b) => a.luc - b.luc);
         for (const it of (KC === 1 ? LK : [])) { // (6.19.2) kênh 2, 3: chỉ nhận bài khớp chữ (không gán video lạ theo thứ tự)
           if (it.loai !== 'manifest' && it.loai !== 'video') continue;
           const r = ttSlot(s, it.k); if (XONG.includes(r.tt) || r.tt === 'dang' || (dd && dd.slot === it.k)) continue;
@@ -2791,6 +2806,7 @@
           const ng = s.ngoai[p.id]; if (ng) { Object.assign(r, { kiem: ng.kiem || [], cmtOk: ng.cmtOk, guiBu: ng.guiBu, kiem19: ng.kiem19 }); delete s.ngoai[p.id]; }
           s.s[it.k] = Object.assign(r, { tt: 'xong', luc: p.luc, id: p.id, link: p.link || '', may: 'khac', kiem: r.kiem || [], can: r.can || canCmt(it, noiDungSlot(ngay, it.k, d)), lyDo: '', loi: '', theoThuTu: true });
           moi.push(`${it.ten} (đăng tay lúc ${gioStr(new Date(p.luc))}, nhận theo thứ tự)`);
+          { const it0 = it, p0 = p; setTimeout(() => { baoLoi(`⚠ ${it0.ten}: thấy 1 ${it0.loai === 'manifest' ? 'manifest' : 'video'} đăng lúc ${gioStr(new Date(p0.luc))} có chữ KHÁC sheet → script tạm coi đó là ${it0.ten} nên sẽ KHÔNG đăng dòng ${it0.ten} trong sheet. Nếu không phải: bấm ${it0.ten} trên bảng → «↺ Không phải bài này»${p0.link ? ' — bài đó: ' + p0.link : ''}`, 'theothutu_' + homNay() + '_' + it0.k).catch(() => {}); }, 0); }
         }
         if (KC !== 1) return; // bài đăng tay ngoài lịch: chỉ theo dõi ở kênh 1
         for (const kg of Object.keys(s.ngoai)) { const g = s.ngoai[kg]; if (g.giu && !g.id) { const p = homNayDs.find((q) => !daDung.has(q.id) && baiGiongNhat([q], g.text)); if (p) { delete s.ngoai[kg]; s.ngoai[p.id] = Object.assign(g, { id: p.id, link: p.link || g.link, luc: p.luc }); daDung.add(p.id); } } }
@@ -3200,8 +3216,9 @@
     if (hopDangDo() || hopSoanBai() || ganManHinh()) { ghi('Có hộp đăng bài mở dở → đóng lại'); if (!(await dongHopSoan()) || ganManHinh()) { await dongHopVideo(); if (ganManHinh() || hopSoanBai()) { luiCho(); roiTrang(); return; } } }
     window.__smhThe = chonThe(it.loai, it.so, ngayTT, null, it.kenh || 1); // (6.19.3) thẻ theo kênh
     window.__smhTheDuoc = 0;
-    { const kc = CAI_DAT.KENH[it.kenh || 1] || {}; window.__smhBoViTri = !!kc.hx; window.__smhBoThe = !!kc.hx && !window.__smhThe.length; } // (6.26) kênh Hà Xá: không gắn vị trí Sơn Mộc Hương; kho thẻ trống thì bỏ bước thẻ
-    window.__smhNhe = (it.kenh || 1) > 1; // (6.19) kênh 2, 3: vị trí / thẻ / nhóm / hình thu nhỏ lỗi → bỏ qua bước đó, vẫn đăng (đăng bài mới là chính)
+    { const kc = CAI_DAT.KENH[it.kenh || 1] || {}; window.__smhBoViTri = false; window.__smhBoThe = !!kc.hx && !window.__smhThe.length; } // (6.26) kênh Hà Xá: không gắn vị trí Sơn Mộc Hương; kho thẻ trống thì bỏ bước thẻ
+    window.__smhNhe = true; // (6.26.9) mọi kênh: bước phụ thử các cách rồi bỏ, vẫn đăng bài cho đúng giờ
+    window.__smhViecTen = it.ten; // (6.19) kênh 2, 3: vị trí / thẻ / nhóm / hình thu nhỏ lỗi → bỏ qua bước đó, vẫn đăng (đăng bài mới là chính)
     const kq = await dangVideoFb({ slot: it.k, ten: it.ten, loai: loaiSo[it.loai], text: nd.text, file, cmts, hang: nd.hang, ngay }, { soanThu: thu });
     if (thu) { choTay({ video: true }); return; }
     void kq; // việc dở 'kiem_bai' (dò bài qua Facebook) chạy tiếp ở nhịp sau
@@ -3322,7 +3339,7 @@
       try { return await fn(); } catch (e) { if (!thuNhe() || e instanceof LoiDung) throw e; boQuaBuoc(ten, e); try { await gocLai(); } catch (e2) { /* */ } return null; }
     };
     const thoatLop = async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true })); await sleep(1200); };
-    if (ganManHinh() === 'soan' && !window.__smhBoViTri) { const vt = await phu('vị trí', async () => { await ganViTri(bao); return 1; }, async () => { if (ganManHinh() === 'vitri-tim') await thoatLop(); const t = ganNutTiep(); if (t) ganBamCu(t); }); if (vt) B('V3. Đã gắn vị trí ' + CAI_DAT.VI_TRI); }
+    if (ganManHinh() === 'soan' && !window.__smhBoViTri) { const vt = await phu('vị trí', async () => { await ganViTri(bao); return 1; }, async () => { if (ganManHinh() === 'vitri-tim') await thoatLop(); const t = ganNutTiep(); if (t) ganBamCu(t); }); if (vt) B('V3. Đã gắn vị trí ' + viTriKenh().ten); }
     else { const t0 = ganNutTiep(); if (t0) ganBamCu(t0); }
     if (!(await ganCho(() => ganManHinh() === 'the' || ganManHinh() === 'caidat', 60000, 500))) {
       const t1 = ganNutTiep(); if (t1) { B('Chưa sang màn Chỉnh sửa thước phim → bấm Tiếp lại'); ganBam(t1); }
@@ -4228,16 +4245,17 @@
     if (!r) { await sleep(1500); r = fn(); }
     return r;
   }
+  function viTriKenh() { const k = CAI_DAT.KENH[KENH_HT] || {}; return k.viTri ? { go: k.viTri.go, re: new RegExp(k.viTri.re, 'i'), ten: k.viTri.ten } : { go: GAN.VI_TRI, re: /Sơn Mộc Hương/i, ten: GAN.VI_TRI }; } // (6.26.9)
   async function ganViTri(bao) {
     if (ganManHinh() === 'soan') { bao('Gắn vị trí…'); ganBamCu([...document.querySelectorAll('[aria-label="Vị trí"]')].find(ganThay)); }
     const o = await ganCho(() => ganO('Bạn đang ở đâu?'), 8000);
     if (!o) throw new Error('không thấy ô tìm vị trí');
-    ganGo(o, GAN.VI_TRI + ' ');
-    const op = await ganCho(() => [...document.querySelectorAll('[role=option]')].find((x) => ganThay(x) && /Sơn Mộc Hương/i.test(x.innerText)), 8000);
-    if (!op) throw new Error('không thấy kết quả "' + GAN.VI_TRI + '"');
+    const VT = viTriKenh(); ganGo(o, VT.go + ' ');
+    const op = await ganCho(() => [...document.querySelectorAll('[role=option]')].find((x) => ganThay(x) && viTriKenh().re.test(x.innerText)), 8000);
+    if (!op) throw new Error('không thấy kết quả "' + VT.ten + '"');
     ganBamCu(op); await ganCham(1500);
     if (ganO('Bạn đang ở đâu?')) { // (4.5) chọn chưa ăn → bấm lại kiểu thường
-      const op2 = [...document.querySelectorAll('[role=option]')].find((x) => ganThay(x) && /Sơn Mộc Hương/i.test(x.innerText));
+      const op2 = [...document.querySelectorAll('[role=option]')].find((x) => ganThay(x) && viTriKenh().re.test(x.innerText));
       if (op2) { (op2.querySelector('[role=button]') || op2).click(); await ganCham(1500); }
     }
     const tiep = await ganCho(() => ganNutTiep() || ((ganManHinh() === 'the' || ganManHinh() === 'caidat') ? true : null), 12000);
@@ -4309,9 +4327,11 @@
   }
   async function ganNhom(bao) {
     bao('Chọn nhóm…');
+    { const kn0 = lay('khong_nhom6', {}) || {}; if (kn0[CAI_DAT.TEN_TRANG] && Date.now() - kn0[CAI_DAT.TEN_TRANG] < 3 * 864e5 && !ganNutChua('Chia sẻ lên nhóm')) { ghi(`Gắn thẻ: trang ${CAI_DAT.TEN_NGAN} chưa tham gia nhóm nào → bỏ qua bước chọn nhóm`); return { moi: 0, tong: 0, trong: true }; } } // (6.26.9b) nhớ rồi thì khỏi chờ tìm mục nhóm
     const chuaKhuat = () => { const b = [...document.querySelectorAll('[role=button]')].find((x) => chuan(x.innerText).startsWith('Chia sẻ lên nhóm') && x.getClientRects().length && !x.closest('[aria-hidden="true"]') && x.closest('[role=dialog]')); if (b) { try { b.scrollIntoView({ block: 'center' }); } catch (e) { /* */ } } return b && ganThay(b) ? b : null; };
     let hang = await ganCho(() => ganNutChua('Chia sẻ lên nhóm'), 5000);
     if (!hang) { hang = await ganCho(() => ganNutChua('Chia sẻ lên nhóm') || chuaKhuat(), 6000, 400); if (hang) ghi('Gắn thẻ: mục Chia sẻ lên nhóm bị cuộn khuất → đã cuộn tới'); }
+    if (!hang && ganManHinh() === 'caidat') { ghi(`Gắn thẻ: màn Cài đặt thước phim không có mục "Chia sẻ lên nhóm" (trang ${CAI_DAT.TEN_NGAN} chưa tham gia nhóm nào) → bỏ qua bước nhóm, vẫn đăng`); luu('khong_nhom6', Object.assign({}, lay('khong_nhom6', {}) || {}, { [CAI_DAT.TEN_TRANG]: Date.now() })); return { moi: 0, tong: 0, trong: true }; }
     if (!hang) throw new Error('không thấy mục Chia sẻ lên nhóm');
     const nhomTrong = () => [...document.querySelectorAll('[role=dialog]')].find((d) => ganThay(d) && /Không tìm thấy nhóm nào|No groups found/i.test(d.innerText || ''));
     { const kn = lay('khong_nhom6', {}) || {}; if (kn[CAI_DAT.TEN_TRANG] && Date.now() - kn[CAI_DAT.TEN_TRANG] < 3 * 864e5) { ghi(`Gắn thẻ: trang ${CAI_DAT.TEN_NGAN} chưa tham gia nhóm nào → bỏ qua bước chọn nhóm`); return { moi: 0, tong: 0, trong: true }; } }
@@ -4365,19 +4385,21 @@
     const dat = (k, tt, chu) => { ganTT.buoc[k] = tt; if (chu) ganTT.chu[k] = chu; if (tt === 'chay') ganTT.cur = k; else if (ganTT.cur === k) ganTT.cur = null; ganTT.tien = ''; ganVe(); };
     const bao = (t) => { if (ganTT) { ganTT.tien = t; ganVe(); } };
     const kq = [];
+    { const kc = kenhCuaDuong() || 1; datKenh(kc); const ed = [...document.querySelectorAll('[role="dialog"] [contenteditable="true"]')].map((x) => x.innerText || '').join(' '); const loai = /#manifest/i.test(ed) ? 'manifest' : 'video'; window.__smhThe = chonThe(loai, Math.floor(Math.random() * 1000), homNay() + '|' + Math.random(), null, kc); ghi(`Gắn vị trí & thẻ: kênh ${tenKenh(kc)} — vị trí ${viTriKenh().ten}, ${window.__smhThe.length} thẻ ngẫu nhiên (${loai === 'manifest' ? 'kho Manifest' : 'kho Video ' + tenKenh(kc)})`); } // (6.26.9) theo kênh đang mở
     ghi('Gắn vị trí & thẻ: bắt đầu');
     try {
       let mh = ganManHinh();
       if (mh === 'soan' || mh === 'vitri-tim') {
-        dat('vitri', 'chay'); await ganViTri(bao); kq.push('vị trí'); dat('vitri', 'xong', 'Đã gắn vị trí ' + GAN.VI_TRI); ghi('Gắn vị trí & thẻ: đã gắn vị trí'); await ganCham(1500); mh = ganManHinh();
+        dat('vitri', 'chay'); await ganViTri(bao); kq.push('vị trí'); dat('vitri', 'xong', 'Đã gắn vị trí ' + viTriKenh().ten); ghi('Gắn vị trí & thẻ: đã gắn vị trí'); await ganCham(1500); mh = ganManHinh();
       } else dat('vitri', 'xong', 'Vị trí đã có sẵn');
       if (mh === 'the' || (await ganCho(() => ganManHinh() === 'the', 6000))) {
-        dat('the', 'chay'); await ganThe(bao); const nt = ganDsThe().length; kq.push(nt + ' thẻ'); dat('the', 'xong', 'Đã gắn ' + nt + ' thẻ'); ghi('Gắn vị trí & thẻ: đã gắn ' + nt + ' thẻ'); await ganCham(1800);
+        if (!window.__smhThe.length) { dat('the', 'xong', 'Kho thẻ kênh này trống → không gắn thẻ'); const tq = ganNutTiep(); if (tq) ganBamCu(tq); await ganCham(1500); } else {
+        dat('the', 'chay'); await ganThe(bao); const nt = ganDsThe().length; kq.push(nt + ' thẻ'); dat('the', 'xong', 'Đã gắn ' + nt + ' thẻ'); ghi('Gắn vị trí & thẻ: đã gắn ' + nt + ' thẻ'); await ganCham(1800); }
       } else dat('the', 'xong', 'Thẻ đã có sẵn');
       if (!(await ganCho(() => ganManHinh() === 'caidat', 10000))) throw new Error('chưa sang được màn Cài đặt thước phim');
       dat('nhom', 'chay'); const n = await ganNhom(bao); kq.push(n.tong + ' nhóm');
       if (!(await ganCho(() => ganManHinh() === 'caidat' && ![...document.querySelectorAll('input[type=checkbox]')].some((x) => x.getAttribute('role') !== 'switch' && ganThay(x)), 12000, 300))) throw new Error('chưa quay lại được màn Cài đặt thước phim sau khi chọn nhóm');
-      dat('nhom', 'xong', 'Đã chọn ' + n.tong + ' nhóm'); ghi('Gắn vị trí & thẻ: đã chọn ' + n.tong + ' nhóm'); await ganCham(900);
+      dat('nhom', 'xong', n.trong ? 'Trang chưa có nhóm → bỏ qua' : 'Đã chọn ' + n.tong + ' nhóm'); ghi('Gắn vị trí & thẻ: đã chọn ' + n.tong + ' nhóm'); await ganCham(900);
       dat('thunho', 'chay'); const coRange = await ganThuNho(bao); kq.push(coRange ? 'hình thu nhỏ' : 'hình thu nhỏ (bỏ qua)');
       dat('thunho', 'xong', coRange ? 'Đã sửa hình thu nhỏ' : 'Hình thu nhỏ giữ mặc định'); ghi('Gắn vị trí & thẻ: đã xử lý hình thu nhỏ');
       ganTT.loai = 'xong';
@@ -5701,6 +5723,7 @@
     if (false) for (const c of chuaNgay()) ds.push({ k: 'cn|' + c.chu, chu: c.chu + ' → script chưa biết đăng ngày nào, hãy điền ngày', nut: [['▦ Mở sheet', c.nut, '', 'chinh']] });
     const tn = thieuNgay();
     if (tn.length) ds.push({ k: 'thieu|' + tn.map((x) => x.ngay + x.t.length).join(), bang: bangThieu(tn), chu: `Nội dung 2 ngày tới còn thiếu (${tn.reduce((a, x) => a + x.t.length, 0)} mục) — sửa sheet xong bấm Đọc lại`, chuCu: `Cập nhật nội dung cho ${tn.map((x) => (x.i === 0 ? 'hôm nay' : x.i === 1 ? 'ngày mai' : x.ngay.slice(0, 5).replace('-', '/'))).join(', ')} (${tn.reduce((a, x) => a + x.t.length, 0)} bài còn thiếu — theo sheet đọc lúc ${gioStr(new Date(duLieu().luc))}${ngayStr(new Date(duLieu().luc)) !== homNay() ? ' ' + ngayStr(new Date(duLieu().luc)).slice(0, 5).replace('-', '/') : ''}; vừa sửa sheet thì bấm Đọc lại)`, tip: tn.map((x) => x.ngay + ': ' + x.t.map((y) => y.ten + ' thiếu ' + y.thieu.join(', ')).join('; ')).join('\n'), nut: [['▦ Mở sheet', 'mosheet', ''], ['Xem', 'xemsaptoi', '']] });
+    { const hk = hanKiemThe(); if (MAY && hk.den) ds.push({ k: 'the7|' + Math.floor(hk.luc / 864e5), chu: `🏷 Đã ${hk.qua} ngày chưa kiểm tra thẻ (Kênh 1, 2, 3, Hà Xá, Manifest) — mở xem, sửa nếu cần, hoặc bấm Xác nhận nếu vẫn dùng thẻ cũ`, nut: [['🏷 Kiểm tra thẻ', 'motabthe', '', 'chinh']] }); } // (6.26.9)
     if (MAY && !nhacInfo()) ds.push({ k: 'nhac', chu: 'Máy này chưa có nhạc nền cho video manifest', nut: [['🎵 Tải nhạc', 'xemmanifest', '', 'chinh']] });
     if (!coApi()) ds.push({ k: 'chuama', chu: 'Chưa cài mã khoá Facebook (script chưa dò được bài trên trang)', nut: [['🔑 Cài mã khoá', 'caima', '', 'chinh']] });
     else { const luc = lay('fb_token_luc', 0); const n = luc ? Math.floor((Date.now() - luc) / 864e5) : 0; if (n >= CAI_DAT.MA_KHOA_HAN_NGAY - 10) ds.push({ k: 'hetma', chu: `Mã khoá Facebook đã dùng ${n} ngày — nên lấy mã mới`, nut: [['🔑 Đổi mã khoá', 'caima', '', 'chinh']] }); }
@@ -5811,6 +5834,7 @@
     if (['bo', 'loi', 'thieu', 'khong_ro'].includes(r.tt)) nut.push(`<button class="phu-nut" data-a="khoiphuc" data-k="${x.k}">↺ Đưa lại vào hàng chờ</button>`);
     else if (r.tt === 'co_san' && r.may !== 'tay') nut.push(`<button class="phu-nut" data-a="khoiphuc" data-k="${x.k}" title="Script tưởng bài đã có trên trang (máy khác / đăng tay) nhưng thật ra chưa lên → đưa lại vào hàng chờ để đăng">↺ Thật ra chưa đăng — đăng lại</button>`); // (6.20.1)
     if (!x.xong && r.tt !== 'dang') nut.push(`<button class="phu-nut" data-a="danhdau" data-k="${x.k}" title="Bài đã lên trang mà script chưa nhận ra">✓ Đánh dấu đã đăng</button>`);
+    if (x.xong && r.theoThuTu) nut.push(`<button class="phu-nut" data-a="khoiphuc" data-k="${x.k}" title="Script đoán bài đăng tay (chữ khác sheet) là bài này — nếu không phải, bấm để script đăng dòng trong sheet">↺ Không phải bài này</button>`); // (6.26.8)
     if (r.may === 'tay') nut.push(`<button class="phu-nut" data-a="bodanhdau" data-k="${x.k}">Bỏ đánh dấu</button>`);
     if (nut.length) h += `<div class="r">${nut.join(' ')}</div>`;
     return h + '</div>';
@@ -6020,8 +6044,8 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px">${KENH_ALL.map((c) => `<button class="tg ${(ui6.kenhThe || 1) === c ? 'ok' : ''}" data-a="chonkenhthe" data-k="${c}" title="${esc(CAI_DAT.KENH[c].ten)}">${CAI_DAT.KENH[c].anSo ? '' : 'Kênh ' + c + ' · '}${esc(CAI_DAT.KENH[c].ngan)} <b>${dem(t[c === 1 ? 'video' : 'video' + c])}</b></button>`).join('')}</div>
         <textarea class="cmtta" rows="12" data-o="the_video" placeholder="Để trống = video kênh này không gắn thẻ">${esc(t[truongThe()])}</textarea><button class="nut nho" data-a="themd" data-k="video">↺ Dùng lại kho mẫu (kênh ${ui6.kenhThe || 1})</button></div>
       <div><div class="mo"><b>Thẻ cho Manifest</b> — mỗi dòng 1 thẻ (${dem(t.manifest)} thẻ)</div><textarea class="cmtta" rows="12" data-o="the_manifest">${esc(t.manifest)}</textarea><button class="nut nho" data-a="themd" data-k="manifest">↺ Dùng lại kho mẫu</button></div></div>
-      <div class="hang"><button class="nut chinh${t.dangLuu ? ' chay' : ''}" data-a="luuthe" ${t.dangLuu ? 'disabled' : ''}>${t.dangLuu ? '<span class="xoay"></span>Đang lưu…' : '💾 Lưu kho thẻ'}</button><button class="nut nho" data-a="xemthe">🎲 Xem thử thẻ hôm nay</button>${t.sua ? '<button class="nut nho" data-a="huythe">Huỷ thay đổi</button><b style="color:var(--do-chu)">● Có thay đổi chưa lưu</b>' : ''}</div>
-      <div class="mo">Bản đang dùng: ${kt.luc ? 'lưu lúc ' + gioStr(new Date(kt.luc)) + ' ' + ngayStr(new Date(kt.luc)).slice(0, 5).replace('-', '/') : 'kho mẫu (chưa sửa)'} · ${dbt ? 'đã đồng bộ với sheet (ô ' + CAI_DAT.O_THE + ') lúc ' + gioStr(new Date(dbt)) : 'chưa đồng bộ với sheet'}. Thẻ nào Facebook không nhận thì script bỏ thẻ đó, gắn tiếp thẻ sau.</div>`;
+      <div class="hang"><button class="nut chinh${t.dangLuu ? ' chay' : ''}" data-a="luuthe" ${t.dangLuu ? 'disabled' : ''}>${t.dangLuu ? '<span class="xoay"></span>Đang lưu…' : '💾 Lưu kho thẻ'}</button><button class="nut nho" data-a="xemthe">🎲 Xem thử thẻ hôm nay</button><button class="nut nho${hanKiemThe().den ? ' chinh' : ''}" data-a="xacnhanthe" title="Đã xem, vẫn dùng bộ thẻ này — tắt nhắc, 7 ngày sau nhắc lại">✓ Xác nhận vẫn dùng</button>${t.sua ? '<button class="nut nho" data-a="huythe">Huỷ thay đổi</button><b style="color:var(--do-chu)">● Có thay đổi chưa lưu</b>' : ''}</div>
+      <div class="mo">Bản đang dùng: ${kt.luc ? 'lưu lúc ' + gioStr(new Date(kt.luc)) + ' ' + ngayStr(new Date(kt.luc)).slice(0, 5).replace('-', '/') : 'kho mẫu (chưa sửa)'} · ${dbt ? 'đã đồng bộ với sheet (ô ' + CAI_DAT.O_THE + ') lúc ' + gioStr(new Date(dbt)) : 'chưa đồng bộ với sheet'}. Thẻ nào Facebook không nhận thì script bỏ thẻ đó, gắn tiếp thẻ sau. ${(() => { const hk = hanKiemThe(); return hk.den ? '<b style="color:var(--do-chu)">● Đến hạn kiểm tra thẻ (' + hk.qua + ' ngày)</b>' : 'Kiểm tra thẻ gần nhất: ' + ngayStr(new Date(hk.luc)).slice(0, 5).replace('-', '/') + ' — 7 ngày sau sẽ nhắc lại.'; })()}</div>`;
     if (ui6.xemThe) { const kho = { video: dsThe(t.video), video2: dsThe(t.video2), video3: dsThe(t.video3), video4: dsThe(t.video4), manifest: dsThe(t.manifest) }; h += `<div class="cmtxem">${LICH.filter((it) => it.loai === 'video' || it.loai === 'manifest').map((it) => { const th = chonThe(it.loai, it.so, homNay(), kho, it.kenh || 1); return `<div class="cmtmau"><b>${esc(it.ten)}</b>${(it.kenh || 1) > 1 ? ` <span class="mo">(${esc(CAI_DAT.KENH[it.kenh].ngan)})</span>` : ''}<pre>${esc(th.length ? th.map((x, i) => (i + 1) + '. ' + x).join('\n') : '(kho thẻ kênh này đang trống — không gắn thẻ)')}</pre></div>`; }).join('')}</div><button class="phu-nut" data-a="dongxemthe">✕ Đóng xem thử</button>`; }
     h += '</div>';
     if (ui6.xemCmt) {
@@ -6282,7 +6306,7 @@
       ghi(`Bấm ${soan ? 'Soạn' : 'Đăng ngay'}: ${tenSlot(k)}`); phanHoi(a); setTimeout(nhip, 300); return;
     }
     if (hd === 'boqua' && k) { if (!confirm(`Bỏ qua ${tenSlot(k)} hôm nay?`)) return; capNhatTT((s) => { Object.assign(ttSlot(s, k), { tt: 'bo', lyDo: 'bấm Bỏ qua trên popup' }); }); ghi('Bấm Bỏ qua: ' + tenSlot(k)); veBangNgay(); return; }
-    if (hd === 'khoiphuc' && k) { const quaChot = phutTrongNgay(new Date()) >= docGio((LICH.find((x) => x.k === k) || {}).them ? CAI_DAT.GIO_CHOT_THEM : CAI_DAT.GIO_CHOT); capNhatTT((s) => { const x = ttSlot(s, k); if (x.tt === 'co_san') { x.link = ''; x.may = ''; } x.tt = 'cho'; x.lan = 0; x.loi = ''; x.lyDo = ''; x.thuLai = 0; if (quaChot) x.ep = Date.now(); }); ghi('Bấm Đưa lại vào hàng chờ: ' + tenSlot(k) + (quaChot ? ' (đã quá giờ chốt → đăng ngay)' : '')); if (quaChot) nhacNho('Đã quá giờ chốt nên bài sẽ được đăng ngay'); veBangNgay(); setTimeout(nhip, 300); return; } // (6.19.3) sau giờ chốt trước đây bấm xong không làm gì
+    if (hd === 'khoiphuc' && k) { const quaChot = phutTrongNgay(new Date()) >= docGio((LICH.find((x) => x.k === k) || {}).them ? CAI_DAT.GIO_CHOT_THEM : CAI_DAT.GIO_CHOT); capNhatTT((s) => { const x = ttSlot(s, k); if (x.tt === 'co_san' || x.theoThuTu) { if (x.theoThuTu && x.id) s.boTT = (s.boTT || []).concat(x.id); x.link = ''; x.may = ''; x.id = ''; delete x.theoThuTu; } x.tt = 'cho'; x.lan = 0; x.loi = ''; x.lyDo = ''; x.thuLai = 0; if (quaChot) x.ep = Date.now(); }); ghi('Bấm Đưa lại vào hàng chờ: ' + tenSlot(k) + (quaChot ? ' (đã quá giờ chốt → đăng ngay)' : '')); if (quaChot) nhacNho('Đã quá giờ chốt nên bài sẽ được đăng ngay'); veBangNgay(); setTimeout(nhip, 300); return; } // (6.19.3) sau giờ chốt trước đây bấm xong không làm gì
     if (hd === 'danhdau' && k) { // (6.26.3) hỏi Facebook trước: không thấy bài trên trang thì cảnh báo, tránh đánh dấu nhầm
       const c = kenhCua(k); let p = null, daHoi = false;
       if (coApiKenh(c)) { nhacNho(`Đang hỏi Facebook xem ${tenSlot(k)} đã lên trang chưa…`, 'cho'); datKenh(c); try { const nd0 = noiDungSlot(homNay(), k); p = nd0.text ? baiKhop(await baiTrenTrangApi(new Date(new Date().setHours(0, 0, 0, 0)).getTime()), nd0.text) : null; daHoi = true; } catch (e) { ghi('Đánh dấu đã đăng: chưa hỏi được Facebook (' + e.message + ')'); } finally { datKenh(1); } }
@@ -6297,6 +6321,8 @@
     if (hd === 'huythe') { ui6.the = null; nhacNho('Đã huỷ thay đổi kho thẻ'); veBangNgay(); return; }
     if (hd === 'xemthe') { ui6.xemThe = true; nhacNho('Xem thử 8 thẻ mỗi video / manifest hôm nay (chưa lưu)'); veBangNgay(); return; }
     if (hd === 'dongxemthe') { ui6.xemThe = false; veBangNgay(); return; }
+    if (hd === 'motabthe') { luu('ui_tab6', 'comment'); uiTab.moRong = true; veBangNgay(); setTimeout(() => { try { const x = document.querySelector('#smhfb [data-a="xacnhanthe"]'); if (x) x.scrollIntoView({ block: 'center' }); } catch (e) { /* */ } }, 300); return; } // (6.26.9)
+    if (hd === 'xacnhanthe') { phanHoi(a); try { const k = khoThe(); await luuKhoThe({ video: k.video, video2: k.video2, video3: k.video3, video4: k.video4, manifest: k.manifest }); ghi('Bấm Xác nhận vẫn dùng bộ thẻ hiện tại'); nhacNho('Đã xác nhận bộ thẻ — 7 ngày sau sẽ nhắc kiểm tra lại'); } catch (er) { nhacNho('Đã xác nhận trên máy này, chưa lưu lên sheet (' + er.message + ')', 'vang', 8000); } ui6.the = null; veBangNgay(); return; }
     if (hd === 'luuthe') {
       const t = nhapThe(); const c = { video: dsThe(t.video), video2: dsThe(t.video2), video3: dsThe(t.video3), video4: dsThe(t.video4), manifest: dsThe(t.manifest) };
       if (!c.video.length || !c.manifest.length) { alert('Kho thẻ Video kênh 1 và kho thẻ Manifest cần ít nhất 1 thẻ (mỗi dòng 1 thẻ). Kho kênh 2, 3 để trống = không gắn thẻ.'); return; }
@@ -6950,6 +6976,26 @@
   }
 
   // ---------- vòng chính (gọi cuối nhịp) ----------
+  // (6.26.11) chỉ số tuần (tự động thứ 6): tab Facebook đang ẩn → tự chuyển về tab; Chrome không cho → thông báo trên máy + chuông, 07:45–09:00 cứ 15 phút nhắc lại
+  function nhacMayCS(tieu, noi) {
+    try { GM_notification({ title: tieu, text: noi, timeout: 0, highlight: true, onclick: () => { try { window.focus(); } catch (e) { /* */ } } }); } catch (e) { ghi('Chỉ số tuần: không hiện được thông báo trên máy (' + e.message + ')'); }
+    try { const AC = window.AudioContext || window.webkitAudioContext; const ac = new AC(); const t0 = ac.currentTime + 0.05; [0, 0.4, 0.8].forEach((d, i) => { const o = ac.createOscillator(); const g = ac.createGain(); o.frequency.value = i === 2 ? 1046 : 880; g.gain.setValueAtTime(0.0001, t0 + d); g.gain.exponentialRampToValueAtTime(0.5, t0 + d + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d + 0.32); o.connect(g); g.connect(ac.destination); o.start(t0 + d); o.stop(t0 + d + 0.35); }); setTimeout(() => { try { ac.close(); } catch (e) { /* */ } }, 2500); } catch (e) { /* */ }
+    ghi('Chỉ số tuần: đã hiện thông báo + kêu chuông trên máy — "' + tieu + '"');
+  }
+  function nhacTabCS(viec) {
+    if (!viec || viec.loai !== 'tudong' || document.visibilityState === 'visible') return;
+    const now = new Date(); const mm = phutTrongNgay(now);
+    if (!window.__csNhay) {
+      window.__csNhay = Date.now(); ghi('Chỉ số tuần: đến giờ nhưng tab Facebook đang ẩn → tự chuyển về tab Facebook');
+      try { window.focus(); } catch (e) { /* */ }
+      setTimeout(() => ghi(document.visibilityState === 'visible' ? 'Chỉ số tuần: đã tự chuyển về tab Facebook → xem chỉ số ngay' : '⚠️ Chỉ số tuần: Chrome không cho tự chuyển về tab Facebook (cửa sổ đang thu nhỏ / đang dùng ứng dụng khác) → sẽ nhắc bằng thông báo + chuông'), 4000);
+    }
+    const tu = docGio('07:45'), den = docGio('09:00');
+    if (now.getDay() === 5 && mm >= tu && mm <= den) {
+      const k = homNay() + '|' + Math.floor((mm - tu) / 15);
+      if (lay('csnhac6', '') !== k) { luu('csnhac6', k); try { window.focus(); } catch (e) { /* */ } nhacMayCS('Đến giờ xem chỉ số tuần fb kênh 1', 'Bấm vào đây để mở tab Facebook — script sẽ xem chỉ số và gửi báo cáo ngay.'); }
+    }
+  }
   let csDangChay = false;
   async function vongChiSo() { if (csDangChay) return false; csDangChay = true; try { return await vongChiSo0(); } finally { csDangChay = false; } }
   async function vongChiSo0() {
@@ -6970,10 +7016,10 @@
     if (tuDongDenGio && !c.yc && !c.chay && !hookCS().kq) { if (c.lyDo !== 'chưa cài link NHÓM KẾT QUẢ (nút 🔑 Cài nhóm Lark)') { luuCS((x) => { x.lyDo = 'chưa cài link NHÓM KẾT QUẢ (nút 🔑 Cài nhóm Lark)'; }); ghi('Chỉ số tuần: chưa cài link NHÓM KẾT QUẢ → chưa xem chỉ số (bấm 🔑 Cài nhóm Lark ở tab Chỉ số tuần)'); } return false; } // (6.20) chưa có nơi gửi thì không mở trang vô ích
     const viec = c.chay || (c.yc ? { loai: c.yc.loai, buoc: 0, kq: {}, batDau: Date.now() } : (tuDongDenGio && !(c.cho && Date.now() < c.cho) ? { loai: 'tudong', buoc: 0, kq: {}, batDau: Date.now() } : null));
     if (!viec) return false;
+    if (document.visibilityState !== 'visible' && laTabChinh() && !tamDung()) nhacTabCS(viec); // (6.27) tab ẩn lúc tới giờ chỉ số → tự nhảy về tab Facebook; không được thì thông báo + chuông 15 phút/lần (07:45–09:00 thứ 6)
     const ly = lyDoBanCS();
     if (ly) {
       luuCS((x) => { x.lyDo = ly; });
-      if (/bị ẩn/.test(ly) && Date.now() - (window.__csAn || 0) > 15 * 60000) { window.__csAn = Date.now(); thongBaoMay('Đến giờ xem chỉ số tuần fb kênh 1 — cần mở tab Facebook', 'Tab Facebook đang bị che/thu nhỏ. Mở cửa sổ Facebook lên là script làm ngay.'); }
       if (dangOTrangCS() && /sắp tới giờ|làm việc chính/.test(ly) && !lay('dang_do', null)) { datKenh(1); ghi('Chỉ số tuần: tạm dừng để nhường việc chính → về trang kênh 1'); veTrang(); return true; }
       return false;
     }
@@ -7056,7 +7102,7 @@
     const bang = k ? `<table style="width:100%;border-collapse:collapse;margin:6px 0"><tr><th style="text-align:left;padding:4px"></th><th style="text-align:left;padding:4px">7 ngày <span class="mo">${ng('7D')}</span></th><th style="text-align:left;padding:4px">28 ngày <span class="mo">${ng('28D')}</span></th></tr>${[['views', '👁 Lượt xem'], ['messaging', '💬 Người liên hệ nhắn tin'], ['audience', '👥 Người theo dõi thực']].map(([t, ten]) => `<tr style="border-top:1px solid var(--vien,#ddd)"><td style="padding:4px">${ten}</td><td style="padding:4px">${o(k.kq['7D' + t])}</td><td style="padding:4px">${o(k.kq['28D' + t])}</td></tr>`).join('')}</table><div class="mo">Kiểm lúc ${gioStr(new Date(k.luc))} ${ngayStr(new Date(k.luc)).slice(0, 5).replace('-', '/')} (${k.loai === 'tudong' ? 'tự động' : k.loai === 'soan' ? 'Soạn thử' : k.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay'})</div>` : '<div class="mo">Chưa có lần kiểm nào.</div>';
     const ban = !!(c.chay || c.yc);
     const nut = (a, chu, chinh) => `<button class="nut${chinh ? ' chinh' : ''}" data-a="${a}" ${ban || !LA_CAO ? 'disabled' : ''}>${chu}</button>`;
-    return `<div class="the-nd"><h4>📊 Báo cáo chỉ số tuần fb kênh 1 <span class="mo">(${esc(CAI_DAT.KENH[1].ngan)} · chỉ Máy Cao · phần phụ, nhường việc chính)</span></h4>
+    return `<div class="the-nd"><h4${fbToi() ? ' style="color:#f2f3f5"' : ''}>📊 Báo cáo chỉ số tuần fb kênh 1 <span class="mo">(${esc(CAI_DAT.KENH[1].ngan)} · chỉ Máy Cao · phần phụ, nhường việc chính)</span></h4>
       <div class="ghichu" style="margin:6px 0"><b>Tuần này:</b> ${esc(trangThaiCS())}</div>
       ${c.kqLoi ? `<div class="mo" style="color:var(--do-chu,#d93a3a)">Lần bấm tay gần nhất (${esc(c.kqLoi.loai === 'soan' ? 'Soạn thử' : c.kqLoi.loai === 'thu' ? 'Gửi thử' : 'Gửi ngay')} lúc ${gioStr(new Date(c.kqLoi.luc))}): ${esc(c.kqLoi.loi)}</div>` : ''}
       ${bang}

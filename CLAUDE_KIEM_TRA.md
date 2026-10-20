@@ -254,3 +254,31 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
   - Kênh 2 · Video 1: 8 thẻ đều "không được nhận sau 3 cách" (mất 2 phút). Nay 2 thẻ đầu đều hỏng → bỏ các thẻ còn lại. (Chưa rõ nguyên nhân thẻ không nhận trên Máy Cao — cần xem thêm.)
   - 07:06–07:08 Máy Cao nhận Kênh 3 · Video 1 → chuyển tư cách (trang tải lại) → sau khi tải lại lại chọn Hà Xá · Video 1 (giờ hẹn sớm hơn) → chuyển tư cách lần nữa; Kênh 3 bị bỏ dở (Máy Giao đăng 07:17). Nay: luu('dang_tiep6') lúc bắt đầu đăng; trong 6 phút sau, vongDang ưu tiên làm tiếp đúng bài đó.
   - Máy Giao giữ chỗ Hà Xá · Video 1 lúc 06:30 / 06:52 / 06:58 nhưng không đăng (Máy Cao đăng thay 07:09) → cần nhật ký Máy Giao.
+
+## 6.26.8 (20/10/2026)
+- Cao báo tab "Kênh 1 Vòng Trầm Hương SMH mới" hàng 132 (19/10) và 137 (20/10) còn "ĐÃ DUYỆT":
+  - Hàng 137 KHÔNG sót: là Video 3 hôm nay, hẹn 18:10 (panel: Video 3 · cột M 137.mp4). Video 4/5/6 (bài thêm) đăng buổi sáng nên các hàng sau đã "ĐÃ ĐĂNG" trước.
+  - Hàng 132 (Video 3 ngày 19/10, "4 lý do khiến ngày càng nhiều…") bị sót thật: 18:06:47 nhật ký Máy Cao "thấy Video 3 (đăng tay lúc 18:06, nhận theo thứ tự)" — 1 video lên trang lúc 18:06 có chữ khác sheet → luật dự phòng "nhận theo thứ tự" gán nó vào ô Video 3 → script coi Video 3 đã đăng, không đăng hàng 132. Trên trang không có bài "4 lý do…".
+- Sửa: luật "nhận theo thứ tự" bỏ qua bài có chữ giống bất kỳ bài nào trong sheet hôm nay (vd đăng lại / đăng trùng 1 video đã có) và bài người đã gỡ (s.boTT); mỗi lần lấp theo thứ tự thì báo nhóm lỗi để người kiểm; ô lấp theo thứ tự có nút "↺ Không phải bài này" (đưa lại hàng chờ, nhớ id để không gán lại).
+- Sim: kịch bản trungtt (video 1 đăng lại lúc 18:06 → Video 3 vẫn chờ đăng; checker báo LỖI do dữ liệu cố tình có 1 bài trùng).
+
+## 6.26.9 (20/10/2026)
+- Quy trình đăng video Hà Xá theo Cao làm mẫu (ghi trên Máy Giao): Ảnh/video → gắn video (không chờ 100%) → chữ mô tả → Vị trí: gõ "trầm hương hà xá" → chọn "Trầm Hương HÀ XÁ 15/15 Làng Tăng Phú…" → Tiếp → Thêm thẻ (mỗi thẻ gõ + dấu phẩy) → Tiếp → hình thu nhỏ: Chỉnh sửa → khung 0 → Lưu → (không có nhóm) → Đăng.
+- Máy Giao lúc đó chạy 6.26.4 (chưa có bản sửa nhóm trống 6.26.5) → kẹt bước nhóm.
+- Sửa: KENH[4].viTri; viTriKenh() dùng cho ganViTri (tự đăng + nút "Gắn vị trí & thẻ"); Hà Xá không còn bỏ vị trí. THE_VIDEO_K4 = 8 thẻ Hà Xá (kho Hà Xá trống → dùng kho mặc định). Mỗi video bốc 8 thẻ ngẫu nhiên (SO_THE 8).
+- Nút "Gắn vị trí & thẻ": theo kênh của trang đang mở (kenhCuaDuong) → vị trí + kho thẻ kênh đó (bài có #manifest → kho Manifest), bốc thẻ ngẫu nhiên; kho trống → bỏ bước thẻ.
+- Bước phụ (vị trí / thẻ / nhóm / hình thu nhỏ) mọi kênh: thử các cách bên trong bước, không được → bỏ bước, vẫn đăng ngay lần đầu (__smhNhe = true), báo nhóm lỗi 1 lần/bài/bước.
+- Nhắc kiểm tra thẻ: kho thẻ 7 ngày chưa sửa/xác nhận (hanKiemThe, mốc = the6.luc) → mục "🏷 Đã N ngày chưa kiểm tra thẻ" trong việc cần xử lý; tab Comment & Thẻ có nút "✓ Xác nhận vẫn dùng" (lưu lại kho, luc = bây giờ, đồng bộ Z4; dongBoThe nhận cả bản chỉ đổi mốc).
+- Chưa làm: gắn bù vị trí/thẻ sau khi đăng (màn sửa thước phim không có ô thẻ) — bước bị bỏ được báo nhóm để người xử lý.
+- Sim: fake vị trí trả "Trầm Hương HÀ XÁ" khi gõ "hà xá"; hx/hxnhom: V3 vị trí Hà Xá + 8 thẻ.
+
+## 6.26.10 (20/10/2026)
+- Cao soạn thử Hà Xá bằng nút "Gắn vị trí & thẻ" trên Máy Giao (6.26.9): (1) nút gắn vị trí "Sơn Mộc Hương" — trang Hà Xá mở dạng /profile.php KHÔNG kèm mã trang nên kenhCuaDuong() = 0 → kênh 1; (2) màn Cài đặt thước phim của Hà Xá KHÔNG có mục "Chia sẻ lên nhóm" (trang chưa tham gia nhóm) → ganNhom báo "không thấy mục Chia sẻ lên nhóm" và nút dừng, chưa làm hình thu nhỏ.
+- Sửa: kenhCuaDuong ở /profile.php không mã → nhận kênh theo tên trang (h1/h2) rồi theo tư cách vừa kiểm (suc_khoe.tuCach). ganNhom: đang ở màn Cài đặt mà không có mục nhóm → coi là trang chưa có nhóm, bỏ bước, nhớ khong_nhom6 3 ngày (lần sau không chờ tìm mục). Nút hiện "Trang chưa có nhóm → bỏ qua" và làm tiếp hình thu nhỏ.
+- Sim: INIT.khongMucNhom (Hà Xá không có mục nhóm), kịch bản hxkhongmuc.
+
+## 6.27 (21/10/2026) — (thay tên cho 6.26.11)
+- Báo cáo chỉ số tuần (Máy Cao, tự động thứ 6): tới giờ mà tab Facebook đang ẩn → window.focus() tự chuyển về tab (mỗi lần tải trang 1 lần). Chrome không cho → nhacMayCS(): GM_notification (bấm vào → focus tab) + chuông 3 tiếng (AudioContext), thứ 6 07:45–09:00 cứ 15 phút 1 lần (csnhac6), mỗi lần nhắc thử focus lại. Kiểm tab ẩn trước các lý do bận khác (vd "sắp tới giờ đăng bài"). Xem xong về trang kênh 1 như cũ.
+- Tiêu đề khung "📊 Báo cáo chỉ số tuần" chữ sáng khi Facebook giao diện tối.
+- Sim: window.focus giả có cờ __focusHong; kịch bản chisoan (tự chuyển tab → xem 6 trang), chisoanhong (07:00 thử chuyển + 6 lần thông báo 07:45→09:00).
+- Ghi chú: số 7 ngày = 28 ngày (▲100%) trên tab Chỉ số tuần ngày 21/10 nhiều khả năng do trang kênh 1 mới lập < 28 ngày — đối chiếu lại khi chạy thật thứ 6.
