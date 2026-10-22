@@ -154,6 +154,12 @@
    "moTa": "Báo cáo tuần: lượt xem từng video toàn 10 vì Thư viện nội dung khớp theo chữ, nhiều video cùng câu mở đầu",
    "trangThai": "đã sửa 6.28.2 (khớp theo mã bài)",
    "ngay": "2026-10-22"
+  },
+  {
+   "ma": "lich-tre-2230",
+   "moTa": "22/10: lịch dự kiến kéo tới 22:31 (Manifest 4/5, Bài 6 bị đẩy sau Manifest 3; bài thêm được tới 22:30; trễ trưa dồn 30 phút/bài)",
+   "trangThai": "đã sửa 6.28.3 (rải đều 06:30–20:00, sát giờ cách 15 phút)",
+   "ngay": "2026-10-22"
   }
  ],
  "danhGiaTuan": [],
@@ -197,6 +203,10 @@
   {
    "ngay": "2026-10-22",
    "tomTat": "Ra bản 6.28.2: báo cáo tuần chỉ video chính (bỏ manifest, bỏ mục comment hỏi mua), giao diện 3 ô số + huy chương, khớp Thư viện nội dung theo mã bài; lịch bài thêm chung 2 máy qua ô Z8 (1 máy tắt vẫn tự xếp), đổi bản tự xếp lại, kiểm đủ 20 phút trước khi bấm Đăng."
+  },
+  {
+   "ngay": "2026-10-22",
+   "tomTat": "Ra bản 6.28.3: lịch kênh 1 rải đều 06:30–20:00 (nhiều bài tới 21:00, sát giờ cách 15 phút), lịch chung 2 máy cho toàn bộ bài kênh 1; panel chia 3 khung Sáng/Chiều/Tối có viền + đếm bài + thanh tiến độ, nút Mở bài rộng hơn."
   }
  ],
  "capNhat": "2026-10-22"

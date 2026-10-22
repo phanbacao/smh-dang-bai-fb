@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.2
+// @version      6.28.3
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.2';
+  const PHIEN_BAN = '6.28.3';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -849,35 +849,43 @@
     })();
     try { return await docDLCho; } finally { docDLCho = null; }
   }
-  // (6.28.2) LỊCH 2 MÁY: giờ các bài thêm (Video/Manifest 4+, Bài 4+) ghi ở ô O_LICH (Z8).
-  //  Máy nào xếp lịch hôm nay trước thì ghi ô; máy kia đọc sheet thấy lịch hôm nay (cùng bản hoặc bản mới hơn) thì làm theo cho các bài CHƯA đăng.
-  //  2 máy cùng ghi: Máy Giao (máy chính) được ưu tiên — Máy Cao làm theo. 1 máy tắt / ô trống / ô của hôm khác / đọc ô lỗi → máy còn lại tự xếp như cũ và ghi ô.
+  // (6.28.2) LỊCH 2 MÁY — (6.28.3) giờ của TOÀN BỘ bài kênh 1 (lịch xếp đều) ghi ở ô O_LICH (Z8), kèm danh sách bài (sig).
+  //  Máy nào xếp lịch trước thì ghi; máy kia cùng danh sách bài thì làm theo cho bài CHƯA đăng. Máy Giao (máy chính) được ưu tiên.
+  //  1 máy tắt / ô trống / ô của hôm khác / đọc ô lỗi → máy còn lại tự xếp như cũ và ghi ô (Máy Cao chờ lịch Máy Giao tối đa 60 phút khi danh sách bài khác nhau).
   const TIEN_TO_LICH = 'LICH6|';
-  const lichThemMinh = (ngay, s) => lichNgay(ngay).filter((x) => (x.them || x.baiThem) && typeof s.gio[x.k] === 'number').reduce((o, x) => { o[x.k] = s.gio[x.k]; return o; }, {});
+  const lichThemMinh = (ngay, s) => lichNgay(ngay).filter((x) => (x.kenh || 1) === 1 && typeof s.gio[x.k] === 'number').reduce((o, x) => { o[x.k] = s.gio[x.k]; return o; }, {});
   const docOLich = (raw) => { const t = chuO(raw).trim(); if (!t) return { o: null }; if (!t.startsWith(TIEN_TO_LICH)) return { khac: true }; try { return { o: JSON.parse(t.slice(TIEN_TO_LICH.length)) }; } catch (e) { return { o: null }; } };
   async function dongBoLichThem(raw, xacNhan) {
     if (raw === undefined || !MAY) return;
-    const ngay = homNay(); try { trangThai(ngay); } catch (e) { /* */ } // xếp lại theo luật mới (nếu cần) TRƯỚC khi so / ghi lịch
+    const ngay = homNay(); try { trangThai(ngay); } catch (e) { /* */ } // xếp đều lịch (nếu cần) TRƯỚC khi so / ghi
     const s = lay('ngay6_' + ngay, null); if (!s || !s.gio) return;
     const d = docOLich(raw);
     if (d.khac) { if (!window.__lichOKhac) { window.__lichOKhac = 1; ghi(`Lịch 2 máy: ô ${CAI_DAT.O_LICH} (tab Bài viết kênh 1) đang có chữ khác → không dùng ô này, mỗi máy tự xếp lịch`); } return; }
     const o = d.o; const mine = lichThemMinh(ngay, s); if (!Object.keys(mine).length) return;
+    const sig = s.sigK1 || '';
     const dd0 = lay('dang_do', null);
     const daLam = (k) => { const x = (s.s || {})[k]; return !!((x && x.tt && x.tt !== 'cho') || (dd0 && dd0.slot === k) || (demNguoc && demNguoc.ten && demNguoc.ten.includes(tenSlot(k)))); };
     const homNayOk = !!(o && o.ngay === ngay && o.gio && typeof o.gio === 'object');
-    const giaoDaGhi = LA_GIAO && lay('lichghi6', '') === ngay;
-    const theoO = homNayOk && !cuHon(o.ban || '0', PHIEN_BAN) && (o.may === MAY || !giaoDaGhi || cuHon(PHIEN_BAN, o.ban || '0')); // ô cùng bản / bản mới hơn → làm theo; Máy Giao đã ghi lịch của mình thì không theo Máy Cao (trừ khi Máy Cao chạy bản mới hơn)
+    const cuaMinh = homNayOk && o.may === MAY;
+    const banCu = homNayOk && cuHon(o.ban || '0', PHIEN_BAN); // ô do bản cũ hơn ghi
+    const giaoDaGhi = LA_GIAO && lay('lichghi6', '') === ngay + '|' + sig;
+    const theoO = homNayOk && !cuaMinh && !banCu && o.sig === sig && !(giaoDaGhi && !cuHon(PHIEN_BAN, o.ban || '0'));
     const doi = [];
     if (theoO) for (const [k, v] of Object.entries(o.gio)) { if (!(k in mine) || typeof v !== 'number' || daLam(k) || mine[k] === v) continue; doi.push(`${tenSlot(k)} ${phutStr(mine[k])} → ${phutStr(v)}`); s.gio[k] = v; }
     if (doi.length) { luu('ngay6_' + ngay, s); ghi(`Lịch 2 máy: theo lịch ${o.may === 'CAO' ? 'Máy Cao' : 'Máy Giao'} ghi lúc ${gioStr(new Date(o.luc))} — ${doi.join(' · ')}`); try { veBang(); } catch (e) { /* */ } }
-    const gioGhi = theoO ? Object.assign({}, mine, o.gio) : lichThemMinh(ngay, s);
-    const canGhi = !homNayOk || !theoO || Object.keys(mine).some((k) => !(k in o.gio));
-    if (!canGhi || chanLark()) return;
-    if (xacNhan && LA_CAO) return; // Máy Cao: lượt kiểm lại sau khi ghi mà ô đã là lịch Máy Giao → làm theo (ở trên), không ghi đè
-    const ban = homNayOk && cuHon(PHIEN_BAN, o.ban || '0') ? o.ban : PHIEN_BAN;
-    await ghiO(CAI_DAT.TAB_BAI, CAI_DAT.O_LICH, TIEN_TO_LICH + JSON.stringify({ ngay, ban, may: MAY, luc: Date.now(), gio: gioGhi }));
-    if (LA_GIAO) luu('lichghi6', ngay);
-    ghi(`Lịch 2 máy: ${TEN_MAY} ghi lịch bài thêm hôm nay vào ô ${CAI_DAT.O_LICH} (${!homNayOk ? 'ô chưa có lịch hôm nay' : !theoO ? (o.may !== MAY && giaoDaGhi ? 'Máy Giao giữ lịch của mình' : 'lịch trong ô là của bản cũ ' + o.ban) : 'bổ sung bài thêm mới'}) — ${Object.entries(gioGhi).sort((a, b) => a[1] - b[1]).map(([k, v]) => tenSlot(k) + ' ' + phutStr(v)).join(' · ')}`);
+    if (theoO || chanLark()) return;
+    const gioGhi = lichThemMinh(ngay, s);
+    const khacO = !homNayOk || JSON.stringify(gioGhi) !== JSON.stringify(o.gio);
+    let lyDo = '';
+    if (!homNayOk) lyDo = 'ô chưa có lịch hôm nay';
+    else if (cuaMinh) lyDo = khacO ? 'cập nhật lịch của máy này' : '';
+    else if (banCu) lyDo = 'lịch trong ô là của bản cũ ' + (o.ban || '?');
+    else if (o.sig !== sig) lyDo = LA_GIAO || Date.now() - (o.luc || 0) > 60 * 60000 ? 'danh sách bài trong ngày đã đổi' : '';
+    else if (LA_GIAO) lyDo = 'Máy Giao giữ lịch của mình';
+    if (!lyDo || (xacNhan && LA_CAO)) return;
+    await ghiO(CAI_DAT.TAB_BAI, CAI_DAT.O_LICH, TIEN_TO_LICH + JSON.stringify({ ngay, ban: PHIEN_BAN, may: MAY, luc: Date.now(), sig, gio: gioGhi }));
+    if (LA_GIAO) luu('lichghi6', ngay + '|' + sig);
+    ghi(`Lịch 2 máy: ${TEN_MAY} ghi lịch kênh 1 hôm nay vào ô ${CAI_DAT.O_LICH} (${lyDo}) — ${Object.entries(gioGhi).sort((a, b) => a[1] - b[1]).map(([k, v]) => tenSlot(k) + ' ' + phutStr(v)).join(' · ')}`);
     if (!xacNhan) setTimeout(async () => { // 2 máy có thể ghi cùng lúc → 20–30 giây sau đọc lại ô 1 lần (chạy nền, không chặn việc đăng bài)
       try { const r2 = await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_LICH); const o2 = docOLich(r2).o;
         if (o2 && o2.may !== MAY && o2.ngay === ngay) { ghi(`Lịch 2 máy: ${o2.may === 'CAO' ? 'Máy Cao' : 'Máy Giao'} vừa ghi ô cùng lúc → ${LA_GIAO ? 'Máy Giao ghi lại lịch của mình (máy chính được ưu tiên)' : 'Máy Cao làm theo lịch Máy Giao'}`); await dongBoLichThem(r2, true); }
@@ -2495,11 +2503,61 @@
     for (const it of LICH_GOC) { const a = docGio(it.tu), b = docGio(it.den); let x = a + Math.floor(rnd() * (b - a + 1)); x = Math.max(x, truoc + CAI_DAT.CACH_LICH_PHUT); g[it.k] = x; truoc = x; }
     return g;
   }
+  // (6.28.3) XẾP ĐỀU LỊCH KÊNH 1: mọi bài kênh 1 trong ngày (kể cả bài thêm) rải đều 06:30–20:00 theo thứ tự xen kẽ
+  //  Bài 1 → Video 1 → Manifest 1 → Bài 2 → … → Bài 4 → Video 4 → Manifest 4 …; chỉ xếp lại bài CHƯA đăng.
+  //  Không đủ chỗ với khoảng ≥ 30 phút → rút dần tới 15 phút; vẫn không đủ → kéo tới 21:00 (cách 15 phút). Ngẫu nhiên theo ngày → 2 máy ra cùng giờ.
+  const BAN_XEP = '6.28.3';
+  const XEP_DAU = '06:30', XEP_CUOI = '20:00', XEP_CUOI_MUON = '21:00';
+  const soThuTuK1 = (k) => { const m = /^([bvm])(\d+)$/.exec(k); if (!m) return 999; return (+m[2] - 1) * 3 + ({ b: 0, v: 1, m: 2 })[m[1]]; };
+  function xepDeuK1(s, ngay, ep) {
+    const d = duLieu(); if (!(d && d.ngay && d.ngay[ngay])) return false; // chưa đọc sheet ngày này → chưa biết có bao nhiêu bài
+    const K = lichNgay(ngay).filter((x) => (x.kenh || 1) === 1).sort((a, b) => soThuTuK1(a.k) - soThuTuK1(b.k));
+    const sig = K.map((x) => x.k).join(',');
+    if (!ep && s.sigK1 === sig && s.banXep === BAN_XEP && K.every((x) => typeof s.gio[x.k] === 'number')) return false; // bài nào mất giờ (xếp lại khi đổi bản) → xếp lại
+    const dd0 = lay('dang_do', null);
+    const daLam = (k) => { const x = (s.s || {})[k]; return !!((x && x.tt && x.tt !== 'cho') || (dd0 && dd0.slot === k)); };
+    const lam = K.filter((x) => daLam(x.k)); const con = K.filter((x) => !daLam(x.k));
+    s.sigK1 = sig; s.banXep = BAN_XEP;
+    if (!con.length) return true;
+    const homNayLa = ngay === homNay(); const now = new Date(); const phutNay = homNayLa ? now.getHours() * 60 + now.getMinutes() : 0;
+    const DAU = docGio(XEP_DAU), CUOI = docGio(XEP_CUOI), MUON = docGio(XEP_CUOI_MUON);
+    const truoc = Math.max(-1, ...lam.map((x) => { const r = s.s[x.k]; if (r && r.luc && homNayLa) { const t = new Date(r.luc); return t.getHours() * 60 + t.getMinutes(); } return typeof s.gio[x.k] === 'number' ? s.gio[x.k] : -1; }));
+    const rnd = ngauTheoNgay(ngay, 'xepdeu|' + sig);
+    const m = con.length; let tg = [];
+    const batDauMoi = !lam.length && phutNay < DAU;
+    if (batDauMoi) { // đầu ngày: bài đầu 06:30, bài cuối 20:00
+      let buoc = m > 1 ? (CUOI - DAU) / (m - 1) : 0;
+      if (m > 1 && buoc < 15) buoc = Math.max(15, (MUON - DAU) / (m - 1));
+      tg = con.map((x, i) => DAU + i * buoc);
+      const lech = Math.min(10, buoc / 4); tg = tg.map((t, i) => Math.round(i === 0 ? t + rnd() * lech : t - rnd() * lech));
+    } else { // giữa ngày (thêm bài / lên bản mới): từ giờ hiện tại (cách bài vừa đăng ≥ 30 phút) tới 20:00
+      const tu = Math.max(phutNay + 5, truoc >= 0 ? truoc + 30 : 0, DAU);
+      let buoc = (CUOI - tu) / m;
+      if (buoc >= 30) { const lech = Math.min(8, buoc / 5); tg = con.map((x, i) => Math.round(tu + (i + 0.5) * buoc - rnd() * lech)); }
+      else {
+        buoc = m > 1 ? (CUOI - tu) / (m - 1) : 0;
+        if (m > 1 && buoc < 15) buoc = Math.max(15, (MUON - tu) / (m - 1));
+        tg = con.map((x, i) => Math.round(tu + i * Math.max(15, buoc)));
+      }
+    }
+    for (let i = 1; i < tg.length; i++) tg[i] = Math.max(tg[i], tg[i - 1] + 15); // giờ luôn tăng, cách ≥ 15 phút
+    const doi = [];
+    con.forEach((x, i) => { if (s.gio[x.k] !== tg[i]) doi.push(`${x.ten} ${phutStr(tg[i])}`); s.gio[x.k] = tg[i]; });
+    if (doi.length) ghi(`Xếp đều lịch kênh 1 (${K.length} bài, ${lam.length} đã đăng/đang làm): ${doi.join(' · ')}`);
+    return true;
+  }
+  // (6.28.3) khoảng cách giữa 2 bài kênh 1 lúc chạy: còn nhiều bài so với thời gian tới 20:00 (số bài × 30 phút vượt 20:00) → 15 phút, còn lại 30 phút
+  function cachK1(L) {
+    const con = (L || tinhLichNhe()).filter((x) => (x.kenh || 1) === 1 && !x.ket).length;
+    return Date.now() + con * CAI_DAT.CACH_BU_PHUT * 60000 > lucPhut(docGio(XEP_CUOI)) ? 15 : CAI_DAT.CACH_BU_PHUT;
+  }
+  const tinhLichNhe = () => { const s = lay('ngay6_' + homNay(), null) || { s: {} }; return LICH.map((it) => ({ kenh: it.kenh, ket: KET.includes(((s.s || {})[it.k] || {}).tt) })); };
   // (6.19) giờ cho video kênh 2, 3: video cuối của mỗi kênh đăng trước bài đầu tiên kênh 1 khoảng 5–15 phút; video trước đó cách ≥ 30 phút (cùng trang)
   let ngauNhien = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
   function ganGioKenh(s, ngay) {
     const rnd = ngauTheoNgay(ngay, 'kenh'); ngauNhien = (a, b) => a + Math.floor(rnd() * (b - a + 1));
-    let doi = ganGioThem(s, ngay);
+    let doi = xepDeuK1(s, ngay); // (6.28.3)
+    if (ganGioThem(s, ngay)) doi = true;
     if (ganGioBaiThem(s, ngay)) doi = true; // (6.26)
     const L = lichNgay(ngay).filter((x) => x.kenh > 1); if (!L.length) return doi;
     const goc = LICH_GOC.map((x) => s.gio[x.k]).filter((v) => typeof v === 'number'); if (!goc.length) return doi;
@@ -2593,7 +2651,7 @@
     const out = {}; const now = Date.now();
     for (const c of KENH_ALL) {
       const ds = L.filter((x) => (x.kenh || 1) === c);
-      const gap = (c > 1 ? CAI_DAT.KENH_CACH_PHUT : CAI_DAT.CACH_BU_PHUT) * 60000;
+      const gap = (c > 1 ? CAI_DAT.KENH_CACH_PHUT : cachK1(L)) * 60000;
       let truoc = Math.max(0, ...ds.filter((x) => x.xong && x.r.luc).map((x) => x.r.luc)); let thu = 0, tenTruoc = '';
       for (const x of ds.filter((y) => !y.ket && typeof y.gioKH === 'number').sort((a, b) => a.gioKH - b.gioKH)) {
         let t = Math.max(lucPhut(x.gioKH), truoc ? truoc + gap : 0); if (x.keTiep && x.den) t = Math.max(t, x.den);
@@ -2615,7 +2673,7 @@
     }
     window.scrollTo(0, 0); return null;
   }
-  const lucBuKenh = (L, x) => { const c = x.kenh || 1; const t = Math.max(0, ...L.filter((y) => y.xong && y.r.luc && (y.kenh || 1) === c).map((y) => y.r.luc)); return t ? t + (c > 1 ? CAI_DAT.KENH_CACH_PHUT : CAI_DAT.CACH_BU_PHUT) * 60000 : 0; };
+  const lucBuKenh = (L, x) => { const c = x.kenh || 1; const t = Math.max(0, ...L.filter((y) => y.xong && y.r.luc && (y.kenh || 1) === c).map((y) => y.r.luc)); return t ? t + (c > 1 ? CAI_DAT.KENH_CACH_PHUT : cachK1(L)) * 60000 : 0; };
   // trang đang mở thuộc kênh nào (0 = không phải trang nào trong 3 kênh)
   const kenhCuaDuong = () => {
     const p = duongNay(); for (const c of KENH_ALL) if (CAI_DAT.KENH[c].duong.includes(p)) return c;
@@ -2899,7 +2957,8 @@
     let j = null; try { j = await goiFb(`/${idTrangKenh(1)}/posts?fields=id,created_time&limit=3`, tokenTrang(1)); } catch (e) { ghi(`${tenSlot(slot)}: chưa hỏi được Facebook bài mới nhất (${e.message}) → vẫn đăng`); return; }
     const r = (trangThai().s || {})[slot] || {}; const batDau = r.batDau || Date.now() - 30 * 60000;
     const moi = (j.data || []).map((p) => ({ id: p.id, luc: Date.parse(String(p.created_time).replace(/([+-]\d\d)(\d\d)$/, '$1:$2')) })).filter((p) => p.luc && p.luc > batDau - 60000).sort((a, b) => b.luc - a.luc)[0]; // chỉ bài lên SAU lúc mình bắt đầu soạn (bài trước đó đã được kiểm lúc bắt đầu)
-    if (moi && Date.now() - moi.luc < CAI_DAT.CACH_TRANG_PHUT * 60000) { const den = moi.luc + CAI_DAT.CACH_TRANG_PHUT * 60000 + 30000; const e = new LoiMem(`trong lúc soạn, trang vừa có bài kênh 1 khác lên lúc ${gioStr(new Date(moi.luc))} (máy kia / đăng tay) — chưa đủ ${CAI_DAT.CACH_TRANG_PHUT} phút`); e.nhuong = true; e.choDen = den; throw e; }
+    const cachP = Math.min(CAI_DAT.CACH_TRANG_PHUT, cachK1());
+    if (moi && Date.now() - moi.luc < cachP * 60000) { const den = moi.luc + cachP * 60000 + 30000; const e = new LoiMem(`trong lúc soạn, trang vừa có bài kênh 1 khác lên lúc ${gioStr(new Date(moi.luc))} (máy kia / đăng tay) — chưa đủ ${cachP} phút`); e.nhuong = true; e.choDen = den; throw e; }
   }
   async function kiemKhoaTruocDang(slot) { // (6.28) mọi lần đăng (kể cả đăng đúng giờ) đều đọc ô giữ chỗ 1 lần ngay trước khi bấm Đăng
     await kiemCachTruocDang(slot);
@@ -3037,7 +3096,7 @@
       if (ds) daDoApi = true; else ghi(`${it.ten}: chưa hỏi được Facebook (mã khoá lỗi) → nhìn trang để tránh đăng trùng`);
       if (ds && !ep) {
         const moiNhat = Math.max(0, ...ds.map((p) => p.luc || 0));
-        const cachTrang = (it.kenh || 1) > 1 ? CAI_DAT.KENH_CACH_PHUT : CAI_DAT.CACH_TRANG_PHUT;
+        const cachTrang = (it.kenh || 1) > 1 ? CAI_DAT.KENH_CACH_PHUT : Math.min(CAI_DAT.CACH_TRANG_PHUT, cachK1()); // (6.28.3) sát giờ còn nhiều bài → 15 phút
         if (moiNhat && now - moiNhat < cachTrang * 60000) {
           const den = moiNhat + cachTrang * 60000 + 30000;
           capNhatTT((s) => { ttSlot(s, it.k).choDen = den; });
@@ -5706,6 +5765,17 @@
 #smhfb .chip-duyet{background:#fff3d1;border-color:#e0a21a;color:#7a5410;font-weight:800}
 #smhfb .hd-uoc{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:rgba(0,0,0,.07);font-weight:700;font-size:.92em}
 #smhfb .it .tk.link{background:#e8f3ec;color:#1f6b3a;font-weight:800}
+#smhfb .it .tk.soan,#smhfb .it .tk.rong{min-width:84px;text-align:center;justify-content:center;box-sizing:border-box}
+#smhfb .it .tk.rong{padding:4px 10px;border-radius:6px;cursor:pointer;border:0;text-decoration:none;display:inline-flex;align-items:center}
+#smhfb .khung3{border:2px solid var(--m);border-radius:10px;margin:0 0 10px;overflow:hidden}
+#smhfb .khung3 .k3d{display:flex;align-items:center;gap:8px;padding:7px 10px;background:color-mix(in srgb,var(--m) 14%,transparent);font-weight:800;font-size:13px}
+#smhfb .khung3 .k3d .mo{font-weight:600}
+#smhfb .khung3 .k3d .k3so{margin-left:auto;font-size:12.5px}
+#smhfb .khung3 .k3d .k3so.du{color:#2e9d57}
+#smhfb .khung3 .k3t{height:5px;background:rgba(127,127,127,.25);margin:0 10px 4px;border-radius:3px;overflow:hidden}
+#smhfb .khung3 .k3t i{display:block;height:100%;background:var(--m)}
+#smhfb .khung3 .k3b{padding:0 8px 6px}
+#smhfb .khung3 .k3rong{padding:4px 2px 2px;font-size:12px;opacity:.7}
 #smhfb textarea.cmtta{width:100%;box-sizing:border-box;font:13.5px/1.5 "Segoe UI",system-ui,sans-serif;padding:10px 12px;border-radius:10px;border:1px solid var(--vien,#ccc);background:var(--the,#fff);color:inherit;resize:vertical;user-select:text}
 #smhfb input.cmtlink{flex:1;min-width:240px;font-size:13.5px;padding:6px 10px;border-radius:8px;border:1px solid var(--vien,#ccc)}
 #smhfb .cmtck{display:inline-flex;align-items:center;gap:4px;font-weight:600;margin-right:10px;cursor:pointer}
@@ -5889,13 +5959,13 @@
     if (r.loi) return { gio: g, mo: `Lỗi, thử lại lúc ${gioStr(new Date(r.thuLai || Date.now()))}` };
     if (x.keTiep && x.den && x.den < Date.now() - 60000 && lucPhut(x.gioKH) < Date.now() - 60000) return { gio: 'Ngay', mo: `Bài kế tiếp · trễ giờ (hẹn ${phutStr(x.gioKH)}) → đăng ngay khi trang rảnh` }; // (6.24)
     if (!x.keTiep) { const dk = (window.__smhDK || {})[x.k]; if (dk && dk.tre) return { gio: '~' + gioStr(new Date(dk.luc)), mo: `Trễ giờ · xếp hàng thứ ${dk.thu}${dk.sau ? ' (sau ' + dk.sau + ')' : ''} · hẹn ${phutStr(x.gioKH)}` }; } // (6.24)
-    return { gio: g, mo: x.keTiep ? (g !== phutStr(x.gioKH) ? `Bài kế tiếp · dời ${g} (cách bài trước ${CAI_DAT.CACH_BU_PHUT} phút) · hẹn ${phutStr(x.gioKH)}` : `Bài kế tiếp · tự động ${g}`) : `Tự động · hẹn ${g}` };
+    return { gio: g, mo: x.keTiep ? (g !== phutStr(x.gioKH) ? `Bài kế tiếp · dời ${g} (cách bài trước ${cachK1()} phút) · hẹn ${phutStr(x.gioKH)}` : `Bài kế tiếp · tự động ${g}`) : `Tự động · hẹn ${g}` };
   }
   function theSlot(x) {
     const r = x.r; const nd = noiDungSlot(homNay(), x.k);
     const kq = x.xong ? ['ok', `✓ Đã lên ${gioStr(new Date(r.luc))}`] : r.tt === 'dang' ? ['cho', 'Đang đăng…'] : r.tt === 'bo' ? ['xam', 'Đã bỏ'] : ['loi', 'khong_ro', 'thieu'].includes(r.tt) ? ['loi', r.tt === 'thieu' ? 'Thiếu nội dung' : r.tt === 'khong_ro' ? 'Chưa rõ đã lên chưa' : 'Lỗi — đã bỏ qua'] : x.keTiep ? ['cho', 'Bài kế tiếp'] : (() => { const dk = (window.__smhDK || {})[x.k]; return dk && dk.tre ? ['xam', `Xếp hàng${dk.sau ? ' sau ' + dk.sau : ''} · dự kiến ~${gioStr(new Date(dk.luc))}`] : ['xam', `Chờ đến giờ ${phutStr(x.gioKH)}`]; })();
     const kp = (x.kenh || 1) > 1 ? CAI_DAT.KENH[x.kenh] : null; const cotK = (i) => String.fromCharCode(65 + i);
-    let h = `<div class="bai ${MAU[x.loai]}"><div class="bai-h"><span class="bai-t">${esc(x.ten)}<small>${kp ? 'trang ' + esc(kp.ngan) + ' · trước kênh 1 5–15 phút' : (x.them || x.baiThem || !x.tu) ? 'bài thêm theo sheet · hẹn ' + (typeof x.gioKH === 'number' ? phutStr(x.gioKH) : (typeof (trangThai().gio || {})[x.k] === 'number' ? phutStr(trangThai().gio[x.k]) : 'chưa xếp')) : `khung ${x.tu}–${x.den && typeof x.den === 'string' ? x.den : (LICH.find((y) => y.k === x.k) || {}).den}`}</small></span><span class="kq ${kq[0]}">${kq[1]}</span></div>`;
+    let h = `<div class="bai ${MAU[x.loai]}"><div class="bai-h"><span class="bai-t">${esc(x.ten)}<small>${kp ? 'trang ' + esc(kp.ngan) + ' · trước kênh 1 5–15 phút' : (x.them || x.baiThem || !x.tu) ? 'bài thêm theo sheet · hẹn ' + (typeof x.gioKH === 'number' ? phutStr(x.gioKH) : (typeof (trangThai().gio || {})[x.k] === 'number' ? phutStr(trangThai().gio[x.k]) : 'chưa xếp')) : 'xếp đều trong ngày · hẹn ' + (typeof x.gioKH === 'number' ? phutStr(x.gioKH) : 'chưa xếp')}</small></span><span class="kq ${kq[0]}">${kq[1]}</span></div>`;
     h += hang_('Giờ đăng', x.xong ? `<b>${gioStr(new Date(r.luc))}</b> · ${tenMay(r.may)}` : `<b>${nhanSlot(x).gio}</b>`);
     const cot = kp ? `cột ${cotK(kp.cot.cap)} (tab ${kp.tenTab}${nd.hang ? ' hàng ' + nd.hang : ''})` : { b1: 'cột B', b2: 'cột D', b3: 'cột F', video: 'cột E (tab Kênh 1)', manifest: 'cột G (tab Kênh 1)' }[x.loai];
     h += hang_(`Nội dung · ${cot}`, nd.text ? `<span class="rv phu">${esc(cat(nd.text, 160))}</span>` : '<span class="chip loi">Trống</span>');
@@ -5949,7 +6019,7 @@
     const nd = noiDungSlot(nm, x.k, d); const r = x.r;
     const kp = (x.kenh || 1) > 1 ? CAI_DAT.KENH[x.kenh] : null; const cotK = (i) => String.fromCharCode(65 + i);
     const cot = kp ? `cột ${cotK(kp.cot.cap)} (tab ${kp.tenTab}${nd.hang ? ' hàng ' + nd.hang : ''})` : { b1: 'cột B', b2: 'cột D', b3: 'cột F', video: 'cột E (tab Kênh 1)', manifest: 'cột G (tab Kênh 1)' }[x.loai];
-    let h = `<div class="bai ${MAU[x.loai]}"><div class="bai-h"><span class="bai-t">${esc(x.ten)}<small>ngày mai · ${kp ? 'trang ' + esc(kp.ngan) : `khung ${x.tu}–${(LICH_GOC.find((y) => y.k === x.k) || {}).den}`}</small></span><span class="kq ${x.xong ? 'ok' : nd.thieu.length ? 'loi' : 'xam'}">${x.xong ? '✓ Đã lên' : nd.thieu.length ? 'Thiếu nội dung' : 'Chờ ngày mai'}</span></div>`;
+    let h = `<div class="bai ${MAU[x.loai]}"><div class="bai-h"><span class="bai-t">${esc(x.ten)}<small>ngày mai · ${kp ? 'trang ' + esc(kp.ngan) : 'hẹn ' + phutStr(x.gioKH)}</small></span><span class="kq ${x.xong ? 'ok' : nd.thieu.length ? 'loi' : 'xam'}">${x.xong ? '✓ Đã lên' : nd.thieu.length ? 'Thiếu nội dung' : 'Chờ ngày mai'}</span></div>`;
     h += hang_('Giờ dự kiến', `<b>${phutStr(x.gioKH)}</b>`);
     h += hang_(`Nội dung · ${cot}`, nd.text ? `<span class="rv phu">${esc(cat(nd.text, 160))}</span>` : '<span class="chip loi">Trống</span>');
     if (x.loai === 'b2' || x.loai === 'b3') h += hang_('Ảnh của bài', (nd.anh || []).length ? `<span class="chip ok">${nd.anh.length} ảnh</span>` : '<span class="chip loi">Chưa có ảnh</span>');
@@ -5976,14 +6046,21 @@
     const choDs = L.filter((x) => !x.ket && x !== kt0).sort((a, b) => ((DK[a.k] || {}).luc || lucPhut(a.gioKH)) - ((DK[b.k] || {}).luc || lucPhut(b.gioKH)));
     const dongIt = (x, gon) => {
       const nl = nhanSlot(x); const lop = lopTt(x) || 'xam';
-      const nutSoan = gon ? (x.xong && x.r.link ? `<a href="#" class="tk" data-a="mobai" data-link="${esc(x.r.link)}">↗</a>` : '') : nutTimeline(x, '');
+      const nutSoan = gon ? (x.xong && x.r.link ? `<button class="phu-nut tk link rong" data-a="mobai" data-link="${esc(x.r.link)}" title="Mở bài đã đăng ở tab mới để kiểm tra">↗ Mở bài</button>` : '') : nutTimeline(x, ''); // (6.28.3) nút mở bài rộng bằng nút Soạn
       return `<div class="it${gon ? ' gon' : ''}${x === kt0 ? ' ketiep' : ''}${x.k === chon.k ? ' sel' : ''}" data-a="chon" data-k="${x.k}"><div class="dm ${lop}">${x.xong ? '✓' : KY(x)}</div><div class="h">${nl.gio} · ${esc(x.ten)}${gon ? ` <span class="t">${esc(nl.mo.replace(/^Đã lên lúc \d{1,2}:\d{2} · /, ''))}</span>` : ''}</div>${gon ? '' : `<div class="t">${esc(nl.mo)}</div>`}${nutSoan}</div>`;
     };
-    const tl = xongDs.map((x) => dongIt(x, true)).join('') + (kt0 ? `<div class="tl-moc">▶ Bài kế tiếp</div>${dongIt(kt0, false)}` : '') + (choDs.length ? `<div class="tl-moc">Chưa đăng (${choDs.length})</div>` + choDs.map((x) => dongIt(x, false)).join('') : '');
+    // (6.28.3) chia 3 khung Sáng / Chiều / Tối, mỗi khung 1 viền màu + số bài đã đăng + thanh tiến độ (giờ = giờ đã lên, chưa lên thì giờ dự kiến)
+    const gioIt = (x) => { const t = x.xong && x.r.luc ? x.r.luc : ((DK[x.k] || {}).luc || lucPhut(x.gioKH)); const d0 = new Date(t); return d0.getHours() * 60 + d0.getMinutes(); };
+    const KHUNG3 = [['sang', '☀️ SÁNG', '06:00–12:00', '#e0a21a', 0, 720], ['chieu', '🌤 CHIỀU', '12:00–18:00', '#3ea6ff', 720, 1080], ['toi', '🌙 TỐI', '18:00–22:30', '#9b7bf0', 1080, 1e9]];
+    const thuTu = xongDs.concat(kt0 ? [kt0] : [], choDs);
+    const tl = KHUNG3.map(([k3, ten, gio, mau, a0, b0]) => {
+      const ds = thuTu.filter((x) => { const g = gioIt(x); return g >= a0 && g < b0; }); const xn = ds.filter((x) => x.xong).length; const du = ds.length && xn === ds.length;
+      return `<div class="khung3" data-k3="${k3}" style="--m:${mau}"><div class="k3d">${ten} <span class="mo">${gio}</span><span class="k3so${du ? ' du' : ''}">${xn}/${ds.length} đã đăng${du ? ' ✓' : ''}</span></div><div class="k3t"><i style="width:${ds.length ? Math.round(xn / ds.length * 100) : 0}%"></i></div><div class="k3b">${ds.length ? ds.map((x) => (x === kt0 ? '<div class="tl-moc">▶ Bài kế tiếp</div>' : '') + dongIt(x, !!x.ket)).join('') : '<div class="k3rong">Không có bài trong khung này</div>'}</div></div>`;
+    }).join('');
     const ng = Object.values(trangThai().ngoai || {});
     const ngoai = ng.length ? `<div class="the-nd"><div class="nhan">Video/manifest đăng ngoài lịch hôm nay (${ng.length})</div>${ng.map((r) => `<div class="dong"><span>${gioStr(new Date(r.luc))}</span><span>${esc(cat(r.text, 60) || '(không có chữ)')} · ${r.cmtOk ? '<span class="chip ok">đủ comment</span>' : `<span class="chip cho">kiểm ${(r.kiem || []).length}/3</span>`}${r.link ? ` <a href="#" data-a="mobai" data-link="${esc(r.link)}">Mở ↗</a>` : ''}</span></div>`).join('')}</div>` : '';
     const d = new Date(); const dl = duLieu();
-    const mo = `<div class="mo" style="margin:0 0 10px">${THU[d.getDay()]} ${homNay().replace(/-/g, '/')} · ${LICH.filter((x) => (x.kenh || 1) === 1).length} bài kênh 1${LICH.some((x) => x.them) ? ` (có ${LICH.filter((x) => x.them).length} bài thêm theo sheet)` : ''}${LICH.some((x) => x.kenh > 1) ? ` + ${LICH.filter((x) => x.kenh > 1).length} video kênh 2, 3` : ''}, giờ ngẫu nhiên trong khung · bài trễ đăng bù cách nhau ${CAI_DAT.CACH_BU_PHUT} phút · quá ${CAI_DAT.GIO_CHOT} thì bỏ${dl ? ` · sheet đọc lúc ${gioStr(new Date(dl.luc))}` : ''}</div>`;
+    const mo = `<div class="mo" style="margin:0 0 10px">${THU[d.getDay()]} ${homNay().replace(/-/g, '/')} · ${LICH.filter((x) => (x.kenh || 1) === 1).length} bài kênh 1${LICH.some((x) => x.them) ? ` (có ${LICH.filter((x) => x.them).length} bài thêm theo sheet)` : ''}${LICH.some((x) => x.kenh > 1) ? ` + ${LICH.filter((x) => x.kenh > 1).length} video kênh 2, 3` : ''}, kênh 1 rải đều 06:30–20:00 (nhiều bài thì tới 21:00) · bài trễ cách nhau ${CAI_DAT.CACH_BU_PHUT} phút, sát giờ còn nhiều bài thì 15 phút · quá ${CAI_DAT.GIO_CHOT} thì bỏ${dl ? ` · sheet đọc lúc ${gioStr(new Date(dl.luc))}` : ''}</div>`;
     return html + `<div class="tlay"><div class="tl${L.length > 12 ? ' nho' : ''}"><h4>Lịch hôm nay · ${xongN}/${L.length} đã đăng</h4>${tl}</div><div class="ct">${mo}${theSlot(chon)}${ngoai}</div></div>`;
   }
 
