@@ -142,6 +142,18 @@
    "moTa": "@version trong đầu script kẹt 6.22 → Tampermonkey không tự cập nhật bản mới",
    "trangThai": "đã sửa 6.28.1 (build6.py tự chép PHIEN_BAN)",
    "ngay": "2026-10-22"
+  },
+  {
+   "ma": "lich-2-may-lech",
+   "moTa": "22/10: lịch bài thêm Máy Giao (tạo từ bản cũ) khác Máy Cao → Video 4 đăng trước Video 1, Video 5 định đăng 12:32 cùng lúc Máy Cao đăng Video 2",
+   "trangThai": "đã sửa 6.28.2 (lịch chung ô Z8 + xếp lại khi đổi bản + kiểm 20 phút trước khi bấm Đăng)",
+   "ngay": "2026-10-22"
+  },
+  {
+   "ma": "thu-vien-khop-nham",
+   "moTa": "Báo cáo tuần: lượt xem từng video toàn 10 vì Thư viện nội dung khớp theo chữ, nhiều video cùng câu mở đầu",
+   "trangThai": "đã sửa 6.28.2 (khớp theo mã bài)",
+   "ngay": "2026-10-22"
   }
  ],
  "danhGiaTuan": [],
@@ -181,6 +193,10 @@
   {
    "ngay": "2026-10-22",
    "tomTat": "Ra bản 6.28.1: Soạn thử chỉ số tuần hiện khung giống hệt tin Lark + ghi chú thêm, Gửi thử/Gửi ngay trong 30 phút dùng lại bản soạn; video nổi bật đủ 4 mục (lượt xem, follow, nhắn tin ước tính từ comment hỏi mua, tương tác), mục thiếu ghi 'chưa đọc được' + báo nhóm lỗi; dự phòng Thư viện nội dung khi mã không trả lượt xem (cả lượt xem 24h); sửa lỗi 'ten'; @version tự theo PHIEN_BAN; quy trình tối luôn lấy du-an mới nhất từ GitHub."
+  },
+  {
+   "ngay": "2026-10-22",
+   "tomTat": "Ra bản 6.28.2: báo cáo tuần chỉ video chính (bỏ manifest, bỏ mục comment hỏi mua), giao diện 3 ô số + huy chương, khớp Thư viện nội dung theo mã bài; lịch bài thêm chung 2 máy qua ô Z8 (1 máy tắt vẫn tự xếp), đổi bản tự xếp lại, kiểm đủ 20 phút trước khi bấm Đăng."
   }
  ],
  "capNhat": "2026-10-22"
