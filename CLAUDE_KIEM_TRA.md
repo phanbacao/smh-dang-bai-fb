@@ -352,3 +352,11 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 2. Lượt xem 24h (`vongTV24`): thay Thư viện nội dung bằng trang Thông tin chi tiết từng video (tv24_6.dangK = video đang mở, tối đa 3 lần/video, 60 phút/lượt, mỗi lượt ≤ 8 phút).
 3. Thẻ: lỗi 1 dòng ngắn (`ngan`: thiếu quyền / hết hạn / không khớp); ▲100% (kỳ trước = 0) → "mới"; 7 ngày = 28 ngày → ghi chú "page mới lập từ 17/10". Tên video trống → chữ dòng sheet theo link (`tenTuSheet`), không có → "Video đăng HH:MM dd/mm".
 - Sim: fake trang /content/insights (số theo mã bài). Đạt: chisotv (6 trang chi tiết), tv24 (2 video ghi qua trang chi tiết), chisolai, chiso, chisobuoc7.
+
+## 6.28.5 (23/10/2026) — tiết kiệm lượt Lark
+- Hạn mức cả tổ chức 10.000 lượt/tháng (gói Starter, gồm cả bot KPI "CAO's AI Assistant"). 1–22/10 đã dùng 8.801 (bot 6.209 phần lớn do lỗi đầu tháng, script 2.590).
+1. `kiemKhoaTruocDang`: Máy Giao đăng đúng giờ (≤ GIAO_GIU_CHO_SAU_PHUT sau giờ hẹn, không phải bấm tay) hoặc vừa giữ chỗ < 5 phút (`__smhKhoaLuc`) → không đọc ô Z1 (trước: mỗi bài 1 lượt, 11–20 lượt/ngày).
+2. Trần mềm/ngày (`TRAN_LARK_NGAY`: Giao 35, Cao 15; `larkTietKiem`): chạm trần thì bỏ việc phụ — ghi báo cáo lỗi Z5/Z6 (trừ khi bấm 🛟), ghi lại ô lịch Z8, ghi cột G. Việc chính vẫn chạy.
+3. Báo cáo lỗi: 8 tiếng/lần (trước 6). ghiTTBai: Máy Cao chỉ ghi dự phòng 1 lần sau 23:00.
+4. Đếm lượt tháng mỗi máy (`lark_thang6`) hiện ở tab Hệ thống.
+- Sim: ngay 36 → 24 lượt/ngày, themvideo 47 → 32; caothay, ngay2may đạt.

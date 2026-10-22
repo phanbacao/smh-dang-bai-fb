@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.4
+// @version      6.28.5
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.4';
+  const PHIEN_BAN = '6.28.5';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -478,7 +478,12 @@
   }
   let LARK_VIEC = ''; // (6.20.8) đếm lượt gọi Lark theo từng loại việc (tab Hệ thống)
   const demLark = (url) => { try { demLark0(url); } catch (e) { /* đếm lượt không bao giờ được làm hỏng việc chính */ } };
-  const demLark0 = (url) => { const c = lay('lark_dem', {}) || {}; const moi = c.ngay === homNay() ? c : { ngay: homNay(), so: 0, loai: {} }; moi.so = (moi.so || 0) + 1; const k = LARK_VIEC || (!url ? 'tải tệp (video/ảnh)' : /tenant_access_token/.test(url) ? 'lấy mã Lark' : 'khác ' + (String(url).split('/open-apis/')[1] || '').split('?')[0].replace(/[A-Za-z0-9]{20,}/g, '…').slice(0, 40)); moi.loai = moi.loai || {}; moi.loai[k] = (moi.loai[k] || 0) + 1; capNhat('lark_dem', moi); };
+  // (6.28.5) TIẾT KIỆM LƯỢT LARK: hạn mức cả tổ chức 10.000 lượt/tháng (gồm cả bot KPI). Mỗi máy có trần mềm/ngày — vượt trần thì bỏ việc phụ (đồng bộ lịch Z8, ghi báo cáo lỗi, ghi cột G, kiểm khoá khi đăng đúng giờ); việc chính (đọc sheet, tải tệp, ghi ĐÃ ĐĂNG, giữ chỗ khi đăng thay) vẫn chạy
+  const TRAN_LARK_NGAY = () => (LA_CAO ? 15 : 35);
+  const larkHomNay = () => { const c = lay('lark_dem', {}) || {}; return c.ngay === homNay() ? (c.so || 0) : 0; };
+  const larkTietKiem = () => larkHomNay() >= TRAN_LARK_NGAY();
+  const demThangLark = () => { try { const th = homNay().slice(3); const m = lay('lark_thang6', null) || {}; const moi = m.th === th ? m : { th, so: 0 }; moi.so = (moi.so || 0) + 1; luu('lark_thang6', moi); } catch (e) { /* */ } };
+  const demLark0 = (url) => { demThangLark(); const c = lay('lark_dem', {}) || {}; const moi = c.ngay === homNay() ? c : { ngay: homNay(), so: 0, loai: {} }; moi.so = (moi.so || 0) + 1; const k = LARK_VIEC || (!url ? 'tải tệp (video/ảnh)' : /tenant_access_token/.test(url) ? 'lấy mã Lark' : 'khác ' + (String(url).split('/open-apis/')[1] || '').split('?')[0].replace(/[A-Za-z0-9]{20,}/g, '…').slice(0, 40)); moi.loai = moi.loai || {}; moi.loai[k] = (moi.loai[k] || 0) + 1; capNhat('lark_dem', moi); };
   // lỗi mạng / quá lâu / máy chủ 5xx / giới hạn tốc độ: tự thử lại tối đa 2 lần (cách 3–8 giây) rồi mới tính là lỗi
   async function goi(method, url, body, headers = {}, timeout) {
     const duLieu = url.startsWith('https://open.larksuite.com/open-apis/') && !url.includes('/bot/v2/hook/');
@@ -874,6 +879,7 @@
     if (theoO) for (const [k, v] of Object.entries(o.gio)) { if (!(k in mine) || typeof v !== 'number' || daLam(k) || mine[k] === v) continue; doi.push(`${tenSlot(k)} ${phutStr(mine[k])} → ${phutStr(v)}`); s.gio[k] = v; }
     if (doi.length) { luu('ngay6_' + ngay, s); ghi(`Lịch 2 máy: theo lịch ${o.may === 'CAO' ? 'Máy Cao' : 'Máy Giao'} ghi lúc ${gioStr(new Date(o.luc))} — ${doi.join(' · ')}`); try { veBang(); } catch (e) { /* */ } }
     if (theoO || chanLark()) return;
+    if (larkTietKiem() && homNayOk) { if (!window.__lichTK) { window.__lichTK = 1; ghi('Lịch 2 máy: hôm nay đã chạm trần lượt Lark → không ghi lại ô lịch (lịch trong ô vẫn dùng được)'); } return; } // (6.28.5)
     const gioGhi = lichThemMinh(ngay, s);
     const khacO = !homNayOk || JSON.stringify(gioGhi) !== JSON.stringify(o.gio);
     let lyDo = '';
@@ -2963,6 +2969,9 @@
   async function kiemKhoaTruocDang(slot) { // (6.28) mọi lần đăng (kể cả đăng đúng giờ) đều đọc ô giữ chỗ 1 lần ngay trước khi bấm Đăng
     await kiemCachTruocDang(slot);
     if (chanLark()) return; const cuaMinh = window.__smhKhoaSlot === slot;
+    { // (6.28.5) bớt lượt Lark: Máy Giao đăng đúng giờ (Máy Cao chỉ đăng thay khi Giao trễ > 25 phút và luôn ghi ô giữ chỗ trước) / vừa giữ chỗ xong < 5 phút → không đọc lại ô Z1
+      const g = (trangThai().gio || {})[slot]; const dungGio = LA_GIAO && !window.__smhEp && typeof g === 'number' && Date.now() <= lucPhut(g) + CAI_DAT.GIAO_GIU_CHO_SAU_PHUT * 60000;
+      if (dungGio || (cuaMinh && Date.now() - (window.__smhKhoaLuc || 0) < 5 * 60000)) return; }
     let kx = null; try { kx = docKhoa(chuO(await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA)), slot); } catch (e) { return; }
     if (kx && kx.ngay === homNay() && kx.slot === slot && kx.may !== MAY && (cuaMinh || Date.now() - kx.luc < CAI_DAT.NHUONG_PHUT * 60000)) { window.__smhKhoaSlot = ''; const e = new LoiMem(`máy ${kx.may === 'CAO' ? 'Cao' : 'Giao'} đã nhận đăng bài này lúc ${gioStr(new Date(kx.luc))} (người bấm Đăng tay)`); e.nhuong = true; throw e; }
   }
@@ -2976,7 +2985,7 @@
     const y = await doc();
     const ok = !!(y && y.ngay === homNay() && y.slot === k && y.may === MAY); // (6.28) khoá riêng từng bài // (6.19.2) máy kia vừa giữ ô của bài KHÁC (vd kênh 2 vs kênh 3) → không phải nhường
     ghi(ok ? `${tenSlot(k)}: đã giữ chỗ (ô ${CAI_DAT.O_KHOA}) → ${TEN_MAY} đăng` : `${tenSlot(k)}: máy kia vừa giữ chỗ cùng lúc → nhường`);
-    if (ok) { window.__smhKhoaSlot = k; capNhatTT((s) => { ttSlot(s, k).khoaKhac = null; }); }
+    if (ok) { window.__smhKhoaSlot = k; window.__smhKhoaLuc = Date.now(); capNhatTT((s) => { ttSlot(s, k).khoaKhac = null; }); }
     return ok;
   }
 
@@ -3580,7 +3589,9 @@
   // (6.26.7) tab "Bài viết kênh 1" cột G (Trạng thái): hàng nào cả 3 bài đã lên trang → ghi "Đã đăng" (cùng các mốc ghi gom 13:40 / 18:40 / 22:40; Máy Cao trễ 20 phút để Máy Giao ghi trước)
   async function ghiTTBai(ep) {
     if (!MAY || chanLark()) return false;
+    if (!ep && larkTietKiem()) return false; // (6.28.5) chạm trần lượt Lark ngày → để lượt sau / máy kia ghi
     const mm = phutTrongNgay(new Date()); const ngay = homNay(); const lech = LA_GIAO ? 0 : 20; const st = lay('gomb6_' + ngay, {}) || {};
+    if (LA_CAO && !ep && mm < docGio(MOC_GOM[MOC_GOM.length - 1]) + 20) return false; // (6.28.5) Máy Cao chỉ ghi dự phòng 1 lần cuối ngày (Máy Giao đã ghi ở các mốc)
     const moc = MOC_GOM.filter((g) => mm >= docGio(g) + lech && !st[g]).pop(); if (!ep && !moc) return false;
     const xongMoc = () => { MOC_GOM.forEach((g) => { if (mm >= docGio(g) + lech) st[g] = Date.now(); }); luu('gomb6_' + ngay, st); }; // (6.28) chỉ đánh dấu khi đã ghi xong / không còn gì phải ghi
     if (Date.now() - (window.__ttBaiThu || 0) < 10 * 60000) return false; window.__ttBaiThu = Date.now();
@@ -5283,7 +5294,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;
@@ -6623,7 +6634,7 @@
 
   // ---------- ghi báo cáo lên Lark (khi có lỗi mới; tối đa 30 phút/lần; nút 🛟 thì ghi ngay) ----------
   const oBC = () => (LA_CAO ? CAI_DAT.O_BC_CAO : CAI_DAT.O_BC_GIAO);
-  const canGhiBC = () => { if (!MAY || !coBiMat() || lay('bc6_kiem', '') === 'khoa') return false; const b = layBC(); if (!b.doi || b.doi <= (b.daGhi || 0)) return false; return b.gap || Date.now() - (b.daGhi || 0) >= 6 * 3600000; }; // (6.25) 6 tiếng/lần (6.20.8: 4 tiếng) báo cáo lỗi ghi lên sheet tối đa 4 tiếng/lần (trước 30 phút)
+  const canGhiBC = () => { if (!MAY || !coBiMat() || lay('bc6_kiem', '') === 'khoa') return false; const b = layBC(); if (!b.doi || b.doi <= (b.daGhi || 0)) return false; return b.gap || (!larkTietKiem() && Date.now() - (b.daGhi || 0) >= 8 * 3600000); }; // (6.28.5) 8 tiếng/lần, quá trần lượt Lark ngày thì chỉ ghi khi bấm 🛟 // (6.25) 6 tiếng/lần (6.20.8: 4 tiếng) báo cáo lỗi ghi lên sheet tối đa 4 tiếng/lần (trước 30 phút)
   function tomTatSlot() { const s = trangThai(); const o = {}; for (const it of LICH) { const r = s.s[it.k]; if (r) o[it.k] = [r.tt, r.may || '', r.lan || 0, r.vong || 0, String(r.loi || r.lyDo || '').slice(0, 80)].join('|'); } return o; }
   async function ghiBaoCaoLark() {
     if (!canGhiBC() || chanLark()) return false;
@@ -6692,6 +6703,7 @@
     let h = `<div class="the-nd" style="margin-top:10px"><div class="nhan">🔄 Tự nâng cấp</div>`;
     h += `<div class="dong"><span>Đang chạy</span><span><b>bản ${PHIEN_BAN}</b>${tt.chinhThuc ? ' · bản chính thức trên GitHub: ' + esc(tt.chinhThuc) : ''}</span></div>`;
     h += `<div class="dong"><span>Kênh 1 đang đăng</span><span>${CAI_DAT.KENH[1].moi ? '🟢 Kênh 1 mới (' + esc(CAI_DAT.KENH[1].ten) + ') · kênh 1 cũ: tạm dừng' : '🟠 Kênh 1 CŨ (' + esc(CAI_DAT.KENH[1].ten) + ')'} <button class="nut nho" data-a="k1cu">${CAI_DAT.KENH[1].moi ? 'Bật lại kênh 1 cũ' : 'Về kênh 1 mới'}</button></span></div>`; // (6.21)
+    { const lm = lay('lark_thang6', null); if (lm) h += `<div class="dong"><span>Lượt gọi Lark tháng này (máy này)</span><span><b>${lm.so || 0}</b> · trần mềm mỗi ngày ${TRAN_LARK_NGAY()} lượt${larkTietKiem() ? ' — <b style="color:#d93a3a">hôm nay đã chạm trần, đang bỏ việc phụ</b>' : ''} (hạn mức cả tổ chức 10.000/tháng gồm cả bot KPI)</span></div>`; }
     { const ld = lay('lark_dem', {}) || {}; if (ld.ngay === homNay()) { const ds = Object.entries(ld.loai || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${esc(k)}: ${n}`).join(' · '); h += `<div class="dong"><span>Lượt gọi Lark hôm nay</span><span><b>${ld.so || 0}</b>${ds ? ' — ' + ds : ''}</span></div>`; } } // (6.20.8)
     { const c = lay('cham6', null); const ds = c && c.ngay === homNay() ? c.ds : []; h += `<div class="dong"><span>Bước quá lâu hôm nay</span><span>${ds.length ? ds.slice(-8).reverse().map((x) => `<b>${gioStr(new Date(x.luc))}</b> ${esc(x.ten)} ${x.giay}s (ngưỡng ${x.nguong}s)`).join('<br>') : 'chưa có'}</span></div>`; } // (6.24)
     h += `<div class="dong"><span>Mã bí mật</span><span>${coBiMat() ? '🟢 đã có trong máy' : '🔴 máy này chưa có mã Lark — Claude sẽ nạp khi kiểm tra tối'}</span></div>`;

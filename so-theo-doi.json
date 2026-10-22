@@ -217,7 +217,11 @@
   {
    "ngay": "2026-10-22",
    "tomTat": "Ra bản 6.28.4: dự phòng đọc số từng video qua trang Thông tin chi tiết (cả lượt xem 24h), lỗi 1 dòng ngắn, ▲100% → 'mới', tên video trống lấy từ sheet. Mã đọc trang đã thêm quyền read_insights."
+  },
+  {
+   "ngay": "2026-10-23",
+   "tomTat": "Ra bản 6.28.5: giảm lượt gọi Lark của script khoảng 1/3 (bỏ đọc ô khoá khi Máy Giao đăng đúng giờ, trần mềm/ngày, báo cáo lỗi 8 tiếng/lần, Máy Cao ghi cột G 1 lần cuối ngày). Hạn mức tổ chức còn ~1.199 lượt cho 23–31/10."
   }
  ],
- "capNhat": "2026-10-22"
+ "capNhat": "2026-10-23"
 }
