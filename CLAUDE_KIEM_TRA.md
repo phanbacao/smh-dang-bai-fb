@@ -21,7 +21,11 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 
 ## Chuẩn bị (chỉ làm khi cần sửa lỗi)
 1. Kiểm công cụ trên máy: `python --version`, `node --version`. Thiếu thì cài (Python 3, Node.js LTS) — cài 1 lần.
-2. Mã nguồn: có sẵn `du-an\` thì dùng; chưa có thì tải `https://raw.githubusercontent.com/phanbacao/smh-dang-bai-fb/main/du-an.tar.gz` và giải nén vào `du-an\` (`tar -xzf` có sẵn trên Windows 10/11).
+2. Mã nguồn — **(6.28.1) LUÔN lấy bản mới nhất trên GitHub trước khi sửa** (bản phát hành ban ngày được đưa thẳng lên GitHub, `du-an\` trên máy có thể đã cũ):
+   - Đọc số bản trên GitHub: `https://raw.githubusercontent.com/phanbacao/smh-dang-bai-fb/main/trangthai.json` (`chinhThuc`) và dòng `const PHIEN_BAN = '…'` trong `https://raw.githubusercontent.com/phanbacao/smh-dang-bai-fb/main/smh.user.js`.
+   - So với `PHIEN_BAN` trong `du-an\v6\p1_dau.js`. GitHub mới hơn (hoặc chưa có `du-an\`) → tải `https://raw.githubusercontent.com/phanbacao/smh-dang-bai-fb/main/du-an.tar.gz`, đổi tên `du-an\` cũ thành `du-an-cu-<bản>\` (không xoá), giải nén bản mới vào `du-an\` (`tar -xzf` có sẵn trên Windows 10/11), chép lại `bimat.json` (bước 3).
+   - Bằng nhau → dùng `du-an\` đang có. Máy cũ hơn GitHub mà không tải được → KHÔNG sửa code tối nay (chỉ đọc báo cáo + ghi sổ), ghi lý do vào tin nhắn cuối.
+   - Sổ theo dõi: nếu `so-theo-doi.json` trên GitHub có `capNhat` mới hơn bản trong THƯ MỤC DỰ ÁN → gộp (giữ mục của cả 2, cùng mục thì lấy bản mới hơn) rồi mới ghi tiếp.
 3. Mã bí mật: Google Drive, file **"SMH dang bai - ma bi mat (KHONG CHIA SE)"** (id `1Kc6_UVKSBfreLtVtKKQzVhh-L9mixQH9`) → lưu thành `du-an\v6\bimat.json` (file này KHÔNG bao giờ đưa lên GitHub).
 4. Ghép: `cd du-an\v6` → `python build6.py` → ra `smh6.user.js` (bản riêng, dùng cho giả lập) và `smh6.public.user.js` (bản công khai).
 5. Trang giả lập (lần đầu): trong `du-an\sim6` chạy `npm i playwright` rồi `npx playwright install chromium`. Chạy: `node chay-tat-ca.js 3` (toàn bộ, khoảng 45–60 phút) hoặc `node chay-tat-ca.js 2 <tên kịch bản…>` (vài kịch bản). Kết quả ở `kq\*.txt`; cuối cùng in "TẤT CẢ ĐẠT" hoặc danh sách lỗi (chạy lại riêng từng cái để loại lỗi do máy quá tải).
@@ -43,8 +47,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
    - `ky` (lỗi đã sửa mà lặp lại / lỗi dày): như `vua` + **soạn thử trên Facebook thật** loại bài liên quan (popup → tab Ngày mai → nút Soạn; dừng trước nút Đăng; xem bước nào khác trang giả lập; đóng hộp, bỏ nháp). Cập nhật trang giả lập cho giống Facebook thật rồi mới sửa.
    - 3 ngày liền không có lỗi mới → hạ 1 mức. Lỗi lặp lại sau khi sửa → lên `ky`.
 4. **Tối ưu**: việc có `tk` chạy nhiều mà `kq = 0` suốt 7 ngày → đề xuất giảm (giữ mức tối thiểu cho: bài đã lên chưa, comment đủ chưa, chống trùng). Việc chậm bất thường → tìm cách nhanh hơn.
-5. **Có bản sửa** → tăng số bản (`@version`, `PHIEN_BAN` trong `p1_dau.js`; GIỮ NGUYÊN `@name`), ghép, chạy toàn bộ giả lập (phải "TẤT CẢ ĐẠT"), rồi chép `smh6.public.user.js` → `cho-duyet\smh.user.js` và viết `cho-duyet\tom-tat.txt` (lỗi gì → sửa gì; "Đã tối ưu: cũ → mới").
-6. Ghi **sổ theo dõi** trong THƯ MỤC DỰ ÁN (lỗi mới, lặp lại, mức kiểm, `nhatKyNgay` 1 dòng/ngày). Không đẩy lên GitHub ở bước này.
+5. **Có bản sửa** → tăng số bản (`PHIEN_BAN` trong `p1_dau.js`; từ 6.28.1 `build6.py` tự chép số này vào `@version` để Tampermonkey tự cập nhật; GIỮ NGUYÊN `@name`), ghép, chạy toàn bộ giả lập (phải "TẤT CẢ ĐẠT"), rồi chép `smh6.public.user.js` → `cho-duyet\smh.user.js` và viết `cho-duyet\tom-tat.txt` (lỗi gì → sửa gì; "Đã tối ưu: cũ → mới").
+6. Ghi **sổ theo dõi** trong THƯ MỤC DỰ ÁN (lỗi mới, lặp lại, mức kiểm, `nhatKyNgay` 1 dòng/ngày). Lượt tối **chỉ cập nhật sổ theo dõi** (và bản chờ duyệt nếu có sửa) — không đẩy lên GitHub ở bước này.
 7. **Tin nhắn cuối** (3–6 dòng): hôm nay lỗi gì, đã sửa gì, đã tối ưu gì; có bản chờ duyệt thì ghi "Trả lời **duyệt** để em đưa bản <số> lên, 2 máy sẽ tự cập nhật". Không có gì: "Hôm nay ổn, không cần làm gì." **Dòng cuối luôn ghi: "Mức kiểm tra hôm nay: nhanh / vừa / kỹ"** (để anh Cao đối chiếu với trang Mức sử dụng).
 8. Anh Cao trả lời **"duyệt"** trong phiên → làm mục "Cập nhật GitHub".
 
@@ -282,3 +286,45 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Tiêu đề khung "📊 Báo cáo chỉ số tuần" chữ sáng khi Facebook giao diện tối.
 - Sim: window.focus giả có cờ __focusHong; kịch bản chisoan (tự chuyển tab → xem 6 trang), chisoanhong (07:00 thử chuyển + 6 lần thông báo 07:45→09:00).
 - Ghi chú: số 7 ngày = 28 ngày (▲100%) trên tab Chỉ số tuần ngày 21/10 nhiều khả năng do trang kênh 1 mới lập < 28 ngày — đối chiếu lại khi chạy thật thứ 6.
+
+## 6.27.1 (21/10/2026) — Cao cài tay, chưa lên GitHub
+- 21/10 Video 4 (bài thêm) hẹn 07:22 trước Video 1 (07:58) vì ganGioThem rải vào khoảng trống, không theo số. Nay: bài thêm giữ số thứ tự trong cùng loại (v4 sau v3, v5 sau v4; m tương tự; b4 sau b3…), vẫn rải khoảng trống ≥ 30 phút; hết chỗ thì nối tiếp (giờ luôn tăng). Bài viết hàng thêm (b4–b6) được tới GIO_CHOT_THEM (22:30) như video/manifest thêm. Lịch đã có: xếp lại 1 lần trong ngày (s.thuTu27) các bài thêm chưa đăng.
+- Ô chi tiết bài thêm hiện "bài thêm theo sheet · hẹn HH:MM" (trước: "khung undefined–undefined").
+- Đếm ngược đã Tạm dừng: không nhấp nháy (khung, viền bảng, tiêu đề tab), chỉ còn 1 nút "▶ Tiếp tục", ghi giờ tự tiếp tục.
+- Tab Comment & Thẻ: 2 nút chọn "💬 Comment" / "🏷 Thẻ" (thẻ đến hạn kiểm tra có chấm đỏ), tiêu đề các khung chữ sáng khi giao diện tối.
+- Sim: themvideo, bai4, hx, uicmt (ảnh kq/uicmt_*.png), demnguoc.
+
+## 6.28 (21/10/2026) — tổng rà soát (2 lượt soát song song: đăng/comment và lịch/sheet/báo cáo)
+1. Chờ video lên trang: qua mốc 20 phút vẫn hỏi 4 phút/lần; kênh chưa có mã khoá quá CHO_VIDEO_LEN_PHUT+2 thì thôi tải lại trang, đi tới kết luận (trước: treo việc dở cả ngày).
+2. Trước khi đăng lại video (Facebook chưa trả bài sau hạn): tab ẩn → chờ tab hiện để nhìn trang (tối đa +30 phút), không đăng lại mù.
+3. kiemKhoaTruocDang: mọi lần đăng (kể cả đúng giờ) đọc ô giữ chỗ 1 lần trước khi bấm Đăng; máy kia giữ chỗ bài này còn hạn → nhường.
+4. Ô Z1 chứa nhiều khoá ("KHOA|ngày|slot|máy|lúc ; …", dsKhoa/docKhoa(v, slot)/ghiKhoaO) → 2 máy giữ 2 bài khác nhau không đè nhau; giuCho xác nhận đúng khoá của bài mình.
+5. Bài viết ghim theo dòng (s.ganB, hangBaiGhim: số dòng + 40 ký tự đầu) → chèn/đổi ngày dòng khác giữa ngày không lấy nhầm chữ bài đã đăng. Sim chendong.
+6. Báo "2 bài trùng": cùng link thì bỏ (Facebook trả 1 thước phim 2 lần); Máy Cao chỉ báo khi caoNenBao.
+7. Số ngẫu nhiên theo ngày bị tràn số (seed*31 không cắt 32 bit) → thẻ manifest/kênh phụ và câu CTA ngày nào cũng giống nhau. Sửa ">>> 0".
+8. Đếm lần chuyển tư cách: riêng từng trang ('lan_chuyen|tên trang'), xoá khi đã đúng tư cách.
+9. dongBoLich: kênh 2/3/Hà Xá đang đọc tab lỗi → giữ ghim dòng cũ của kênh đó.
+10. ganGioBaiThem: chỗ trống SỚM NHẤT sau bài liền trước (trước: giữa khoảng rộng nhất → dồn về tối, dễ bị bỏ 22:30). ganGioThem tính cả giờ Bài 4–6.
+11. Bản Soạn chờ bấm Đăng: 15 phút ghi lại ô giữ chỗ (khoá không hết hạn ở phút 40).
+12. Sửa nền đỏ tải lại màn sửa qua roiTrang (gỡ hộp "Rời khỏi trang?").
+13. Hoãn 10 phút áp cho cả comment và gắn thẻ + cảm xúc.
+14. Lệnh "về trang" hẹn 4 giây không chạy khi vừa bắt đầu chuẩn bị đăng bài (__smhChuanBi 90 giây).
+15. Tổng kết cuối ngày: chỉ coi tổng kết 21:30 là đã gửi khi gửi được.
+16. 'the6_bd', 'csnhac6' vào danh sách giữ khi dọn dữ liệu (nhắc kiểm thẻ 7 ngày không bị reset mỗi ngày).
+17. ghiTTBai: đánh dấu mốc chỉ khi ghi xong; nhớ dòng đã ghi/đã thấy "Đã đăng" (ttbai6_) để khỏi đọc lại tab.
+18. Tổng kết 12:00: gửi được mới đánh dấu (lỗi thì 5 phút thử lại trong khung 12–13h).
+19. (thêm) Tin "nhận theo thứ tự" (6.26.8) và "bỏ bước phụ" (6.26.9) không lọt KHOA_NGUY_CAP nên chưa từng gửi nhóm → thêm theothutu_, boqua_.
+- Sim đạt: ngay, haimay, ghide, bai4, themvideo, khongan, videodung, kenh, caothay, tranh, chendong (mới).
+
+## 6.28.1 (22/10/2026) — Soạn thử chỉ số tuần + video nổi bật đủ 4 mục
+1. Soạn thử: tab Chỉ số tuần hiện khung "Xem trước tin Lark" dựng bằng chính hàm gửi (`theCS`) → giống hệt thẻ sắp gửi (bảng 7/28 ngày, video nổi bật có link bấm được). Dòng "Soạn lúc HH:MM — dùng lại được tới HH:MM".
+2. Ô "📝 Ghi chú thêm" (khoá `csghichu6`): có chữ → thêm 1 dòng ở cuối tin; Gửi ngay / gửi tự động xong thì tự xoá.
+3. Gửi thử / Gửi ngay trong 30 phút sau lần soạn (`kqCuoi`, cùng tuần, Gửi ngay cần đủ số) → gửi đúng bản đó (`guiLaiCS`), không xem lại 6 trang.
+4. Mục video không đọc được → vẫn gửi, ghi "chưa đọc được (lý do)"; thêm 1 tin vào NHÓM LỖI liệt kê mục thiếu (`loiVideoCS`).
+5. Video nổi bật: 1 Lượt xem (top 3 7/28, không tính #manifest, 24h thấp/cao) · 2 Follow · 3 Nhắn tin (ước tính: comment khách hỏi giá/ib/tư vấn/còn không…, `HOI_MUA_RE`) · 4 Tương tác.
+6. Mã đọc trang không trả lượt xem từng video → ghi lý do Facebook vào nhật ký; mở Thư viện nội dung (`/professional_dashboard/content/content_library`) đọc bảng (cột "Lượt xem"/"Lượt theo dõi", cuộn hết, số "1,2K", dòng chia sẻ nhóm lấy số lớn nhất), khớp theo 40 ký tự đầu (`khoaSo`). Bước này là `chay.buoc = 7`, `chay.tv` 1→2.
+7. Lượt xem 24h: Facebook không trả → ghi vào `tv24_6`; Máy Cao rảnh (điều kiện như chỉ số tự động) mở Thư viện nội dung đọc, 60 phút/lần, tối đa 3 lần/video, quá 40h thì bỏ (`vongTV24`, chạy sau `vongChiSo`).
+8. Lỗi "Cannot read properties of undefined (reading 'ten')": bị ngắt sau bước 6 (buoc = 7) → lượt sau đọc CS.BUOC[6]. Sửa: buoc > 6 → làm tiếp phần video; trangThaiCS chặn chỉ số.
+9. `@version` tự lấy từ PHIEN_BAN khi ghép (trước kẹt 6.22 → 2 máy không tự cập nhật). `@name` giữ nguyên.
+10. Quy trình tối: luôn so bản GitHub với `du-an\` và tải bản mới hơn trước khi sửa; lượt tối chỉ cập nhật sổ theo dõi.
+- Sim đạt: chisolai (mới: soạn → ghi chú → gửi thử/gửi ngay dùng lại, Thư viện nội dung), chisotv (mới: tự động thứ 6, mã không trả lượt xem), tv24 (mới: lượt xem 24h đọc ở Thư viện nội dung), chisobuoc7 (mới: lỗi "ten"), chisonut, chisovid, chiso, chisoloi, chisoan, ngay, haimay, ui, uicmt.
