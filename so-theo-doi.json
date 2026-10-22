@@ -160,6 +160,12 @@
    "moTa": "22/10: lịch dự kiến kéo tới 22:31 (Manifest 4/5, Bài 6 bị đẩy sau Manifest 3; bài thêm được tới 22:30; trễ trưa dồn 30 phút/bài)",
    "trangThai": "đã sửa 6.28.3 (rải đều 06:30–20:00, sát giờ cách 15 phút)",
    "ngay": "2026-10-22"
+  },
+  {
+   "ma": "bao-cao-tuan-thieu-quyen",
+   "moTa": "Báo cáo tuần: lượt xem/follow từng video 'chưa đọc được' — mã đọc trang thiếu read_insights; Thư viện nội dung cuộn hụt",
+   "trangThai": "đã xử lý 22/10 (thêm quyền + mã mới) + 6.28.4 dự phòng trang Thông tin chi tiết từng video",
+   "ngay": "2026-10-22"
   }
  ],
  "danhGiaTuan": [],
@@ -207,6 +213,10 @@
   {
    "ngay": "2026-10-22",
    "tomTat": "Ra bản 6.28.3: lịch kênh 1 rải đều 06:30–20:00 (nhiều bài tới 21:00, sát giờ cách 15 phút), lịch chung 2 máy cho toàn bộ bài kênh 1; panel chia 3 khung Sáng/Chiều/Tối có viền + đếm bài + thanh tiến độ, nút Mở bài rộng hơn."
+  },
+  {
+   "ngay": "2026-10-22",
+   "tomTat": "Ra bản 6.28.4: dự phòng đọc số từng video qua trang Thông tin chi tiết (cả lượt xem 24h), lỗi 1 dòng ngắn, ▲100% → 'mới', tên video trống lấy từ sheet. Mã đọc trang đã thêm quyền read_insights."
   }
  ],
  "capNhat": "2026-10-22"

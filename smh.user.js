@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.3
+// @version      6.28.4
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.3';
+  const PHIEN_BAN = '6.28.4';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -7021,7 +7021,7 @@
     ],
   };
   const linkCS = (b) => `https://www.facebook.com/professional_dashboard/profile_insights/${b.trang}/?date_range=LAST_${b.ky}`;
-  const dangOTrangCS = () => /^\/professional_dashboard\/(profile_insights|content\/content_library)/.test(location.pathname);
+  const dangOTrangCS = () => /^\/professional_dashboard\/(profile_insights|content\/content_library)/.test(location.pathname) || /^\/content\/insights/.test(location.pathname);
   const LINK_TV = 'https://www.facebook.com/professional_dashboard/content/content_library'; // (6.28.1) Thư viện nội dung — dự phòng khi mã đọc trang không trả lượt xem từng video
   const dangOTV = () => /^\/professional_dashboard\/content\/content_library/.test(location.pathname);
   const ghiChuCS = () => String(lay('csghichu6', '') || '').trim();
@@ -7095,6 +7095,7 @@
   function fmtPct(p, mau) {
     if (!p) return '';
     if (laKhong(p)) return mau ? `<font color='grey'>=0%</font>` : '=0%';
+    if (p.dau === '+' && /^100(?:[.,]0+)?$/.test(p.so)) return mau ? `<font color='grey'>mới</font>` : 'mới'; // (6.28.4) kỳ trước = 0 (page mới) → % không có ý nghĩa
     const s = (p.dau === '-' ? '▼' : p.dau === '+' ? '▲' : '') + p.so + '%';
     return mau && p.dau ? `<font color='${p.dau === '-' ? 'red' : 'green'}'>${s}</font>` : s;
   }
@@ -7116,11 +7117,12 @@
       { tag: 'markdown', content: x && fmtPct(x.pct, true) ? fmtPct(x.pct, true) : '—', text_align: 'center' }] });
     return [{ tag: 'markdown', content: dau }, { tag: 'column_set', flex_mode: 'none', background_style: 'grey', horizontal_spacing: 'default', columns: [o(kq[ky + 'views'], '👁 Lượt xem'), o(kq[ky + 'messaging'], '💬 Nhắn tin'), o(kq[ky + 'audience'], '👥 Theo dõi')] }];
   }
+  const trungKy = (kq) => ['views', 'messaging', 'audience'].every((t) => kq['7D' + t] && kq['28D' + t] && kq['7D' + t].so === kq['28D' + t].so); // (6.28.4)
   function theCS(kq, thu, ghiChu) { // (6.28.1) 1 hàm dựng thẻ Lark — dùng cho cả gửi lẫn xem trước trong tab (giống hệt nhau)
     const el = oCS(kq, '7D').concat([{ tag: 'div', text: { tag: 'plain_text', content: ' ' } }], oCS(kq, '28D'));
     if (kq.video) el.push({ tag: 'hr' }, { tag: 'markdown', content: dongVideoTuan(kq.video, true).join('\n') });
     if (ghiChu) el.push({ tag: 'hr' }, { tag: 'div', text: { tag: 'lark_md', content: '📝 **Ghi chú:** ' + ghiChu } });
-    el.push({ tag: 'note', elements: [{ tag: 'plain_text', content: '% = so với kỳ liền trước cùng độ dài (số liệu từ Facebook)' }] });
+    el.push({ tag: 'note', elements: [{ tag: 'plain_text', content: '% = so với kỳ liền trước cùng độ dài (số liệu từ Facebook)' + (trungKy(kq) ? ' · page mới lập từ 17/10 nên số 28 ngày = 7 ngày, "mới" = kỳ trước chưa có số' : '') }] });
     return { msg_type: 'interactive', card: { config: { wide_screen_mode: true }, header: { template: thu ? 'grey' : 'blue', title: { tag: 'plain_text', content: (thu ? '(GỬI THỬ) ' : '') + CS.TIEU_DE } }, elements: el } };
   }
   async function guiHookCS(nhom, kq, thu, ghiChu) { // nhom: 'kq' | 'loi' — 2 đường riêng, KHÔNG bao giờ đổi nhóm khi lỗi
@@ -7249,21 +7251,36 @@
     if (dangOTrangCS() && !lay('dang_do', null)) { datKenh(1); veTrang(); }
     return true;
   }
-  async function buocTVCS(viec) { // (6.28.1) mã đọc trang không trả lượt xem từng video → đọc ở trang Thư viện nội dung
+  async function buocTVCS(viec) { // (6.28.4) mã đọc trang không trả lượt xem → mở trang Thông tin chi tiết của TỪNG video (tối đa 20, mỗi trang ≤ 20 giây); vẫn thiếu → Thư viện nội dung
     const vt = viec.kq && viec.kq.video;
-    if (viec.tv === 1 && vt && vt.ds) {
-      if (!dangOTV()) { if (hdChay) hdChay.chi = 'Chỉ số tuần: mở Thư viện nội dung'; ghi('Chỉ số tuần: Facebook không trả lượt xem từng video qua mã đọc trang → mở Thư viện nội dung để đọc'); await sleep(500); roiTrang(LINK_TV); return true; }
+    if (vt && vt.ds && viec.tv === 1) {
+      const can = vt.ds.filter((p) => !p.mf && p.xem == null && !p.ttctXong).slice(0, 20);
+      if (!can.length || Date.now() - (viec.batDau || 0) > 18 * 60000) { luuCS((x) => { if (x.chay) x.chay.tv = 3; }); viec.tv = 3; }
+      else {
+        const p = can[0];
+        if (!dangOTTCTCua(p.id)) { if (hdChay) hdChay.chi = `Chỉ số tuần: mở Thông tin chi tiết "${p.ten}" (${vt.ds.length - can.length + 1}/${vt.ds.length})`; if (!viec.ttctGhi) { ghi('Chỉ số tuần: Facebook không trả lượt xem từng video qua mã đọc trang → mở trang Thông tin chi tiết của từng video'); luuCS((x) => { if (x.chay) x.chay.ttctGhi = 1; }); } await sleep(400); roiTrang(linkTTCT(p.id)); return true; }
+        let r = null; const het = Date.now() + 20000; while (Date.now() < het && !r) { r = docTTCT(); if (!r) await sleepThat(1000); }
+        if (r) { if (r.xem != null) p.xem = r.xem; if (r.theoDoi != null && p.theoDoi == null) p.theoDoi = r.theoDoi; ghi(`Chỉ số tuần: "${p.ten}" — lượt xem ${r.xem == null ? '?' : fmtSo(r.xem)}, theo dõi ${r.theoDoi == null ? '?' : fmtSo(r.theoDoi)} (trang Thông tin chi tiết)`); }
+        else ghi(`Chỉ số tuần: trang Thông tin chi tiết của "${p.ten}" chưa hiện số sau 20 giây → bỏ qua`);
+        p.ttctXong = 1;
+        luuCS((x) => { if (x.chay) x.chay.kq.video = vt; });
+        return await buocTVCS(Object.assign(viec, { kq: Object.assign(viec.kq, { video: vt }) }));
+      }
+    }
+    if (viec.tv === 3 && vt && vt.ds && vt.ds.some((p) => !p.mf && p.xem == null)) { // còn thiếu → Thư viện nội dung (1 lần)
+      if (!dangOTV()) { if (hdChay) hdChay.chi = 'Chỉ số tuần: mở Thư viện nội dung'; ghi('Chỉ số tuần: vẫn còn video thiếu lượt xem → mở Thư viện nội dung để đọc'); await sleep(500); roiTrang(LINK_TV); return true; }
       if (hdChay) hdChay.chi = 'Chỉ số tuần: đọc Thư viện nội dung';
       const ly = Object.assign({}, vt.ly);
       try {
         const rows = await docThuVien(); let n = 0;
         for (const p of vt.ds) { const r = khopTV(rows, p.khoa, p.id); if (!r) continue; if (p.xem == null && r.xem != null) { p.xem = r.xem; n++; } if (p.theoDoi == null && r.theoDoi != null) p.theoDoi = r.theoDoi; }
-        ghi(`Chỉ số tuần: Thư viện nội dung có ${rows.length} bài → bổ sung lượt xem cho ${n}/${vt.ds.length} video`);
-        if (!n) ly.xem = (ly.xem ? ly.xem + '; ' : '') + 'Thư viện nội dung không khớp được video nào';
-      } catch (e) { ly.xem = (ly.xem || 'Facebook không trả lượt xem') + '; Thư viện nội dung: ' + e.message; ghi('Chỉ số tuần: chưa đọc được Thư viện nội dung (' + e.message + ')'); }
+        ghi(`Chỉ số tuần: Thư viện nội dung có ${rows.length} bài → bổ sung lượt xem cho ${n} video`);
+        if (!n && vt.ds.every((p) => p.mf || p.xem == null)) ly.xem = (ly.xem ? ly.xem + '; ' : '') + 'Thư viện nội dung không khớp được video nào';
+      } catch (e) { if (vt.ds.every((p) => p.mf || p.xem == null)) ly.xem = (ly.xem || 'Facebook không trả lượt xem') + '; Thư viện nội dung: ' + e.message; ghi('Chỉ số tuần: chưa đọc được Thư viện nội dung (' + e.message + ')'); }
       vt.ly = ly;
-      luuCS((x) => { if (x.chay) { x.chay.kq.video = vt; x.chay.tv = 2; } });
     }
+    if (vt && vt.ds) { if (vt.ds.some((p) => !p.mf && p.xem != null)) vt.ly = Object.assign({}, vt.ly, { xem: '' }); if (vt.ds.some((p) => !p.mf && p.theoDoi != null)) vt.ly = Object.assign({}, vt.ly, { theoDoi: '' }); }
+    luuCS((x) => { if (x.chay) { x.chay.kq.video = vt; x.chay.tv = 4; } });
     return await xongCS();
   }
   async function xongCS() {
@@ -7271,7 +7288,7 @@
     if (!kq.video) { // (6.26) phần video nổi bật kênh 1
       if (hdChay) hdChay.chi = 'Chỉ số tuần: đọc số từng video kênh 1';
       try { kq.video = await layVideoTuan(); } catch (e) { kq.video = { loi: e.message }; ghi('Báo cáo tuần: chưa đọc được số từng video (' + e.message + ') → báo cáo ghi "chưa đọc được"'); }
-      if (kq.video.ds && !viec.tv && kq.video.ds.some((p) => p.xem == null && kq.video.luc - p.luc > 3600e3)) { // còn video thiếu lượt xem → đọc Thư viện nội dung (1 lần)
+      if (kq.video.ds && !viec.tv && kq.video.ds.some((p) => !p.mf && p.xem == null && kq.video.luc - p.luc > 3600e3)) { // còn video thiếu lượt xem → trang Thông tin chi tiết từng video, rồi Thư viện nội dung
         luuCS((x) => { x.chay.kq.video = kq.video; x.chay.tv = 1; x.chay.buoc = CS.BUOC.length + 1; });
         return await buocTVCS(Object.assign({}, viec, { kq, tv: 1 }));
       }
@@ -7378,7 +7395,10 @@
   //   2. Video mang lại nhiều lượt theo dõi nhất · 3. Tương tác top 3 (thích + bình luận của khách + chia sẻ)
   //  Lượt xem 24h đầu: Máy Cao tự ghi lại đúng lúc mỗi video tròn 24h (ô v24_6 trong máy) — video đăng trước khi cài bản này chưa có số.
   // =====================================================================
-  const tenVid = (p) => { const t = String(p.text || '').split('\n').map((x) => chuan(x.replace(/#\S+/g, '')).trim()).find(Boolean) || 'Video'; return t.length > 40 ? t.slice(0, 39) + '…' : t; };
+  const tenVid = (p) => { let t = String(p.text || '').split('\n').map((x) => chuan(x.replace(/#\S+/g, '')).trim()).find(Boolean) || '';
+    if (!t) t = tenTuSheet(p) || (p.luc ? `Video đăng ${gioStr(new Date(p.luc))} ${ngayStr(new Date(p.luc)).slice(0, 5).replace('-', '/')}` : 'Video'); // (6.28.4) bài không có chữ → lấy chữ ở sheet theo link, không có thì ghi giờ đăng
+    return t.length > 40 ? t.slice(0, 39) + '…' : t; };
+  const tenTuSheet = (p) => { try { const d = duLieu(); if (!d || !d.ngay || !p.link) return ''; const id = (p.link.match(/\/(?:reel|videos)\/(\d+)/) || [])[1]; if (!id) return ''; for (const n of Object.values(d.ngay)) for (const x of (n.v || [])) if (x.link && String(x.link).includes(id) && x.cap) return String(x.cap).split('\n')[0].trim(); } catch (e) { /* */ } return ''; };
   const laManifestVid = (p) => /#manifest/i.test(p.text || '');
   const HOI_MUA_RE = /\bgia\b(?! dinh)|bao nhieu|\bib\b|\binbox|\bin box|tu van|\bcon (khong|ko|k|hang)\b|\bmua\b|\bchot\b|\bship|\bsize\b|\bsz\b|zalo|\bsdt\b|so dien thoai|\bxin gia/; // (6.28.1) comment hỏi mua → ước tính nhắn tin theo video (so trên chữ đã bỏ dấu: khách hay gõ không dấu)
   const boDauCS = (s) => thuong(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
@@ -7445,7 +7465,7 @@
       const ds = (await dsVideoK1(Date.now() - 36 * 3600e3)).filter((p) => { const tuoi = Date.now() - p.luc; return tuoi >= 24 * 3600e3 && tuoi <= 36 * 3600e3 && !c.ds[p.id]; });
       for (const p of ds) {
         const s = await soVideo(p.vid);
-        if (s.xem == null) { if (!t.ds[p.id]) { t.ds[p.id] = { luc: p.luc, ten: tenVid(p), link: p.link, mf: laManifestVid(p), khoa: khoaSo(p.text).slice(0, 120), lan: 0 }; ghi(`Báo cáo tuần: Facebook không trả lượt xem 24h của "${tenVid(p)}" (${s.loi || 'không rõ lý do'}) → chờ máy rảnh đọc ở Thư viện nội dung`); } continue; }
+        if (s.xem == null) { if (!t.ds[p.id]) { t.ds[p.id] = { luc: p.luc, ten: tenVid(p), link: p.link, mf: laManifestVid(p), khoa: khoaSo(p.text).slice(0, 120), lan: 0 }; ghi(`Báo cáo tuần: Facebook không trả lượt xem 24h của "${tenVid(p)}" (${s.loi || 'không rõ lý do'}) → chờ máy rảnh mở trang Thông tin chi tiết của video`); } continue; }
         c.ds[p.id] = { xem: s.xem, sau: Math.round((Date.now() - p.luc) / 3600e3 * 10) / 10, luc: p.luc, ten: tenVid(p), link: p.link, mf: laManifestVid(p) };
         ghi(`Báo cáo tuần: ghi lượt xem 24h đầu của "${tenVid(p)}" = ${fmtSo(s.xem)} (sau ${c.ds[p.id].sau} giờ)`);
       }
@@ -7454,28 +7474,42 @@
     } catch (e) { ghi('Báo cáo tuần: chưa ghi được lượt xem 24h (' + e.message + ')'); }
     return true;
   }
-  async function vongTV24() { // (6.28.1) Máy Cao rảnh → mở Thư viện nội dung đọc lượt xem 24h của video Facebook không trả số (tối đa 3 lần/video, 60 phút/lần)
+  // (6.28.4) trang "Thông tin chi tiết" của 1 bài: /content/insights/?content_id=base64("S:_I<mã trang>:<mã bài>:<mã bài>") — đọc được Lượt xem, Lượt theo dõi kể cả khi mã thiếu quyền
+  const linkTTCT = (postId) => { const pid = String(postId).split('_'); const trang = pid.length > 1 ? pid[0] : idTrangKenh(1); const bai = pid[pid.length - 1]; return 'https://www.facebook.com/content/insights/?content_id=' + encodeURIComponent(btoa(`S:_I${trang}:${bai}:${bai}`)); };
+  const dangOTTCT = () => /^\/content\/insights/.test(location.pathname);
+  const dangOTTCTCua = (postId) => { if (!dangOTTCT()) return false; try { const d = atob(new URLSearchParams(location.search).get('content_id') || ''); return d.split(':').pop() === String(postId).split('_').pop(); } catch (e) { return false; } };
+  function docTTCT() { // → { xem, theoDoi, tuongTac } hoặc null (chưa hiện số)
+    const L = String(document.body ? document.body.innerText : '').split('\n').map(sachCS).filter(Boolean);
+    const sau = (nhan) => { const i = L.findIndex((x) => x === nhan); if (i < 1) return null; const v = L[i - 1]; return laSo(v) ? soCS(v) : null; }; // số đứng ngay TRƯỚC nhãn
+    const xem = sau('Lượt xem'); if (xem == null) return /Không có thông tin chi tiết|Chưa đủ dữ liệu/.test(L.join(' ')) ? { xem: 0, theoDoi: 0, tuongTac: 0 } : null;
+    const td = (() => { const i = L.findIndex((x) => x === 'Lượt theo dõi'); if (i < 0) return null; for (let j = i + 1; j < Math.min(L.length, i + 4); j++) if (laSo(L[j])) return soCS(L[j]); return null; })();
+    const tt = (() => { const m = L.find((x) => /^\d[\d.,]*\s*Lượt tương tác$/.test(x)); return m ? soCS(m) : null; })();
+    return { xem, theoDoi: td, tuongTac: tt };
+  }
+  async function vongTV24() { // (6.28.4) Máy Cao rảnh → mở trang Thông tin chi tiết của từng video Facebook không trả số (mỗi video 1 lần, tối đa 3 lần, 60 phút/lượt)
     if (!LA_CAO || !MAY) return false;
     const t = lay('tv24_6', null); if (!t || !t.ds) return false;
     const c = csTT(); if (c.chay || c.yc) return false;
-    const now = Date.now(); const veLai = () => { if (dangOTV() && !lay('dang_do', null)) { datKenh(1); veTrang(); return true; } return false; };
-    for (const k of Object.keys(t.ds)) { const x = t.ds[k]; if (now - x.luc > 40 * 3600e3 || (x.lan >= 3 && !t.dang)) { ghi(`Báo cáo tuần: không ghi được lượt xem 24h đầu của "${x.ten}" (Facebook không trả số, Thư viện nội dung cũng chưa đọc được)`); delete t.ds[k]; } }
+    const now = Date.now(); const veLai = () => { if ((dangOTTCT() || dangOTV()) && !lay('dang_do', null)) { datKenh(1); veTrang(); return true; } return false; };
+    for (const k of Object.keys(t.ds)) { const x = t.ds[k]; if (now - x.luc > 40 * 3600e3 || (x.lan >= 3 && !t.dang)) { ghi(`Báo cáo tuần: không ghi được lượt xem 24h đầu của "${x.ten}" (Facebook không trả số, trang Thông tin chi tiết cũng chưa đọc được)`); delete t.ds[k]; } }
     const cho = Object.keys(t.ds);
-    if (t.dang && (now - t.dang > 10 * 60000 || !cho.length || lyDoBanCS())) { t.dang = 0; luu('tv24_6', t); return veLai(); }
+    if (t.dang && (now - t.dang > 10 * 60000 || !cho.length || lyDoBanCS())) { t.dang = 0; t.dangK = ''; luu('tv24_6', t); return veLai(); }
     if (!cho.length) { luu('tv24_6', t); return false; }
     if (t.dang) {
-      if (!dangOTV()) { roiTrang(LINK_TV); return true; }
+      const k = t.dangK && t.ds[t.dangK] ? t.dangK : cho[0]; const x = t.ds[k];
+      if (!dangOTTCTCua(k)) { t.dangK = k; luu('tv24_6', t); if (hdChay) hdChay.chi = `Báo cáo tuần: mở Thông tin chi tiết "${x.ten}"`; roiTrang(linkTTCT(k)); return true; }
+      let r = null; const het = Date.now() + 20000; while (Date.now() < het && !r) { r = docTTCT(); if (!r) await sleepThat(1000); }
       const v = lay('v24_6', null) || { luc: 0, ds: {} };
-      try {
-        const rows = await docThuVien();
-        for (const k of cho) { const x = t.ds[k]; const r = khopTV(rows, x.khoa, k); if (!r || r.xem == null) continue; v.ds[k] = { xem: r.xem, sau: Math.round((Date.now() - x.luc) / 3600e3 * 10) / 10, luc: x.luc, ten: x.ten, link: x.link, mf: x.mf, tv: 1 }; delete t.ds[k]; ghi(`Báo cáo tuần: ghi lượt xem 24h đầu của "${x.ten}" = ${fmtSo(r.xem)} (đọc ở Thư viện nội dung, sau ${v.ds[k].sau} giờ)`); }
-        luu('v24_6', v);
-      } catch (e) { ghi('Báo cáo tuần: chưa đọc được Thư viện nội dung cho lượt xem 24h (' + e.message + ')'); }
+      if (r && r.xem != null) { v.ds[k] = { xem: r.xem, theoDoi: r.theoDoi, sau: Math.round((Date.now() - x.luc) / 3600e3 * 10) / 10, luc: x.luc, ten: x.ten, link: x.link, mf: x.mf, tv: 2 }; delete t.ds[k]; luu('v24_6', v); ghi(`Báo cáo tuần: ghi lượt xem 24h đầu của "${x.ten}" = ${fmtSo(r.xem)} (trang Thông tin chi tiết, sau ${v.ds[k].sau} giờ)`); }
+      else ghi(`Báo cáo tuần: trang Thông tin chi tiết của "${x.ten}" chưa hiện số (lần ${x.lan})`);
+      t.dangK = '';
+      const con = Object.keys(t.ds).filter((kk) => (t.ds[kk].lan || 0) < 3 && Date.now() - (t.ds[kk].luc || 0) <= 40 * 3600e3);
+      if (con.length && Date.now() - t.dang < 8 * 60000 && !lyDoBanCS()) { t.dangK = con[0]; t.ds[con[0]].lan = (t.ds[con[0]].lan || 0) + 1; luu('tv24_6', t); roiTrang(linkTTCT(con[0])); return true; } // video kế tiếp
       t.dang = 0; luu('tv24_6', t); datKenh(1); if (!lay('dang_do', null)) veTrang(); return true;
     }
     if (now - (t.thu || 0) < 60 * 60000 || lyDoBanCS()) return false;
-    t.dang = now; t.thu = now; for (const k of cho) t.ds[k].lan = (t.ds[k].lan || 0) + 1; luu('tv24_6', t);
-    ghi(`Báo cáo tuần: máy đang rảnh → mở Thư viện nội dung đọc lượt xem 24h của ${cho.length} video`); datKenh(1); roiTrang(LINK_TV); return true;
+    t.dang = now; t.thu = now; t.dangK = cho[0]; t.ds[cho[0]].lan = (t.ds[cho[0]].lan || 0) + 1; luu('tv24_6', t);
+    ghi(`Báo cáo tuần: máy đang rảnh → mở trang Thông tin chi tiết đọc lượt xem 24h của ${cho.length} video`); datKenh(1); roiTrang(linkTTCT(cho[0])); return true;
   }
   async function khoaManifestSheet() { // (6.28.2) chữ các hàng Manifest (cột G tab Kênh 1) → nhận ra manifest cả khi bài quên gắn #manifest
     try { const v = await docBang(CAI_DAT.TAB_VIDEO, 'G1:G3000'); return new Set(v.map((r) => (r || [])[0]).filter((c) => c && !coTep(c)).map((c) => khoaSo(chuO(c)).slice(0, 40)).filter((k) => k.length >= 15)); }
@@ -7504,11 +7538,12 @@
     if (!vt.ds.some((p) => vt.luc - p.luc <= 7 * 864e5 && p.x24 != null)) out.push('Lượt xem 24h đầu (chưa có video nào được ghi số lúc tròn 24h)');
     return out;
   }
+  const ngan = (l) => { const t = String(l || ''); if (!t) return 'Facebook không trả số'; if (/read_insights|permission/i.test(t)) return 'mã đọc trang chưa có quyền xem thống kê'; if (/190|expired|hết hạn/i.test(t)) return 'mã đọc trang hết hạn'; if (/Thư viện/i.test(t)) return 'Facebook không trả số, Thư viện nội dung cũng không khớp'; return t.length > 60 ? t.slice(0, 57) + '…' : t; }; // (6.28.4) lỗi trong thẻ: 1 dòng ngắn — câu gốc vào nhật ký + nhóm lỗi
   function dongVideoTuan(vt, mau) { // (6.28.2) chỉ video chính · mỗi video 1 dòng · 7 ngày trên, 28 ngày dưới
     const dau = '**📊 VIDEO NỔI BẬT (kênh 1 · chỉ video chính, không tính manifest)**';
     if (!vt) return [];
-    if (vt.loi || !vt.ds) return [dau, `Chưa đọc được (${vt.loi || 'không rõ lý do'})`];
-    const ly = vt.ly || {}; const chua = (k) => `chưa đọc được (${ly[k] || 'Facebook không trả số'})`;
+    if (vt.loi || !vt.ds) return [dau, `Chưa đọc được (${ngan(vt.loi)})`];
+    const ly = vt.ly || {}; const chua = (k) => `chưa đọc được (${ngan(ly[k])})`;
     const L = (p) => (mau && p.link ? `[${p.ten}](${p.link})` : p.ten);
     const ds0 = vt.ds.filter((p) => !p.mf);
     const trong = (ngay) => ds0.filter((p) => vt.luc - p.luc <= ngay * 864e5);
