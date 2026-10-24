@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.6
+// @version      6.28.7
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.6';
+  const PHIEN_BAN = '6.28.7';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -3626,6 +3626,40 @@
     if (o.length) { await ghiNhieuO(CAI_DAT.TAB_BAI, o); for (const x of o) daGhi.add(+x[0].slice(1)); ghi(`Ghi tab Bài viết kênh 1: cột G "Đã đăng" cho ${xong.join('; ')}`); }
     luu('ttbai6_' + ngay, [...daGhi]); xongMoc(); return true;
   }
+  // (6.28.7) Facebook hiện hộp "Chào mừng bạn đến với Trang mới!" / "Đã cập nhật Trang của bạn!" khi trang chuyển sang kiểu Trang mới → che trang, script bấm gì cũng không ăn.
+  //  Tự bấm "Dùng Trang" (giữ nguyên 2 công tắc mặc định: thông báo bật, email quảng cáo tắt), ghi nhật ký.
+  const TIEU_DE_TRANG_MOI = /^(Chào mừng bạn đến với Trang mới!?|Đã cập nhật Trang của bạn!?|Welcome to your new Page!?|Your Page has been updated!?)$/i;
+  function dongHopTrangMoi() {
+    try {
+      const nuts = document.evaluate("//*[@role='button' or self::button][normalize-space(.)='Dùng Trang' or normalize-space(.)='Use Page']", document.body, null, window.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      for (let i = 0; i < nuts.snapshotLength; i++) {
+        const n = nuts.snapshotItem(i); if (!dangHien(n) || n.closest('#smhfb')) continue;
+        let hop = n; for (let j = 0; j < 12 && hop && hop !== document.body; j++) { hop = hop.parentElement; if (hop && Array.from(hop.querySelectorAll('h1,h2,h3,span,div')).some((e) => e.childElementCount === 0 && TIEU_DE_TRANG_MOI.test(String(e.textContent || '').trim()))) break; }
+        if (!hop || hop === document.body) continue;
+        const ten = (Array.from(hop.querySelectorAll('span,div')).find((e) => e.childElementCount === 0 && TIEU_DE_TRANG_MOI.test(String(e.textContent || '').trim())) || {}).textContent || '';
+        n.click(); ghi(`Facebook hiện hộp "${String(ten).trim()}" → đã bấm "Dùng Trang" (giữ nguyên lựa chọn mặc định, email quảng cáo vẫn tắt)`);
+        return true;
+      }
+    } catch (e) { /* */ }
+    return false;
+  }
+  setInterval(() => { if (MAY && document.visibilityState === 'visible') dongHopTrangMoi(); }, 2500);
+  // (6.28.7) GỠ KẸT "Đang làm…": bài ở trạng thái đang đăng quá 8 phút mà không còn việc dở thật (trang tải lại giữa chừng, tab bị ẩn…) → đưa về hàng chờ.
+  //  Lượt đăng sau luôn hỏi trang đã có bài chưa trước khi đăng → có rồi thì đánh dấu xong, chưa có thì đăng lại (không trùng).
+  function goKetDangLam(lyDo) {
+    try {
+      if (!MAY || dangBan || lay('dang_do', null) || demNguoc) return 0;
+      const ct = lay('cho_tay6', null); const s = trangThai(); const ds = [];
+      for (const it of LICH) { const x = (s.s || {})[it.k]; if (!x || x.tt !== 'dang') continue; if (ct && ct.slot === it.k) continue; if (Date.now() - (x.batDau || 0) < 8 * 60000) continue; ds.push(it); }
+      if (!ds.length) return 0;
+      capNhatTT((s2) => { for (const it of ds) { const x = ttSlot(s2, it.k); if (x.tt !== 'dang') continue; x.tt = 'cho'; x.thuLai = Date.now() + 30000; x.lyDo = 'gỡ kẹt "Đang làm"'; } });
+      ghi(`Gỡ kẹt "Đang làm" (${lyDo}): ${ds.map((it) => it.ten).join(', ')} — quá 8 phút không còn việc dở → đưa về hàng chờ, lượt sau kiểm trang rồi đăng lại nếu chưa có`);
+      try { veBang(); } catch (e) { /* */ }
+      return ds.length;
+    } catch (e) { return 0; }
+  }
+  setTimeout(() => goKetDangLam('vừa mở trang'), 20000);
+  setInterval(() => goKetDangLam('kiểm định kỳ'), 60000);
   async function ghiKetQuaVideoNgay(dd, laThuLai) {
     if (dd.loai !== 4 || !dd.hang) return true;
     const c = kenhCua(dd.slot); const cfg = c > 1 ? CAI_DAT.KENH[c] : null; const L = (i) => String.fromCharCode(65 + i);

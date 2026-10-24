@@ -365,3 +365,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - 24/10 sáng không đăng được bài nào cần chuyển trang: nút ảnh đại diện góc trên phải đổi aria-label "Trang cá nhân của bạn" → "Account, your profile" (nhãn cũ chỉ còn ở svg bên trong). Lỗi: "Không mở được menu tài khoản Facebook".
 - `vu6286.py`: `nutTaiKhoan()` tìm theo NHAN_TK (nhãn cũ/mới, vi/en) → svg bên trong nút → nút cuối của vùng "Cài đặt và kiểm soát tài khoản"; ghi nhật ký cách đã tìm thấy (`ghiCachTK`). Thay mọi chỗ chờ nút theo nhãn cũ.
 - Sim: fake nút mang nhãn mới (C.nhanCu = nhãn cũ). Đạt: kenh, caothay, ngay, hxmenu. Facebook thật: mở + đóng menu chuyển trang OK.
+
+## 6.28.7 (24/10/2026) — hộp "Trang mới" + gỡ kẹt "Đang làm"
+1. `dongHopTrangMoi` (p18_them, 2,5 giây/lần): thấy nút "Dùng Trang"/"Use Page" nằm trong hộp có tiêu đề "Chào mừng bạn đến với Trang mới!" / "Đã cập nhật Trang của bạn!" → bấm, giữ nguyên công tắc mặc định (email quảng cáo tắt), ghi nhật ký. Hộp này hiện 1 lần mỗi trang khi Facebook chuyển trang sang kiểu Trang mới (24/10 gặp ở kênh 2, Hà Xá) và che trang.
+2. `goKetDangLam` (mở trang + 60 giây/lần): bài tt='dang' quá 8 phút (batDau) mà không có dang_do / đếm ngược / cho_tay6 của bài đó → tt='cho', thuLai +30 giây, lyDo 'gỡ kẹt "Đang làm"'. Lượt đăng sau kiểm trang đã có bài chưa (không trùng). 24/10: Bài 1 kênh 1 và Video 1 kênh 2 kẹt "Đang làm…" sau khi trang tải lại giữa lúc đăng.
+- Sim: trangmoi (hộp hiện → tự bấm, Bài 1 vẫn đăng), ketdang (b1 kẹt 20 phút → gỡ, đăng 07:38). Facebook thật: dò nút 1 ms/lần.

@@ -172,6 +172,18 @@
    "moTa": "24/10: Facebook đổi nhãn nút tài khoản thành 'Account, your profile' → không chuyển được trang, cả 2 máy không đăng được bài sáng 24/10",
    "trangThai": "đã sửa 6.28.6",
    "ngay": "2026-10-24"
+  },
+  {
+   "ma": "hop-trang-moi",
+   "moTa": "24/10: hộp 'Đã cập nhật Trang của bạn!' / 'Chào mừng bạn đến với Trang mới!' che trang khi chuyển trang",
+   "trangThai": "đã sửa 6.28.7 (tự bấm Dùng Trang)",
+   "ngay": "2026-10-24"
+  },
+  {
+   "ma": "ket-dang-lam",
+   "moTa": "24/10: Bài 1 kênh 1, Video 1 kênh 2 kẹt 'Đang làm…' sau khi trang tải lại giữa lúc đăng",
+   "trangThai": "đã sửa 6.28.7 (gỡ kẹt sau 8 phút)",
+   "ngay": "2026-10-24"
   }
  ],
  "danhGiaTuan": [],
@@ -231,6 +243,10 @@
   {
    "ngay": "2026-10-24",
    "tomTat": "Ra bản 6.28.6 sửa gấp nút tài khoản Facebook đổi nhãn (tìm theo nhiều cách). Máy Cao sáng nay tab bị ẩn tới ~09:00."
+  },
+  {
+   "ngay": "2026-10-24",
+   "tomTat": "Ra bản 6.28.7: tự bấm 'Dùng Trang' trên hộp Trang mới; gỡ kẹt bài 'Đang làm' quá 8 phút."
   }
  ],
  "capNhat": "2026-10-24"
