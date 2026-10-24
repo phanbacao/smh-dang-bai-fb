@@ -376,3 +376,11 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 1. Nhớ khoá của máy (`khoa_minh6`, `coKhoaMinh`/`nhoKhoa`, 25 phút): giuCho / ghiKhoaO / kiemKhoaTruocDang dùng lại khoá còn hạn, không gọi Lark; giữ chỗ hỏng (máy kia giành) thì xoá nhớ. Bản soạn chờ bấm Đăng ghi lại khoá 25 phút/lần (ghiKhoaO(k, true)).
 2. Trần cứng/ngày (`TRAN_CUNG_LARK`: Cao 60, Giao 100) trong goiLark: vượt thì chỉ cho việc chính (đọc sheet/tab, tải tệp, ghi tab kênh, lấy mã); việc khác ném LoiMem có e.tranCung. Giữ chỗ bị trần cứng → Máy Cao vẫn đăng (đã kiểm trang). Báo 1 tin nhóm (khoá trancung_ trong KHOA_NGUY_CAP).
 - Sim z1cao (chỉ Máy Cao, Video 1 hỏng liên tục): 6.28.7 49 lượt (Z1 28) → 6.28.8 33 lượt (Z1 12), cùng số bài đăng. trancung: chạm trần → vẫn đăng Bài 1, báo nhóm. Đạt: ngay, haimay, caothay, kenh, ketdang, trangmoi.
+
+## 6.28.9 (24/10/2026) — chống gửi trùng báo cáo ngày + rà trần cứng
+- 24/10: nhóm "Báo cáo fb kênh 1" nhận 2 thẻ: Máy Giao 20/20, Máy Cao 19/19 lúc 22:31 (nhánh 21:45+20). Máy Cao đã chạm trần cứng 60 → đọc ô Z2 bị chặn → "vẫn gửi". Máy Cao không có Hà Xá V2 vì lần đọc sheet cuối 16:01.
+1. `laViecChinhLark` viết lại: việc chính = đọc sheet / tải / lấy mã / đọc-ghi mọi tab không phải ô Z / đọc-ghi ô Z2 (O_BAO_CAO). Việc phụ = các ô Z khác + "ghi Bài viết (gộp)" (ghiTTBai). `TEN_TAB_DEM` thêm tab Hà Xá (trước đó "ghi ZSDDld" bị chặn khi chạm trần).
+2. `xemDauBaoCao()` (đọc Z2, thử 2 lần): dùng cho cả 2 nhánh. Nhánh "đủ bài, bài cuối của máy này": cả 2 máy xem Z2 trước; Máy Cao chờ 5 phút sau bài cuối; Máy Cao không đọc được Z2 thì chờ tới 22:05 rồi mới gửi.
+3. `canGhiBC`: chạm trần cứng → false (1 dòng nhật ký) — hết lặp "Ghi báo cáo lỗi lên Lark chưa được" mỗi 15 giây.
+4. `choDD`: việc dở phải chờ (người đang thao tác, không phải tab chính, tạm dừng, đếm ngược bị hoãn, chờ nhân sự) → ghi nhật ký tối đa 2 phút/lần (22:22–22:30 gửi bù comment 19:30 im lặng 8 phút).
+- Sim: bccao (Cao đăng thay bài cuối 19:59 → báo cáo 20:04, ghi Z2), bccaoz2 (Cao chạm trần + Z2 đã có GIAO → không gửi), bccaomuon (22:05, chạm trần, Z2 GIAO → không gửi), baocao (Giao gửi như cũ), trancung.

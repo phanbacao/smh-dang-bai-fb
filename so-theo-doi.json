@@ -190,6 +190,24 @@
    "moTa": "24/10: Máy Cao 349 lượt Lark/ngày, 319 lượt ở ô giữ chỗ Z1 (mỗi lần thử lại đều giữ chỗ từ đầu)",
    "trangThai": "đã sửa 6.28.8 (nhớ khoá 25 phút + trần cứng Cao 60 / Giao 100)",
    "ngay": "2026-10-24"
+  },
+  {
+   "ma": "bc-ngay-trung",
+   "moTa": "24/10: nhóm nhận 2 thẻ báo cáo ngày (Máy Giao 20/20, Máy Cao 19/19 lúc 22:31) — Máy Cao chạm trần cứng nên không đọc được ô Z2 rồi vẫn gửi",
+   "trangThai": "đã sửa 6.28.9 (Z2 là việc chính; nhánh đủ bài cũng xem Z2, Máy Cao chờ 5 phút)",
+   "ngay": "2026-10-24"
+  },
+  {
+   "ma": "hx-ghi-tran",
+   "moTa": "Ghi 'ĐÃ ĐĂNG' tab Hà Xá bị trần cứng chặn (tên tab không khớp luật việc chính)",
+   "trangThai": "đã sửa 6.28.9",
+   "ngay": "2026-10-24"
+  },
+  {
+   "ma": "bc-loi-lap",
+   "moTa": "Chạm trần: 'Ghi báo cáo lỗi lên Lark chưa được' lặp mỗi 15 giây (36 lần)",
+   "trangThai": "đã sửa 6.28.9",
+   "ngay": "2026-10-24"
   }
  ],
  "danhGiaTuan": [],
@@ -257,6 +275,10 @@
   {
    "ngay": "2026-10-24",
    "tomTat": "Ra bản 6.28.8: nhớ khoá giữ chỗ 25 phút, trần cứng lượt Lark mỗi ngày (Cao 60, Giao 100)."
+  },
+  {
+   "ngay": "2026-10-24",
+   "tomTat": "Ra bản 6.28.9: chống 2 máy gửi trùng báo cáo ngày, ghi Hà Xá không bị trần chặn, dừng lặp ghi báo cáo lỗi, nhật ký khi việc dở phải chờ."
   }
  ],
  "capNhat": "2026-10-24"
