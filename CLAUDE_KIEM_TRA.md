@@ -360,3 +360,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 3. Báo cáo lỗi: 8 tiếng/lần (trước 6). ghiTTBai: Máy Cao chỉ ghi dự phòng 1 lần sau 23:00.
 4. Đếm lượt tháng mỗi máy (`lark_thang6`) hiện ở tab Hệ thống.
 - Sim: ngay 36 → 24 lượt/ngày, themvideo 47 → 32; caothay, ngay2may đạt.
+
+## 6.28.6 (24/10/2026) — sửa gấp: Facebook đổi nhãn nút tài khoản
+- 24/10 sáng không đăng được bài nào cần chuyển trang: nút ảnh đại diện góc trên phải đổi aria-label "Trang cá nhân của bạn" → "Account, your profile" (nhãn cũ chỉ còn ở svg bên trong). Lỗi: "Không mở được menu tài khoản Facebook".
+- `vu6286.py`: `nutTaiKhoan()` tìm theo NHAN_TK (nhãn cũ/mới, vi/en) → svg bên trong nút → nút cuối của vùng "Cài đặt và kiểm soát tài khoản"; ghi nhật ký cách đã tìm thấy (`ghiCachTK`). Thay mọi chỗ chờ nút theo nhãn cũ.
+- Sim: fake nút mang nhãn mới (C.nhanCu = nhãn cũ). Đạt: kenh, caothay, ngay, hxmenu. Facebook thật: mở + đóng menu chuyển trang OK.

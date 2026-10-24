@@ -166,6 +166,12 @@
    "moTa": "Báo cáo tuần: lượt xem/follow từng video 'chưa đọc được' — mã đọc trang thiếu read_insights; Thư viện nội dung cuộn hụt",
    "trangThai": "đã xử lý 22/10 (thêm quyền + mã mới) + 6.28.4 dự phòng trang Thông tin chi tiết từng video",
    "ngay": "2026-10-22"
+  },
+  {
+   "ma": "nut-tai-khoan-doi-nhan",
+   "moTa": "24/10: Facebook đổi nhãn nút tài khoản thành 'Account, your profile' → không chuyển được trang, cả 2 máy không đăng được bài sáng 24/10",
+   "trangThai": "đã sửa 6.28.6",
+   "ngay": "2026-10-24"
   }
  ],
  "danhGiaTuan": [],
@@ -221,7 +227,11 @@
   {
    "ngay": "2026-10-23",
    "tomTat": "Ra bản 6.28.5: giảm lượt gọi Lark của script khoảng 1/3 (bỏ đọc ô khoá khi Máy Giao đăng đúng giờ, trần mềm/ngày, báo cáo lỗi 8 tiếng/lần, Máy Cao ghi cột G 1 lần cuối ngày). Hạn mức tổ chức còn ~1.199 lượt cho 23–31/10."
+  },
+  {
+   "ngay": "2026-10-24",
+   "tomTat": "Ra bản 6.28.6 sửa gấp nút tài khoản Facebook đổi nhãn (tìm theo nhiều cách). Máy Cao sáng nay tab bị ẩn tới ~09:00."
   }
  ],
- "capNhat": "2026-10-23"
+ "capNhat": "2026-10-24"
 }

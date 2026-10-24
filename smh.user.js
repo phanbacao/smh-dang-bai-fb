@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.5
+// @version      6.28.6
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.5';
+  const PHIEN_BAN = '6.28.6';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -1051,13 +1051,24 @@
   const laNhom = (d) => { const t = d.innerText || ''; if (t.startsWith('Chia sẻ lên nhóm') && d.getBoundingClientRect().height > 100) return true; return t.includes('Chọn nhóm') && tieuDeHien('Chia sẻ lên nhóm') && !!d.querySelector('input[type="checkbox"]'); };
   const hopThoai = (dk) => Array.from(document.querySelectorAll('div[role="dialog"]')).find((d) => dangHien(d) && dk(d));
   const nutTheoChu = (goc, chu) => Array.from(goc.querySelectorAll('[role="button"]')).find((b) => chuan(b.innerText) === chu);
-  function nutTaiKhoan() { const ds = Array.from(document.querySelectorAll('div[role="button"][aria-label="Trang cá nhân của bạn"]')); return ds.find(dangHien) || ds[0] || null; }
+  const NHAN_TK = /^(Trang cá nhân của bạn|Account, your profile|Your profile|Tài khoản, trang cá nhân của bạn|Tài khoản|Account)$/i;
+  function nutTaiKhoan() { // (6.28.6) nhiều cách tìm nút tài khoản — Facebook hay đổi nhãn
+    const hien = (e) => e && dangHien(e) && !e.closest('#smhfb');
+    let ds = Array.from(document.querySelectorAll('[role="button"][aria-label]')).filter((e) => NHAN_TK.test(e.getAttribute('aria-label').trim()));
+    let n = ds.find(hien); if (n) return ghiCachTK(n, 'nhãn ' + n.getAttribute('aria-label')), n;
+    ds = Array.from(document.querySelectorAll('svg[aria-label="Trang cá nhân của bạn"], svg[aria-label="Your profile"], image[aria-label="Trang cá nhân của bạn"]')).map((s) => s.closest('[role="button"]')).filter(Boolean);
+    n = ds.find(hien); if (n) return ghiCachTK(n, 'hình bên trong nút'), n;
+    const nav = document.querySelector('[role="navigation"][aria-label="Cài đặt và kiểm soát tài khoản"], [role="navigation"][aria-label="Account controls and settings"]');
+    if (nav) { const bs = Array.from(nav.querySelectorAll('[role="button"]')).filter(hien); const cuoi = bs[bs.length - 1]; if (cuoi) return ghiCachTK(cuoi, 'nút cuối vùng tài khoản'), cuoi; }
+    return null;
+  }
+  function ghiCachTK(n, cach) { if (window.__cachTK !== cach) { window.__cachTK = cach; ghi('Tìm thấy nút tài khoản Facebook theo: ' + cach); } }
   async function moMenuTaiKhoan() {
     const dk = () => hopThoai((d) => d.querySelector('a[href^="/me/"]'));
     const dongPopup = async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, which: 27, bubbles: true })); await sleep(600); };
     for (let lan = 0; lan < 4; lan++) {
       const dangMo = dk(); if (dangMo) return dangMo;
-      const nut = await cho(() => nutTaiKhoan() || Array.from(document.querySelectorAll('[role="button"][aria-label="Trang cá nhân của bạn"]')).find(dangHien) || null, 8000, 400);
+      const nut = await cho(() => nutTaiKhoan() || nutTaiKhoan() || null, 8000, 400);
       if (!nut) { await sleep(1500); continue; }
       // có bảng khác đang mở (Thông báo, Messenger…) thì đóng trước, kẻo bấm lần này chỉ để đóng bảng đó
       let nut2 = nut;
