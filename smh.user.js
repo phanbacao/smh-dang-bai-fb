@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.7
+// @version      6.28.8
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.7';
+  const PHIEN_BAN = '6.28.8';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -506,7 +506,13 @@
       throw loiLark(ma, r.mang ? (r.mang === 'timeout' ? 'Phản hồi quá lâu' : 'Mất kết nối') : (j && j.msg));
     }
   }
+  const TRAN_CUNG_LARK = () => (LA_CAO ? 60 : 100); // (6.28.8) trần cứng/ngày: vượt thì chỉ còn việc chính (đọc sheet, tải ảnh/video, ghi ĐÃ ĐĂNG, lấy mã)
+  const laViecChinhLark = (viec, url) => !url || /tenant_access_token/.test(url || '') || /đọc sheet|tải|ghi Kênh|ghi Trầm|ghi Kênh 1|lấy mã/.test(viec || '') || (/^đọc /.test(viec || '') && !/ ô Z/.test(viec || ''));
   async function goiLark(method, url, body, timeout) {
+    if (larkHomNay() >= TRAN_CUNG_LARK() && !laViecChinhLark(LARK_VIEC, url)) {
+      if (!window.__tranCungBao) { window.__tranCungBao = 1; ghi(`⛔ Lượt gọi Lark hôm nay đã chạm trần cứng ${TRAN_CUNG_LARK()} (${TEN_MAY}) → dừng mọi việc phụ tới hôm sau (giữ chỗ ô Z1 chuyển sang kiểm trang Facebook)`); baoLoi(`⛔ ${TEN_MAY}: lượt gọi Lark hôm nay đã chạm trần cứng ${TRAN_CUNG_LARK()} lượt → dừng việc phụ tới hôm sau, việc đăng bài vẫn chạy (kiểm trang trước khi đăng)`, 'trancung_' + homNay()).catch(() => {}); }
+      const e = new LoiMem('đã chạm trần cứng lượt Lark hôm nay (' + (LARK_VIEC || 'việc phụ') + ')'); e.tranCung = true; throw e;
+    }
     for (let lan = 0; ; lan++) {
       const t = await larkToken();
       try { return await goi(method, url, body, { Authorization: 'Bearer ' + t }, timeout); }
@@ -604,7 +610,7 @@
   // báo lỗi vào nhóm "Đăng bài fb" — luôn ghi rõ máy nào; mỗi khoá tối đa 1 lần/ngày
   // (6.25) chỉ lỗi NGUY CẤP mới gửi nhóm Lark báo lỗi: thiếu nội dung (bài bị bỏ), mã khoá/Lark/trang hỏng, trễ > 2 tiếng, Máy Cao đăng thay,
   //  bài bị bỏ sau mọi lần thử, trang có 2 bài trùng, tổng kết 12:00 / cuối ngày, nhắc sheet ngày mai. Còn lại chỉ ghi nhật ký + Báo lỗi cho Claude
-  const KHOA_NGUY_CAP = /^(theothutu_|boqua_|thieu_|lark_|suckhoe|loitrang|giahan|tab_an_|thay_|loi_|trung_|tong12_|tongtoi_|nhacsheet_)/;
+  const KHOA_NGUY_CAP = /^(trancung_|theothutu_|boqua_|thieu_|lark_|suckhoe|loitrang|giahan|tab_an_|thay_|loi_|trung_|tong12_|tongtoi_|nhacsheet_)/;
   async function baoLoi(noiDung, khoa, toiDa = 1) {
     if (!laTabChinh()) return false;
     if (!KHOA_NGUY_CAP.test(khoa || '')) { ghi('⚠️ (không báo Lark) ' + noiDung); return false; }
@@ -2967,7 +2973,8 @@
   // (6.28) ô giữ chỗ chứa NHIỀU khoá (mỗi bài 1 khoá, cách nhau " ; ") → 2 máy giữ 2 bài khác nhau cùng lúc không đè mất khoá của nhau
   const dsKhoa = (v) => { const out = []; const re = /KHOA\|(\d{2}-\d{2}-\d{4})\|(\w+)\|(GIAO|CAO)\|(\d+)/g; let m; while ((m = re.exec(String(v || '')))) out.push({ ngay: m[1], slot: m[2], may: m[3], luc: +m[4] }); return out; };
   const docKhoa = (v, slot) => { const ds = dsKhoa(v).filter((x) => !slot || x.slot === slot).sort((a, b) => a.luc - b.luc); return ds.length ? ds[ds.length - 1] : null; };
-  async function ghiKhoaO(k) { let cu = ''; try { cu = chuO(await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA)); } catch (e) { /* */ } const giu = dsKhoa(cu).filter((x) => x.ngay === homNay() && x.slot !== k && Date.now() - x.luc < 3 * 3600e3).slice(-6); giu.push({ ngay: homNay(), slot: k, may: MAY, luc: Date.now() }); await ghiO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA, giu.map((x) => `KHOA|${x.ngay}|${x.slot}|${x.may}|${x.luc}`).join(' ; ')); }
+  async function ghiKhoaO(k, ep) { if (!ep && coKhoaMinh(k)) return; // (6.28.8) khoá của máy này còn hạn → không ghi lại
+  {  let cu = ''; try { cu = chuO(await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA)); } catch (e) { /* */ } const giu = dsKhoa(cu).filter((x) => x.ngay === homNay() && x.slot !== k && Date.now() - x.luc < 3 * 3600e3).slice(-6); giu.push({ ngay: homNay(), slot: k, may: MAY, luc: Date.now() }); await ghiO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA, giu.map((x) => `KHOA|${x.ngay}|${x.slot}|${x.may}|${x.luc}`).join(' ; ')); } nhoKhoa(k); }
   // (6.26.4) máy này đã giữ chỗ bài này (đăng trễ) → ngay trước khi bấm Đăng đọc lại ô giữ chỗ: máy kia đã nhận bài (người bấm Đăng tay ở máy kia) thì nhường
   async function kiemCachTruocDang(slot) { // (6.28.2) ngay trước khi bấm Đăng: bài kênh 1 mới nhất trên trang (máy kia vừa đăng trong lúc mình đang soạn) chưa đủ 20 phút → chưa đăng
     if ((kenhCua(slot) || 1) !== 1 || window.__smhEp || !coApiKenh(1)) return;
@@ -2982,11 +2989,17 @@
     if (chanLark()) return; const cuaMinh = window.__smhKhoaSlot === slot;
     { // (6.28.5) bớt lượt Lark: Máy Giao đăng đúng giờ (Máy Cao chỉ đăng thay khi Giao trễ > 25 phút và luôn ghi ô giữ chỗ trước) / vừa giữ chỗ xong < 5 phút → không đọc lại ô Z1
       const g = (trangThai().gio || {})[slot]; const dungGio = LA_GIAO && !window.__smhEp && typeof g === 'number' && Date.now() <= lucPhut(g) + CAI_DAT.GIAO_GIU_CHO_SAU_PHUT * 60000;
-      if (dungGio || (cuaMinh && Date.now() - (window.__smhKhoaLuc || 0) < 5 * 60000)) return; }
+      if (dungGio || coKhoaMinh(slot) || (cuaMinh && Date.now() - (window.__smhKhoaLuc || 0) < 5 * 60000)) return; }
     let kx = null; try { kx = docKhoa(chuO(await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA)), slot); } catch (e) { return; }
     if (kx && kx.ngay === homNay() && kx.slot === slot && kx.may !== MAY && (cuaMinh || Date.now() - kx.luc < CAI_DAT.NHUONG_PHUT * 60000)) { window.__smhKhoaSlot = ''; const e = new LoiMem(`máy ${kx.may === 'CAO' ? 'Cao' : 'Giao'} đã nhận đăng bài này lúc ${gioStr(new Date(kx.luc))} (người bấm Đăng tay)`); e.nhuong = true; throw e; }
   }
-  async function giuCho(k, ghiDe = false) { // (6.26.4) ghiDe = người bấm Đăng dù máy kia đang giữ chỗ
+  // (6.28.8) NHỚ KHOÁ CỦA CHÍNH MÁY: giữ chỗ được 1 bài thì nhớ 25 phút — thử lại / bấm Soạn / kiểm trước khi Đăng trong 25 phút không gọi Lark lại (24/10: 319 lượt ô Z1 vì mỗi lần thử lại đều giữ chỗ từ đầu)
+  const NHO_KHOA_PHUT = 25;
+  const khoaMinh = () => { const m = lay('khoa_minh6', null) || {}; return m.ngay === homNay() ? m : { ngay: homNay() }; };
+  const coKhoaMinh = (k) => { const t = khoaMinh()[k]; return typeof t === 'number' && Date.now() - t < NHO_KHOA_PHUT * 60000; };
+  const nhoKhoa = (k) => { const m = khoaMinh(); m[k] = Date.now(); luu('khoa_minh6', m); window.__smhKhoaSlot = k; window.__smhKhoaLuc = Date.now(); };
+  async function giuCho(k, ghiDe = false) {
+    if (!ghiDe && coKhoaMinh(k)) { window.__smhKhoaSlot = k; window.__smhKhoaLuc = Date.now(); if (window['__nhoKhoa_' + k] !== khoaMinh()[k]) { window['__nhoKhoa_' + k] = khoaMinh()[k]; ghi(`${tenSlot(k)}: ${TEN_MAY} đã giữ chỗ lúc ${gioStr(new Date(khoaMinh()[k]))} (còn hạn) → dùng lại, không gọi Lark`); } return true; } // (6.26.4) ghiDe = người bấm Đăng dù máy kia đang giữ chỗ
     const doc = async () => { const c = await docO(CAI_DAT.TAB_BAI, CAI_DAT.O_KHOA); const t = chuO(c).trim(); if (t && !/^KHOA\|/.test(t)) throw new LoiMem(`ô ${CAI_DAT.O_KHOA} (tab Bài viết kênh 1) đang có chữ khác — script không dùng ô này để giữ chỗ`); return docKhoa(t, k); };
     const x = await doc();
     if (x && x.ngay === homNay() && x.slot === k && x.may !== MAY && Date.now() - x.luc < CAI_DAT.NHUONG_PHUT * 60000 && ghiDe) ghi(`${tenSlot(k)}: máy ${x.may === 'CAO' ? 'Cao' : 'Giao'} đang giữ chỗ từ ${gioStr(new Date(x.luc))} nhưng người bấm Đăng → ${TEN_MAY} ghi đè ô giữ chỗ và đăng (vẫn kiểm trang trước khi bấm Đăng)`);
@@ -2996,7 +3009,8 @@
     const y = await doc();
     const ok = !!(y && y.ngay === homNay() && y.slot === k && y.may === MAY); // (6.28) khoá riêng từng bài // (6.19.2) máy kia vừa giữ ô của bài KHÁC (vd kênh 2 vs kênh 3) → không phải nhường
     ghi(ok ? `${tenSlot(k)}: đã giữ chỗ (ô ${CAI_DAT.O_KHOA}) → ${TEN_MAY} đăng` : `${tenSlot(k)}: máy kia vừa giữ chỗ cùng lúc → nhường`);
-    if (ok) { window.__smhKhoaSlot = k; window.__smhKhoaLuc = Date.now(); capNhatTT((s) => { ttSlot(s, k).khoaKhac = null; }); }
+    if (!ok) { const m = khoaMinh(); delete m[k]; luu('khoa_minh6', m); }
+    if (ok) { nhoKhoa(k); capNhatTT((s) => { ttSlot(s, k).khoaKhac = null; }); }
     return ok;
   }
 
@@ -3149,7 +3163,7 @@
     else if (!chanLark() && (LA_CAO || now > it.den + CAI_DAT.GIAO_GIU_CHO_SAU_PHUT * 60000)) {
       try {
         if (!(await giuCho(it.k, !!(it.r.ghiDe && Date.now() - it.r.ghiDe < 30 * 60000)))) { capNhatTT((s) => { ttSlot(s, it.k).choDen = Date.now() + 5 * 60000; }); return false; }
-      } catch (e) { ghi(`${it.ten}: chưa giữ chỗ được (${e.message}) → ${LA_CAO ? 'Máy Cao không đăng để tránh trùng' : 'vẫn đăng (đã kiểm trang chưa có bài)'}`); if (LA_CAO) { capNhatTT((s) => { ttSlot(s, it.k).choDen = Date.now() + 10 * 60000; }); return false; } }
+      } catch (e) { ghi(`${it.ten}: chưa giữ chỗ được (${e.message}) → ${LA_CAO && !e.tranCung ? 'Máy Cao không đăng để tránh trùng' : 'vẫn đăng (đã kiểm trang chưa có bài)'}`); if (LA_CAO && !e.tranCung) { capNhatTT((s) => { ttSlot(s, it.k).choDen = Date.now() + 10 * 60000; }); return false; } }
       if (LA_CAO && !ep) await baoLoi(`Máy Giao chưa đăng ${it.ten} (quá ${Math.round((now - it.den) / 60000)} phút so với giờ hẹn ${gioStr(new Date(it.den))}) → Máy Cao đăng thay`, 'thay_' + it.k);
     }
     // đếm ngược 3 giây (bấm "Đăng ngay" trên popup thì không cần)
@@ -3985,7 +3999,7 @@
     { const itP = lichNgay(p.mai ? ngayMai() : homNay()).find((x) => x.k === p.slot); datKenh(itP ? itP.kenh : kenhCua(p.slot)); } // (6.19.2) bài soạn sẵn của kênh 2, 3 → kiểm đúng trang
     const hopMo = hopDangDo() || hopSoanBai() || ganManHinh();
     if (hopMo) hopThayTrangNay = true; // (6.8) tính theo lần tải trang này: F5 xong mà không còn hộp → 45 giây là bỏ
-    if (hopMo && !p.mai && !chanLark() && Date.now() - (p.khoaLuc || p.luc) > 15 * 60000) { p.khoaLuc = Date.now(); luu('cho_tay6', p); ghiKhoaO(p.slot).catch(() => {}); } // (6.28) bản soạn còn chờ bấm Đăng → 15 phút ghi lại ô giữ chỗ (khoá không hết hạn ở phút 40)
+    if (hopMo && !p.mai && !chanLark() && Date.now() - (p.khoaLuc || p.luc) > NHO_KHOA_PHUT * 60000) { p.khoaLuc = Date.now(); luu('cho_tay6', p); ghiKhoaO(p.slot, true).catch(() => {}); } // (6.28) bản soạn còn chờ bấm Đăng → 15 phút ghi lại ô giữ chỗ (khoá không hết hạn ở phút 40)
     if (hopMo) {
       if (Date.now() - p.luc > 45 * 60000) { luu('cho_tay6', null); capNhatTT((s) => { Object.assign(ttSlot(s, p.slot), p.soan ? { tt: 'cho', thuLai: p.mai ? 0 : Date.now() + 15 * 60000, daSoan: 0 } : { tt: 'bo', lyDo: 'chạy thử: quá 45 phút chưa bấm Đăng' }); }, p.mai || homNay()); ghi(`${p.ten} ${p.soan ? 'đã soạn' : 'chạy thử'}: quá 45 phút chưa bấm Đăng → ${p.soan ? 'để lại hàng chờ' : 'bỏ lượt này'}`); }
       return true;
@@ -5339,7 +5353,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;

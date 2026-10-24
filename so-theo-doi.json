@@ -184,6 +184,12 @@
    "moTa": "24/10: Bài 1 kênh 1, Video 1 kênh 2 kẹt 'Đang làm…' sau khi trang tải lại giữa lúc đăng",
    "trangThai": "đã sửa 6.28.7 (gỡ kẹt sau 8 phút)",
    "ngay": "2026-10-24"
+  },
+  {
+   "ma": "z1-ton-luot",
+   "moTa": "24/10: Máy Cao 349 lượt Lark/ngày, 319 lượt ở ô giữ chỗ Z1 (mỗi lần thử lại đều giữ chỗ từ đầu)",
+   "trangThai": "đã sửa 6.28.8 (nhớ khoá 25 phút + trần cứng Cao 60 / Giao 100)",
+   "ngay": "2026-10-24"
   }
  ],
  "danhGiaTuan": [],
@@ -247,6 +253,10 @@
   {
    "ngay": "2026-10-24",
    "tomTat": "Ra bản 6.28.7: tự bấm 'Dùng Trang' trên hộp Trang mới; gỡ kẹt bài 'Đang làm' quá 8 phút."
+  },
+  {
+   "ngay": "2026-10-24",
+   "tomTat": "Ra bản 6.28.8: nhớ khoá giữ chỗ 25 phút, trần cứng lượt Lark mỗi ngày (Cao 60, Giao 100)."
   }
  ],
  "capNhat": "2026-10-24"
