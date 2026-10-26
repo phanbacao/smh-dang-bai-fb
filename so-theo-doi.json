@@ -208,6 +208,12 @@
    "moTa": "Chạm trần: 'Ghi báo cáo lỗi lên Lark chưa được' lặp mỗi 15 giây (36 lần)",
    "trangThai": "đã sửa 6.28.9",
    "ngay": "2026-10-24"
+  },
+  {
+   "ma": "lark-het-luot-thang",
+   "moTa": "26/10: cả công ty hết 10.000 lượt API Lark/tháng (mã 99991403) → bấm Soạn video/manifest hỏng, Video 3/4, Manifest 4 không đăng được (không tải được file)",
+   "trangThai": "đã sửa 6.29: tải video/ảnh qua Lark web (phiên đăng nhập Chrome, không tốn lượt), tải sẵn 2 ngày tới, cảnh báo lượt cao",
+   "ngay": "2026-10-26"
   }
  ],
  "danhGiaTuan": [],
@@ -279,6 +285,10 @@
   {
    "ngay": "2026-10-24",
    "tomTat": "Ra bản 6.28.9: chống 2 máy gửi trùng báo cáo ngày, ghi Hà Xá không bị trần chặn, dừng lặp ghi báo cáo lỗi, nhật ký khi việc dở phải chờ."
+  },
+  {
+   "ngay": "2026-10-26",
+   "tomTat": "Ra bản 6.29: tải file qua Lark web khi hết lượt API, tải sẵn 2 ngày tới cho cả 2 máy, báo nhóm khi lượt Lark cao. Đọc sheet mới khi hết lượt vẫn chưa làm được (Lark web mã hoá dữ liệu sheet)."
   }
  ],
  "capNhat": "2026-10-24"

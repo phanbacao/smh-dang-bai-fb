@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.28.9
+// @version      6.29
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @grant        GM_xmlhttpRequest
@@ -49,7 +49,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.28.9';
+  const PHIEN_BAN = '6.29';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -482,8 +482,8 @@
   const TRAN_LARK_NGAY = () => (LA_CAO ? 15 : 35);
   const larkHomNay = () => { const c = lay('lark_dem', {}) || {}; return c.ngay === homNay() ? (c.so || 0) : 0; };
   const larkTietKiem = () => larkHomNay() >= TRAN_LARK_NGAY();
-  const demThangLark = () => { try { const th = homNay().slice(3); const m = lay('lark_thang6', null) || {}; const moi = m.th === th ? m : { th, so: 0 }; moi.so = (moi.so || 0) + 1; luu('lark_thang6', moi); } catch (e) { /* */ } };
-  const demLark0 = (url) => { demThangLark(); const c = lay('lark_dem', {}) || {}; const moi = c.ngay === homNay() ? c : { ngay: homNay(), so: 0, loai: {} }; moi.so = (moi.so || 0) + 1; const k = LARK_VIEC || (!url ? 'tải tệp (video/ảnh)' : /tenant_access_token/.test(url) ? 'lấy mã Lark' : 'khác ' + (String(url).split('/open-apis/')[1] || '').split('?')[0].replace(/[A-Za-z0-9]{20,}/g, '…').slice(0, 40)); moi.loai = moi.loai || {}; moi.loai[k] = (moi.loai[k] || 0) + 1; capNhat('lark_dem', moi); };
+  const demThangLark = () => { try { const th = homNay().slice(3); const m = lay('lark_thang6', null) || {}; const moi = m.th === th ? m : { th, so: 0 }; moi.so = (moi.so || 0) + 1; luu('lark_thang6', moi); if (moi.so === (LA_CAO ? 700 : 1500)) setTimeout(() => { try { baoLoi(`📈 ${TEN_MAY}: tháng này script đã gọi Lark ${moi.so} lượt — cả công ty chỉ có 10.000 lượt/tháng (gồm cả bot KPI), cần xem bảng lượt gọi trong trang quản trị Lark`, 'tranthang_' + th).catch(() => {}); } catch (e) { /* */ } }, 0); } catch (e) { /* */ } };
+  const demLark0 = (url) => { demThangLark(); const c = lay('lark_dem', {}) || {}; const moi = c.ngay === homNay() ? c : { ngay: homNay(), so: 0, loai: {} }; moi.so = (moi.so || 0) + 1; if (moi.so === TRAN_LARK_NGAY()) setTimeout(() => { try { baoLoi(`📈 ${TEN_MAY}: hôm nay đã gọi Lark ${moi.so} lượt (mức bình thường) — từ giờ script bỏ bớt việc phụ để giữ lượt; nếu ngày nào cũng báo thì cần kiểm tra`, 'tranmem_' + homNay()).catch(() => {}); } catch (e) { /* */ } }, 0); const k = LARK_VIEC || (!url ? 'tải tệp (video/ảnh)' : /tenant_access_token/.test(url) ? 'lấy mã Lark' : 'khác ' + (String(url).split('/open-apis/')[1] || '').split('?')[0].replace(/[A-Za-z0-9]{20,}/g, '…').slice(0, 40)); moi.loai = moi.loai || {}; moi.loai[k] = (moi.loai[k] || 0) + 1; capNhat('lark_dem', moi); };
   // lỗi mạng / quá lâu / máy chủ 5xx / giới hạn tốc độ: tự thử lại tối đa 2 lần (cách 3–8 giây) rồi mới tính là lỗi
   async function goi(method, url, body, headers = {}, timeout) {
     const duLieu = url.startsWith('https://open.larksuite.com/open-apis/') && !url.includes('/bot/v2/hook/');
@@ -2183,11 +2183,43 @@
     } catch (e) { return { tong: 0, xoa: 0, n: 0 }; }
   }
   const MA_KHOA_LARK = ['99991403', '99991400', '429', '91403', '99991672', '99991676', '99991679', '99991668', '10014'];
+  // (6.29) TẢI QUA LARK WEB: dùng tài khoản Lark đang đăng nhập trên Chrome của máy này (như khi bấm xem/tải video trong sheet)
+  //  → KHÔNG tính lượt gọi API Lark. Ưu tiên cách này; hỏng (chưa đăng nhập Lark web, mất mạng…) thì mới dùng API như cũ.
+  const LARK_WEB_HOST = ['https://internal-api-drive-stream-sg.larksuite.com', (CAI_DAT.LINK_SHEET.match(/^https:\/\/[^/]+/) || [''])[0]].filter(Boolean);
+  const LARK_WEB_NGHI_PHUT = 30;
+  const larkWeb = () => lay('lark_web6', null) || {};
+  const larkWebNghi = () => { const w = larkWeb(); return w.hong && Date.now() - w.hong < LARK_WEB_NGHI_PHUT * 60000 ? w : null; };
+  async function taiTepWeb(token, { ten = 'tep', loai = '', size = 0, timeout = 180000 } = {}) {
+    const t0 = Date.now(); let loiCuoi = '', dangNhap = false;
+    for (const host of LARK_WEB_HOST) {
+      const url = host + '/space/api/box/stream/download/all/' + encodeURIComponent(token) + '/?mount_point=sheet';
+      const r = await new Promise((resolve) => GM_xmlhttpRequest({ method: 'GET', url, responseType: 'blob', timeout, anonymous: false,
+        onload: (x) => resolve({ status: x.status, blob: x.response }), onerror: () => resolve({ mang: 'mất kết nối' }), ontimeout: () => resolve({ mang: 'quá lâu' }) }));
+      if (r.mang) { loiCuoi = r.mang; continue; }
+      const b = r.blob; const ty = (b && b.type) || '';
+      if (r.status === 401 || r.status === 403 || /text\/html|json/.test(ty) || (b && b.size < 500)) { let chu = ''; try { chu = b ? (await b.slice(0, 300).text()) : ''; } catch (e) { /* */ }
+        if (r.status === 401 || r.status === 403 || /login|passport|accounts|"code":\s*(4|9)/i.test(chu) || /text\/html/.test(ty)) { dangNhap = true; loiCuoi = 'Chrome máy này chưa đăng nhập Lark web (mã ' + r.status + ')'; continue; }
+        loiCuoi = 'Lark web trả về ' + (b ? b.size : 0) + ' byte (mã ' + r.status + ')'; continue; }
+      if (r.status !== 200) { loiCuoi = 'mã ' + r.status; continue; }
+      if (size && Math.abs(b.size - size) > 1024) { loiCuoi = `chưa đủ (${b.size}/${size} byte)`; continue; }
+      luu('lark_web6', { ok: Date.now(), soOk: (larkWeb().soOk || 0) + 1 });
+      ghi(`Tải ${ten} qua Lark web (không tốn lượt Lark): ${(b.size / 1048576).toFixed(1)} MB trong ${((Date.now() - t0) / 1000).toFixed(0)} giây`);
+      return b;
+    }
+    luu('lark_web6', Object.assign(larkWeb(), { hong: Date.now(), ly: loiCuoi, dangNhap }));
+    const e = new LoiMem('tải qua Lark web chưa được: ' + loiCuoi); e.dangNhap = dangNhap; throw e;
+  }
   // tải 1 file trong ô sheet (ảnh / video / nhạc) — có trong kho thì lấy kho, không gọi Lark
   async function taiTepLark(token, { ten = 'tep', loai = '', size = 0, timeout = 180000, lanToiDa = 1 } = {}) { // (6.25) mặc định chỉ tải 1 lần (không tự thử lại nhiều lần tốn lượt Lark); mã Lark hết hạn thì được lấy mã mới thử thêm 1 lần
     const trongKho = await khoLay('tep|' + token);
     if (trongKho && trongKho.blob && trongKho.blob.size > 500) return trongKho.blob;
-    const gate = chanLark(); if (gate) throw new LoiLark(gate.msg + ' — đang chờ kiểm tra lại');
+    let loiWeb = '';
+    if (!larkWebNghi() || chanLark()) { // (6.29) Lark web trước (miễn phí lượt); hết lượt API thì luôn thử Lark web
+      try { const b = await taiTepWeb(token, { ten, loai, size, timeout }); await khoLuu('tep|' + token, b, { loai, web: 1 }); return b; }
+      catch (e) { loiWeb = e.message; ghi(`Tải ${ten}: ${e.message}${chanLark() ? '' : ' → tải bằng API Lark'}`);
+        if (e.dangNhap && chanLark()) baoLoi(`⚠️ ${TEN_MAY}: Lark đã hết lượt API, và Chrome máy này chưa đăng nhập Lark web nên không tải được video/ảnh — mở ${LARK_WEB_HOST[1] || 'larksuite.com'} trên Chrome máy này, đăng nhập Lark rồi để script tự thử lại`, 'larkweb_' + homNay()).catch(() => {}); }
+    }
+    const gate = chanLark(); if (gate) throw new LoiLark(gate.msg + (loiWeb ? ' · ' + loiWeb : '') + ' — đang chờ kiểm tra lại');
     let loiCuoi = null;
     let soLan = lanToiDa;
     for (let lan = 0; lan < soLan; lan++) {
@@ -4065,10 +4097,10 @@
     if (d && ngayStr(new Date(d.luc)) !== ngay && mm >= 5 * 60 && mm < 22 * 60 && !st.sang && Date.now() - (st.thieu || 0) > 30 * 60000) { st.sang = Date.now(); luu(k, st); return thu('sang'); }
     return false;
   }
-  function dsTaiSan() { // đồ cần tải sẵn: hôm nay (bài chưa đăng) + ngày mai (sau 18:30)
+  function dsTaiSan() { // (6.29) đồ cần tải sẵn: hôm nay (bài chưa đăng) + 2 ngày tới (ảnh, video, video manifest) — Lark hỏng/hết lượt vẫn đăng đủ 2 ngày
     const d = duLieu(); if (!d || !d.ngay) return [];
-    const out = []; const s = trangThai(); const mm = phutTrongNgay(new Date());
-    const cacNgay = [homNay()]; if (mm >= docGio(CAI_DAT.GIO_DOC_CHOT)) cacNgay.push(ngayMai());
+    const out = []; const s = trangThai();
+    const cacNgay = [homNay(), ngayMai(), ngayStr(congNgay(2))].filter((n) => d.ngay[n]);
     const them = (k, x) => { if (!out.some((y) => y.k === k)) out.push(Object.assign({ k }, x)); };
     if (d.chung) { if (d.chung.co) them('tep|' + d.chung.co, { loai: 'anh', token: d.chung.co }); (d.chung.pool || []).concat(d.chung.poolK || []).forEach((t) => them('tep|' + t, { loai: 'anh', token: t })); }
     for (const ngay of cacNgay) {
@@ -4077,15 +4109,17 @@
         const nd = noiDungSlot(ngay, it.k, d); if (nd.thieu && nd.thieu.length && !nd.tep && !nd.anh) continue;
         (Array.isArray(nd.anh) ? nd.anh : []).forEach((t) => them('tep|' + t, { loai: 'anh', token: t }));
         (nd.anhCmt || []).forEach((t) => them('tep|' + t, { loai: 'anh', token: t }));
-        if (it.loai === 'video' && nd.tep && ngay === homNay() && typeof s.gio[it.k] === 'number' && lucPhut(s.gio[it.k]) - Date.now() <= 90 * 60000) them('tep|' + nd.tep.fileToken, { loai: 'video', tep: nd.tep }); // (6.25) video: chỉ tải trước giờ đăng 90 phút
-        if (it.loai === 'manifest' && nd.anh) them(`mf|${ngay}|${it.so}|${nd.anh}`, { loai: 'mf', ngay, so: it.so, anh: nd.anh });
+        if (it.loai === 'video' && nd.tep && nd.tep.fileToken) them('tep|' + nd.tep.fileToken, { loai: 'video', tep: nd.tep, ngay }); // (6.29) video: tải sẵn cả 2 ngày tới (qua Lark web, không tốn lượt)
+        if (it.loai === 'manifest' && nd.anh && ngay !== ngayStr(congNgay(2))) them(`mf|${ngay}|${it.so}|${nd.anh}`, { loai: 'mf', ngay, so: it.so, anh: nd.anh });
       }
     }
     return out;
   }
   async function taiSan() { // (6.25) ảnh tải sẵn từ đầu ngày; video chỉ tải trước giờ đăng 90 phút; mỗi file chỉ tải sẵn 1 lần (lỗi thì để lúc đăng tải 1 lần nữa); nhiều file → gộp 1 lượt Lark
-    if (!LA_GIAO || tamDung() || !laTabChinh() || dangBan || lay('dang_do', null) || chanLark()) return false;
+    if (tamDung() || !laTabChinh() || dangBan || lay('dang_do', null)) return false; // (6.29) cả 2 máy tải sẵn (máy dự phòng cũng có đủ file); hết lượt Lark vẫn tải qua Lark web
     const mm = phutTrongNgay(new Date()); if (mm < 5 * 60 + 30 || mm > 22 * 60 + 30) return false;
+    if (LA_CAO && larkWebNghi()) return false; // (6.29) Máy Cao chỉ tải sẵn qua Lark web (không tốn lượt); Lark web đang hỏng thì để lúc đăng mới tải
+    { const s0 = trangThai(); if (LICH.some((it) => { const r = s0.s[it.k]; return !(r && KET.includes(r.tt)) && typeof s0.gio[it.k] === 'number' && Math.abs(lucPhut(s0.gio[it.k]) - Date.now()) < 5 * 60000; })) return false; } // (6.29) sắp tới giờ đăng (±5 phút) → không tải file lớn, để nhịp đăng chạy trước
     let st = lay('tai6', null) || {}; if (st.ngay !== homNay()) st = { ngay: homNay() };
     if (st.xongLuc && Date.now() - st.xongLuc < 10 * 60000) return false;
     if (st.loiLuc && Date.now() - st.loiLuc < 10 * 60000) return false;
@@ -4096,7 +4130,7 @@
     const tep = can.filter((x) => x.loai === 'anh' || x.loai === 'video').slice(0, 5);
     const danhDau = (ks, e) => { st = Object.assign(lay('tai6', null) || st, { ngay: homNay() }); st.boQua = Array.from(new Set((st.boQua || []).concat(ks))).slice(-60); if (e) { st.loiLuc = Date.now(); st.loi = e; } st.xongLuc = 0; luu('tai6', st); };
     luu('tai6', Object.assign(st, { dang: can[0].k, daCo, tong: ds.length, luc: Date.now(), xongLuc: 0 }));
-    if (tep.length >= 2 && lay('lo_batch6', '') !== homNay()) {
+    if (tep.length >= 2 && lay('lo_batch6', '') !== homNay() && !chanLark() && larkWebNghi()) { // (6.29) gộp lượt API chỉ khi Lark web đang hỏng
       const kq = await taiNhieuTepLark(tep.map((x) => (x.loai === 'video' ? { token: x.tep.fileToken, ten: 'video "' + x.tep.ten + '"', loai: 'video', size: x.tep.size, k: x.k } : { token: x.token, ten: 'ảnh', loai: 'anh', k: x.k })));
       if (kq.loiBatch) return true; // (6.25) Lark không cho xin link tạm (lỗi xin link, chưa tải gì) → lượt sau tải lẻ ngay, không tính là file lỗi
       if (kq.hong.length) danhDau(kq.hong.map((x) => x.k), kq.hong.length + ' file lỗi khi tải nhiều tệp');
@@ -6779,6 +6813,7 @@
     let h = `<div class="the-nd" style="margin-top:10px"><div class="nhan">🔄 Tự nâng cấp</div>`;
     h += `<div class="dong"><span>Đang chạy</span><span><b>bản ${PHIEN_BAN}</b>${tt.chinhThuc ? ' · bản chính thức trên GitHub: ' + esc(tt.chinhThuc) : ''}</span></div>`;
     h += `<div class="dong"><span>Kênh 1 đang đăng</span><span>${CAI_DAT.KENH[1].moi ? '🟢 Kênh 1 mới (' + esc(CAI_DAT.KENH[1].ten) + ') · kênh 1 cũ: tạm dừng' : '🟠 Kênh 1 CŨ (' + esc(CAI_DAT.KENH[1].ten) + ')'} <button class="nut nho" data-a="k1cu">${CAI_DAT.KENH[1].moi ? 'Bật lại kênh 1 cũ' : 'Về kênh 1 mới'}</button></span></div>`; // (6.21)
+    { const w = lay('lark_web6', null) || {}; h += `<div class="dong"><span>Tải video/ảnh qua Lark web (không tốn lượt)</span><span>${w.hong && (!w.ok || w.hong > w.ok) ? '✗ ' + esc(String(w.ly || 'lỗi')) + ' · ' + gioStr(new Date(w.hong)) : w.ok ? '✓ lần cuối ' + gioStr(new Date(w.ok)) + ' · ' + (w.soOk || 0) + ' file' : 'chưa dùng'}</span></div>`; }
     { const lm = lay('lark_thang6', null); if (lm) h += `<div class="dong"><span>Lượt gọi Lark tháng này (máy này)</span><span><b>${lm.so || 0}</b> · trần mềm mỗi ngày ${TRAN_LARK_NGAY()} lượt${larkTietKiem() ? ' — <b style="color:#d93a3a">hôm nay đã chạm trần, đang bỏ việc phụ</b>' : ''} (hạn mức cả tổ chức 10.000/tháng gồm cả bot KPI)</span></div>`; }
     { const ld = lay('lark_dem', {}) || {}; if (ld.ngay === homNay()) { const ds = Object.entries(ld.loai || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${esc(k)}: ${n}`).join(' · '); h += `<div class="dong"><span>Lượt gọi Lark hôm nay</span><span><b>${ld.so || 0}</b>${ds ? ' — ' + ds : ''}</span></div>`; } } // (6.20.8)
     { const c = lay('cham6', null); const ds = c && c.ngay === homNay() ? c.ds : []; h += `<div class="dong"><span>Bước quá lâu hôm nay</span><span>${ds.length ? ds.slice(-8).reverse().map((x) => `<b>${gioStr(new Date(x.luc))}</b> ${esc(x.ten)} ${x.giay}s (ngưỡng ${x.nguong}s)`).join('<br>') : 'chưa có'}</span></div>`; } // (6.24)

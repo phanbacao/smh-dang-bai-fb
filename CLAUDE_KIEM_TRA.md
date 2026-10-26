@@ -384,3 +384,12 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 3. `canGhiBC`: chạm trần cứng → false (1 dòng nhật ký) — hết lặp "Ghi báo cáo lỗi lên Lark chưa được" mỗi 15 giây.
 4. `choDD`: việc dở phải chờ (người đang thao tác, không phải tab chính, tạm dừng, đếm ngược bị hoãn, chờ nhân sự) → ghi nhật ký tối đa 2 phút/lần (22:22–22:30 gửi bù comment 19:30 im lặng 8 phút).
 - Sim: bccao (Cao đăng thay bài cuối 19:59 → báo cáo 20:04, ghi Z2), bccaoz2 (Cao chạm trần + Z2 đã có GIAO → không gửi), bccaomuon (22:05, chạm trần, Z2 GIAO → không gửi), baocao (Giao gửi như cũ), trancung.
+
+## 6.29 (26/10/2026) — dự phòng khi Lark hết lượt API
+- 26/10: cả công ty hết hạn mức 10.000 lượt/tháng (mã 99991403, cấp lại 1/11). Bài chữ vẫn đăng bằng dữ liệu đọc lúc 20:14 25/10; video/manifest hỏng vì tải file qua API (`taiTepLark` → `chanLark` gate quota).
+1. `taiTepWeb` (p5_kho): GET `https://internal-api-drive-stream-sg.larksuite.com/space/api/box/stream/download/all/<fileToken>/?mount_point=sheet` (dự phòng: miền LINK_SHEET), GM_xmlhttpRequest anonymous:false → dùng cookie Lark web của Chrome, không tính lượt API. Đã thử thật trên trang Lark (video Hà Xá 53,6 MB, mã 200, video/mp4). Nhận biết chưa đăng nhập: 401/403 hoặc trả html/json → `lark_web6.hong`, nghỉ cách web 30 phút (trừ khi hết lượt API thì luôn thử web) + báo nhóm 1 lần/ngày `larkweb_`.
+2. `taiTepLark`: kho → Lark web → API (như cũ). Tab Hệ thống có dòng trạng thái Lark web.
+3. Tải sẵn (`dsTaiSan`/`taiSan`): hôm nay + 2 ngày tới (ảnh, video; video manifest hôm nay + mai), cả 2 máy (Máy Cao chỉ khi Lark web chạy, ĐĂNG BÀI bật), chạy cả khi hết lượt API; bỏ qua khi có bài đến giờ ±5 phút; gộp link tạm API chỉ khi Lark web hỏng.
+4. Cảnh báo lượt: chạm trần mềm ngày → báo `tranmem_`; lượt tháng của máy chạm 1500 (Giao) / 700 (Cao) → báo `tranthang_`.
+- CHƯA làm được: đọc nội dung sheet qua Lark web (dữ liệu sheet tải về dạng khối mã hoá client_vars/sub_block) → hết lượt API thì nội dung sửa/thêm sau lần đọc cuối không thấy.
+- Sim: quotaweb/quotadang/taisan2 (19 file tải qua web, 0 lượt API cho file), quotalogin (web trả trang đăng nhập → báo nhóm, rơi về API/hết lượt → báo chưa tải được).
