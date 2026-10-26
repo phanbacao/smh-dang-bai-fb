@@ -214,6 +214,18 @@
    "moTa": "26/10: cả công ty hết 10.000 lượt API Lark/tháng (mã 99991403) → bấm Soạn video/manifest hỏng, Video 3/4, Manifest 4 không đăng được (không tải được file)",
    "trangThai": "đã sửa 6.29: tải video/ảnh qua Lark web (phiên đăng nhập Chrome, không tốn lượt), tải sẵn 2 ngày tới, cảnh báo lượt cao",
    "ngay": "2026-10-26"
+  },
+  {
+   "ma": "lark-web-doc-sheet",
+   "moTa": "Hết lượt API thì nội dung sheet mới không đọc được",
+   "trangThai": "đã sửa 6.30: trợ lý chạy trên tab sheet Lark (MKT 10) đọc sheet bằng phiên Lark web, tab Facebook dùng như đọc API",
+   "ngay": "2026-10-26"
+  },
+  {
+   "ma": "giu-lark-web6",
+   "moTa": "6.29: khoá lark_web6 không nằm trong danh sách giữ lại → bị dọn mỗi lần khởi động",
+   "trangThai": "đã sửa 6.30",
+   "ngay": "2026-10-26"
   }
  ],
  "danhGiaTuan": [],
@@ -289,6 +301,10 @@
   {
    "ngay": "2026-10-26",
    "tomTat": "Ra bản 6.29: tải file qua Lark web khi hết lượt API, tải sẵn 2 ngày tới cho cả 2 máy, báo nhóm khi lượt Lark cao. Đọc sheet mới khi hết lượt vẫn chưa làm được (Lark web mã hoá dữ liệu sheet)."
+  },
+  {
+   "ngay": "2026-10-26",
+   "tomTat": "Ra bản 6.30: đọc sheet qua tab Lark web khi hết lượt API (giải mã dữ liệu ô Lark), script tự đăng tiếp không cần đăng tay."
   }
  ],
  "capNhat": "2026-10-24"
