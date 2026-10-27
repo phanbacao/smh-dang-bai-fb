@@ -305,6 +305,10 @@
   {
    "ngay": "2026-10-26",
    "tomTat": "Ra bản 6.30: đọc sheet qua tab Lark web khi hết lượt API (giải mã dữ liệu ô Lark), script tự đăng tiếp không cần đăng tay."
+  },
+  {
+   "ngay": "2026-10-27",
+   "tomTat": "Ra bản 6.31: tạo ảnh manifest từ chữ nhập trực tiếp trên bảng (không cần Lark), tải từng ảnh / tải tất cả."
   }
  ],
  "capNhat": "2026-10-24"

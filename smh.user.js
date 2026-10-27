@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.30
+// @version      6.31
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.30';
+  const PHIEN_BAN = '6.31';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -4519,33 +4519,53 @@
     if (x.url) URL.revokeObjectURL(x.url);
     Object.assign(x, { blob: kq.blob, url: URL.createObjectURL(kq.blob), tl: kq.tl, tt: 'moi', loi: '' });
   }
-  async function taoAnhXemTruoc(vung) {
+  const tachKhoiMF = (chu) => String(chu || '').replace(/\r/g, '').split(/\n[ \t]*\n+/).map((x) => x.trim()).filter(Boolean); // (6.31) mỗi khối cách 1 dòng trống = 1 ảnh
+  async function taoAnhXemTruoc(vung, chuTay) {
     if (mf.chay || mf.dan) throw new Error('đang tạo/dán ảnh, đợi xong đã');
     if (!anhNenTam.length) throw new Error('chưa chọn ảnh nền');
-    const v0 = docVungMF(vung);
-    mf.chay = true; mf.ds.forEach((x) => { if (x.url) URL.revokeObjectURL(x.url); }); mf.ds = []; mf.tien = null;
+    const tay = chuTay != null; const v0 = tay ? { cot: '', cotKQ: '' } : docVungMF(vung);
+    mf.chay = true; mf.tay = tay; mf.ds.forEach((x) => { if (x.url) URL.revokeObjectURL(x.url); }); mf.ds = []; mf.tien = null;
     try {
-      mfBuoc('doc', `Bước 1/3 · Đọc chữ trong sheet (ô ${vung})`);
-      const v = await docBang(CAI_DAT.TAB_VIDEO, `${v0.cot}${v0.tu}:${v0.cot}${v0.den}`);
       const hangs = [];
-      for (let h = v0.tu; h <= v0.den; h++) { const chu = chuO((v[h - v0.tu] || [])[0]).trim(); if (chu) hangs.push({ h, chu }); }
-      if (!hangs.length) throw new Error(`các ô ${vung} chưa có chữ`);
-      ghi(`Tạo ảnh manifest: đọc được ${hangs.length} ô có chữ trong ${vung}`);
+      if (tay) { // (6.31) nhập chữ trực tiếp trên bảng — không cần Lark
+        mfBuoc('doc', 'Bước 1/3 · Tách chữ đã nhập thành từng ảnh');
+        tachKhoiMF(chuTay).forEach((chu, i) => hangs.push({ h: i + 1, chu }));
+        if (!hangs.length) throw new Error('ô nội dung chưa có chữ');
+        ghi(`Tạo ảnh manifest (nhập trực tiếp): ${hangs.length} khối chữ → ${hangs.length} ảnh`);
+      } else {
+        mfBuoc('doc', `Bước 1/3 · Đọc chữ trong sheet (ô ${vung})`);
+        const v = await docBang(CAI_DAT.TAB_VIDEO, `${v0.cot}${v0.tu}:${v0.cot}${v0.den}`);
+        for (let h = v0.tu; h <= v0.den; h++) { const chu = chuO((v[h - v0.tu] || [])[0]).trim(); if (chu) hangs.push({ h, chu }); }
+        if (!hangs.length) throw new Error(`các ô ${vung} chưa có chữ`);
+        ghi(`Tạo ảnh manifest: đọc được ${hangs.length} ô có chữ trong ${vung}`);
+      }
       { const f = fontChon(); mfBuoc('font', `Bước 2/3 · Nạp font chữ (tiêu đề: ${f.td} · thân: ${f.than} · kêu gọi: ${f.cmt})`); } await napFontChon();
       // chia đều ảnh nền (xáo trộn) cho các ảnh
       const tron = anhNenTam.slice().sort(() => Math.random() - 0.5);
       for (let i = 0; i < hangs.length; i++) {
         const { h, chu } = hangs[i];
-        mfBuoc('tao', `Bước 3/3 · Tạo ảnh ${i + 1}/${hangs.length} (chữ ô ${v0.cot}${h})`, i, hangs.length);
-        const x = { h, oChu: v0.cot + h, oKQ: v0.cotKQ + h, chu, nen: tron[i % tron.length], chon: true, tt: 'moi' };
+        mfBuoc('tao', `Bước 3/3 · Tạo ảnh ${i + 1}/${hangs.length}${tay ? '' : ` (chữ ô ${v0.cot}${h})`}`, i, hangs.length);
+        const x = { h, tay, oChu: tay ? 'Ảnh ' + h : v0.cot + h, oKQ: tay ? 'Ảnh ' + h : v0.cotKQ + h, chu, nen: tron[i % tron.length], chon: true, tt: 'moi' };
         try { await veMotAnh(x); } catch (e) { x.tt = 'loi'; x.loi = e.message; x.chon = false; ghi(`Tạo ảnh manifest ô ${x.oChu} lỗi: ${e.message}`); }
         mf.ds.push(x); veBang(); await sleepThat(30);
       }
       const ok = mf.ds.filter((x) => x.tt !== 'loi').length;
-      mfBuoc('xong', `Đã tạo ${ok}/${hangs.length} ảnh — bấm vào từng ảnh để xem trước, rồi bấm "Dán vào sheet"`, hangs.length, hangs.length);
-      ghi(`Tạo ảnh manifest: đã tạo ${ok}/${hangs.length} ảnh xem trước (chưa dán vào sheet)`);
+      mfBuoc('xong', `Đã tạo ${ok}/${hangs.length} ảnh — ${tay ? 'bấm ⬇ Tải trên từng ảnh hoặc "⬇ Tải tất cả"' : 'bấm vào từng ảnh để xem trước, rồi bấm "Dán vào sheet"'}`, hangs.length, hangs.length);
+      ghi(`Tạo ảnh manifest: đã tạo ${ok}/${hangs.length} ảnh xem trước${tay ? ' (nhập trực tiếp)' : ' (chưa dán vào sheet)'}`);
       return `đã tạo ${ok}/${hangs.length} ảnh xem trước`;
     } catch (e) { mfBuoc('loi', 'Chưa tạo được: ' + e.message); throw e; } finally { mf.chay = false; veBang(); }
+  }
+  function taiAnhMF(x, so) { // (6.31) tải ảnh về máy (thư mục Tải xuống)
+    if (!x || !x.blob) return false;
+    const duoi = /png/.test(x.blob.type) ? 'png' : 'jpg'; const d = new Date();
+    const a = document.createElement('a'); a.href = x.url || URL.createObjectURL(x.blob); a.download = `manifest-${pad(d.getDate())}${pad(d.getMonth() + 1)}-${so}.${duoi}`;
+    document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 1000); return true;
+  }
+  async function taiTatCaMF() {
+    const ds = mf.ds.map((x, i) => ({ x, i })).filter((o) => o.x.blob && o.x.tt !== 'loi');
+    if (!ds.length) throw new Error('chưa có ảnh nào để tải');
+    for (let k = 0; k < ds.length; k++) { taiAnhMF(ds[k].x, ds[k].i + 1); nhacNho(`Đang tải ảnh ${k + 1}/${ds.length}…`, 'cho'); await sleepThat(700); }
+    ghi(`Tải ${ds.length} ảnh manifest về máy`); return ds.length;
   }
   async function taoLaiAnh(i) {
     const x = mf.ds[i]; if (!x || mf.chay || mf.dan) return;
@@ -5568,7 +5588,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['mf_chu6', 'mf_nguon6', 'lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;
@@ -6073,6 +6093,9 @@
 #smhfb .mfchon{display:inline-flex;flex-direction:column;gap:2px;font-size:11px;font-weight:700;opacity:.95}
 #smhfb .mfchon select{font-size:13px;padding:5px 6px;border-radius:8px;border:1px solid var(--vien,#ccc);background:var(--nen,#fff);color:inherit;max-width:190px;cursor:pointer}
 #smhfb .mffont{background:#1d1a17;color:#fff;border-radius:10px;padding:10px 14px;margin:6px 0 8px;line-height:1.45;display:flex;flex-direction:column;gap:4px}
+#smhfb .mfseg{display:inline-flex;border:1.5px solid var(--vien,#4a4840);border-radius:8px;overflow:hidden;margin:0 6px}#smhfb .mfseg button{background:transparent;color:inherit;border:0;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}#smhfb .mfseg button.on{background:#4caf6e;color:#10200f;font-weight:700}
+#smhfb textarea.mfnhap{width:100%;box-sizing:border-box;min-height:220px;resize:vertical;background:var(--the,#fff);color:var(--chu,inherit);border:1.5px solid var(--vien,#ccc);border-radius:10px;padding:10px 12px;font:14px/1.55 "Segoe UI",system-ui,sans-serif;margin:4px 0;user-select:text}
+#smhfb .nut.cam{background:#e0a33a;color:#1d1405;border-color:#e0a33a;margin-left:8px}#smhfb .phu-nut.xanh{background:#4caf6e;color:#10200f;font-weight:700}
 #smhfb .mfluoi{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:10px 0}
 #smhfb .mfo{border:2px solid var(--vien);border-radius:12px;padding:6px;background:var(--the);display:flex;flex-direction:column;gap:4px}
 #smhfb .mfo.chon{border-color:#2e9d57}
@@ -6423,29 +6446,33 @@
       ${them.length ? `<div class="hang"><span class="mo">Font đã tải thêm:</span>${them.map((f) => `<span class="chip xam">${esc(f)} <button class="phu-nut" data-a="xoafont" data-ten="${esc(f)}" title="Xoá font này">✕</button></span>`).join(' ')}</div>` : ''}
       ${veLai ? `<div class="hang"><button class="nut nho${mf.chay ? ' chay' : ''}" data-a="velaifont" ${mf.chay || mf.dan ? 'disabled' : ''}>🔤 Vẽ lại các ảnh bên dưới bằng font đang chọn (giữ ảnh nền)</button></div>` : ''}`;
   }
+  const nguonMF = () => { const v = lay('mf_nguon6', ''); return v === 'tay' || v === 'sheet' ? v : (chanLark() ? 'tay' : 'sheet'); }; // (6.31) chưa chọn: Lark hết lượt thì mặc định nhập trực tiếp
   function tabManifest() {
     const ni = nhacInfo(); const vung = lay('mf_vung6', 'G220:G223'); const t = mf.tien || {};
     const ban = mf.chay || mf.dan;
     let cotKQ = 'H'; try { cotKQ = docVungMF(vung).cotKQ; } catch (e) { /* */ }
+    const tayMF = nguonMF() === 'tay'; const chuMF = lay('mf_chu6', '') || ''; const soKhoi = tachKhoiMF(chuMF).length; // (6.31)
     let h = `<div class="the-nd"><h4>🖼 Tạo ảnh manifest</h4><div class="mo">Tạo ảnh xem trước ngay trong popup → bấm từng ảnh để xem → chọn ảnh ưng ý → bấm Dán vào sheet (tab "Kênh 1 Vòng Trầm Hương SMH", cột bên phải ô chữ, ghi đè ảnh cũ).</div>
       <div class="hang"><b>1.</b><label class="nut nho${ui6.canhNen && !anhNenTam.length ? ' do' : ''}">📂 Chọn ảnh nền…<input type="file" accept="image/*" multiple data-a="chonnen" style="display:none"></label>${anhNenTam.length ? `<b>${anhNenTam.length} ảnh nền</b>` : '<span class="mo">chưa chọn (chọn nhiều ảnh một lúc, script dùng ngẫu nhiên)</span>'}</div>
       ${anhNenTam.length ? `<div class="anhs">${anhNenTam.slice(0, 30).map((f) => `<img src="${f.__url || (f.__url = URL.createObjectURL(f))}">`).join('')}</div>` : ''}
-      <div class="hang"><b>2.</b> Vùng ô chữ <input type="text" data-o="vung" value="${esc(vung)}" placeholder="G220:G223"><span class="mo">→ ảnh sẽ dán vào cột ${esc(cotKQ)} cùng hàng</span></div>
+      <div class="hang"><b>2.</b> Nội dung <span class="mfseg"><button class="${tayMF ? 'on' : ''}" data-a="mfnguon" data-k="tay">✍ Nhập trực tiếp</button><button class="${tayMF ? '' : 'on'}" data-a="mfnguon" data-k="sheet">▦ Lấy từ sheet (${esc(vung)})</button></span>${tayMF ? `<span class="chip ok" data-mfdem>${soKhoi} khối → ${soKhoi} ảnh</span>` : ''}</div>
+      ${tayMF ? `<textarea class="mfnhap" data-o="mfchu" rows="9" placeholder="Dán chữ y như ô sheet:\nDòng 1 = tiêu đề\nCác dòng giữa = thân bài\nDòng cuối = lời kêu gọi (Cmt…)\n\nCách 1 dòng trống = ảnh tiếp theo">${esc(chuMF)}</textarea><div class="mo">Dòng 1 = tiêu đề · dòng giữa = thân bài · dòng cuối = lời kêu gọi · cách nhau 1 dòng trống = ảnh mới · không cần Lark</div>`
+        : `<div class="hang">Vùng ô chữ <input type="text" data-o="vung" value="${esc(vung)}" placeholder="G220:G223"><span class="mo">→ ảnh sẽ dán vào cột ${esc(cotKQ)} cùng hàng</span>${chanLark() ? '<span class="mo" style="color:var(--do-chu)">· Lark đang hết lượt — dùng "✍ Nhập trực tiếp" nếu chưa mở tab sheet Lark</span>' : ''}</div>`}
       ${khuFont()}
-      <div class="hang"><b>4.</b><button class="nut chinh${ban ? ' chay' : ''}" data-a="taoanh" ${ban ? 'disabled' : ''}>${mf.chay ? '<span class="xoay"></span>Đang tạo ảnh…' : '🖼 Tạo ảnh xem trước'}</button>${ui6.canhNen && !anhNenTam.length ? '<b style="color:var(--do-chu)">⚠ Bạn chưa chọn ảnh nền — bấm "📂 Chọn ảnh nền…" ở bước 1 trước</b>' : ''}</div>`;
+      <div class="hang"><b>4.</b><button class="nut chinh${ban ? ' chay' : ''}" data-a="taoanh" ${ban ? 'disabled' : ''}>${mf.chay ? '<span class="xoay"></span>Đang tạo ảnh…' : (tayMF ? `🖼 Tạo ${soKhoi || ''} ảnh` : '🖼 Tạo ảnh xem trước')}</button>${mf.ds.some((x) => x.blob && x.tt !== 'loi') ? `<button class="nut cam" data-a="taiallmf" ${ban ? 'disabled' : ''}>⬇ Tải tất cả (${mf.ds.filter((x) => x.blob && x.tt !== 'loi').length})</button>` : ''}${ui6.canhNen && !anhNenTam.length ? '<b style="color:var(--do-chu)">⚠ Bạn chưa chọn ảnh nền — bấm "📂 Chọn ảnh nền…" ở bước 1 trước</b>' : ''}</div>`;
     if (mf.tien) {
       const st = (b) => { const thu = ['doc', 'font', 'tao', 'xong']; const ti = thu.indexOf(t.buoc), bi = thu.indexOf(b); if (t.buoc === 'loi') return b === 'doc' && !mf.ds.length ? 'loi' : ''; if (t.buoc === 'dan' || t.buoc === 'daxong') return 'xong'; return ti > bi ? 'xong' : ti === bi ? (b === 'xong' ? 'xong' : 'dang') : ''; };
       const pt = t.n ? Math.round(((t.buoc === 'xong' || t.buoc === 'daxong' ? t.n : t.i) / t.n) * 100) : 0;
-      h += `<div class="mfp">${buocMF('Đọc chữ trong sheet', st('doc'))}${buocMF('Nạp font chữ', st('font'))}${buocMF(`Tạo ảnh${t.n && (t.buoc === 'tao' || t.buoc === 'xong') ? ` ${t.buoc === 'xong' ? t.n : t.i + 1}/${t.n}` : ''}`, st('tao'))}${t.buoc === 'dan' || t.buoc === 'daxong' ? buocMF(`Dán vào sheet ${t.buoc === 'daxong' ? t.n : t.i + 1}/${t.n}`, t.buoc === 'daxong' ? 'xong' : 'dang') : ''}</div>
+      h += `<div class="mfp">${buocMF(mf.tay ? 'Tách chữ đã nhập' : 'Đọc chữ trong sheet', st('doc'))}${buocMF('Nạp font chữ', st('font'))}${buocMF(`Tạo ảnh${t.n && (t.buoc === 'tao' || t.buoc === 'xong') ? ` ${t.buoc === 'xong' ? t.n : t.i + 1}/${t.n}` : ''}`, st('tao'))}${t.buoc === 'dan' || t.buoc === 'daxong' ? buocMF(`Dán vào sheet ${t.buoc === 'daxong' ? t.n : t.i + 1}/${t.n}`, t.buoc === 'daxong' ? 'xong' : 'dang') : ''}</div>
         ${t.n ? `<div class="thanh"><i style="width:${pt}%"></i></div>` : ''}<div class="mo" style="font-weight:700;color:${t.buoc === 'loi' ? 'var(--do-chu)' : 'var(--chu)'}">${esc(t.chu || '')}</div>`;
     }
     if (mf.ds.length) {
       const chon = mf.ds.filter((x) => x.chon && x.blob && x.tt !== 'xong').length; const daDan = mf.ds.filter((x) => x.tt === 'xong').length;
       h += `<div class="mfluoi">${mf.ds.map((x, i) => {
-        const chip = x.tt === 'xong' ? '<span class="chip ok">✓ Đã dán</span>' : x.tt === 'dang' ? '<span class="chip cho">Đang dán…</span>' : x.tt === 'dangtao' ? '<span class="chip cho">Đang tạo lại…</span>' : x.tt === 'loi' ? `<span class="chip loi" title="${esc(x.loi)}">⚠ ${esc(cat(x.loi, 30))}</span>` : '<span class="chip xam">Chưa dán</span>';
-        return `<div class="mfo${x.chon ? ' chon' : ''}">${x.url ? `<img src="${x.url}" data-a="xemanh" data-i="${i}" title="Bấm để xem lớn">` : '<div class="mfrong">Lỗi</div>'}<div class="mft"><b>Ô ${x.oKQ}</b>${chip}</div><div class="mfc" title="${esc(x.chu)}">${esc(cat(x.chu.split('\n').find((l) => l && !/^#manifest$/i.test(l.trim())) || '', 40))}</div><div class="mfn">${x.blob && x.tt !== 'xong' ? `<button class="phu-nut" data-a="chonanh" data-i="${i}">${x.chon ? '☑ Dán' : '☐ Không dán'}</button>` : ''}<button class="phu-nut" data-a="taolai" data-i="${i}" ${ban ? 'disabled' : ''}>↻ Tạo lại</button></div></div>`;
+        const chip = x.tay && x.blob && x.tt !== 'loi' && x.tt !== 'dangtao' ? '<span class="chip ok">✓ Đã tạo</span>' : x.tt === 'xong' ? '<span class="chip ok">✓ Đã dán</span>' : x.tt === 'dang' ? '<span class="chip cho">Đang dán…</span>' : x.tt === 'dangtao' ? '<span class="chip cho">Đang tạo lại…</span>' : x.tt === 'loi' ? `<span class="chip loi" title="${esc(x.loi)}">⚠ ${esc(cat(x.loi, 30))}</span>` : '<span class="chip xam">Chưa dán</span>';
+        return `<div class="mfo${x.chon ? ' chon' : ''}">${x.url ? `<img src="${x.url}" data-a="xemanh" data-i="${i}" title="Bấm để xem lớn">` : '<div class="mfrong">Lỗi</div>'}<div class="mft"><b>${x.tay ? "" : "Ô "}${x.oKQ}</b>${chip}</div><div class="mfc" title="${esc(x.chu)}">${esc(cat(x.chu.split('\n').find((l) => l && !/^#manifest$/i.test(l.trim())) || '', 40))}</div><div class="mfn">${x.blob && x.tt !== 'loi' ? `<button class="phu-nut xanh" data-a="taianhmf" data-i="${i}">⬇ Tải</button>` : ''}${x.blob && x.tt !== 'xong' && !x.tay ? `<button class="phu-nut" data-a="chonanh" data-i="${i}">${x.chon ? '☑ Dán' : '☐ Không dán'}</button>` : ''}<button class="phu-nut" data-a="taolai" data-i="${i}" ${ban ? 'disabled' : ''}>↻ Tạo lại</button></div></div>`;
       }).join('')}</div>
-      <div class="hang"><button class="nut chinh${mf.dan ? ' chay' : ''}" data-a="dananh" ${chon && !ban ? '' : 'disabled'}>${mf.dan ? '<span class="xoay"></span>Đang dán vào sheet…' : `📋 Dán ${chon} ảnh đã chọn vào sheet`}</button><span class="mo">${daDan ? `Đã dán ${daDan} ảnh · ` : ''}Bấm ảnh để xem lớn · ↻ Tạo lại = đổi ảnh nền khác</span></div>`;
+      ${mf.tay ? '<div class="hang"><span class="mo">Ảnh tạo từ chữ nhập trực tiếp: bấm ⬇ Tải trên từng ảnh hoặc "⬇ Tải tất cả" · bấm ảnh để xem lớn · ↻ Tạo lại = đổi ảnh nền khác</span></div>' : `<div class="hang"><button class="nut chinh${mf.dan ? ' chay' : ''}" data-a="dananh" ${chon && !ban ? '' : 'disabled'}>${mf.dan ? '<span class="xoay"></span>Đang dán vào sheet…' : `📋 Dán ${chon} ảnh đã chọn vào sheet`}</button><span class="mo">${daDan ? `Đã dán ${daDan} ảnh · ` : ''}Bấm ảnh để xem lớn · ↻ Tạo lại = đổi ảnh nền khác</span></div>`}`;
     }
     h += '</div>';
     h += `<div class="the-nd"><h4>🎵 Nhạc nền video manifest ${ni ? '<span class="chip ok">đã có</span>' : '<span class="chip loi">chưa có</span>'}</h4>
@@ -6695,7 +6722,7 @@
   }, true);
   document.addEventListener('change', (e) => { if (!(e.target.closest && e.target.closest('#smhfb'))) return; const o = e.target.getAttribute('data-o') || ''; const m = o.match(/^font_(td|than|cmt)$/); if (!m) return; datFont(m[1], e.target.value); ghi(`Chọn font ${({ td: 'tiêu đề', than: 'thân bài', cmt: 'lời kêu gọi' })[m[1]]}: ${e.target.value}`); e.target.blur(); veBangNgay(); }, true);
   document.addEventListener('input', (e) => { if (!(e.target.closest && e.target.closest('#smhfb'))) return; const o = e.target.getAttribute('data-o') || ''; if (o === 'cs_ghichu') { luu('csghichu6', e.target.value); return; } if (o === 'the_video' || o === 'the_manifest') { const t = nhapThe(); t[o === 'the_video' ? truongThe() : 'manifest'] = e.target.value; t.sua = true; const b = document.querySelector(`#smhfb [data-a="chonkenhthe"][data-k="${ui6.kenhThe || 1}"] b`); if (b && o === 'the_video') b.textContent = dsThe(e.target.value).length; return; }
-    if (/^cmt_/.test(o)) { const n = nhapCmt(); if (o === 'cmt_goc') n.goc = e.target.value; if (o === 'cmt_gochx') n.gocHx = e.target.value; if (o === 'cmt_link') n.link = e.target.value; if (o === 'cmt_cta') n.cta = e.target.value; if (o === 'cmt_bat') n.bat = e.target.checked; if (o === 'cmt_loai') n.loai[e.target.getAttribute('data-k')] = e.target.checked; if (o === 'cmt_kenh') { n.kenh = n.kenh || {}; n.kenh[e.target.getAttribute('data-k')] = e.target.checked; } n.sua = true; if (e.target.type === 'checkbox') veBangNgay(); return; } if (o === 'vung') luu('mf_vung6', e.target.value.trim()); if (o === 'onhac') luu('o_nhac6', e.target.value.trim().toUpperCase()); }, true);
+    if (/^cmt_/.test(o)) { const n = nhapCmt(); if (o === 'cmt_goc') n.goc = e.target.value; if (o === 'cmt_gochx') n.gocHx = e.target.value; if (o === 'cmt_link') n.link = e.target.value; if (o === 'cmt_cta') n.cta = e.target.value; if (o === 'cmt_bat') n.bat = e.target.checked; if (o === 'cmt_loai') n.loai[e.target.getAttribute('data-k')] = e.target.checked; if (o === 'cmt_kenh') { n.kenh = n.kenh || {}; n.kenh[e.target.getAttribute('data-k')] = e.target.checked; } n.sua = true; if (e.target.type === 'checkbox') veBangNgay(); return; } if (o === 'mfchu') { luu('mf_chu6', e.target.value); const n = tachKhoiMF(e.target.value).length; const b = document.querySelector('#smhfb [data-mfdem]'); if (b) b.textContent = `${n} khối → ${n} ảnh`; const t = document.querySelector('#smhfb [data-a="taoanh"]'); if (t && !t.disabled) t.textContent = `🖼 Tạo ${n || ''} ảnh`; return; } if (o === 'vung') luu('mf_vung6', e.target.value.trim()); if (o === 'onhac') luu('o_nhac6', e.target.value.trim().toUpperCase()); }, true);
   document.addEventListener('click', async (ev) => {
     const tabBtn = ev.target.closest && ev.target.closest('#smhfb [data-tab]');
     if (tabBtn) { luu('ui_tab6', tabBtn.getAttribute('data-tab')); uiTab.moLuc = Date.now(); veBangNgay(); return; }
@@ -6763,6 +6790,11 @@
       capNhatTT((s) => { Object.assign(ttSlot(s, k), { tt: 'xong', luc: p ? p.luc : Date.now(), may: 'tay', lyDo: '', cmtOk: !p, link: p ? p.link : '', id: p ? p.id : '' }); });
       ghi('Bấm Đánh dấu đã đăng: ' + tenSlot(k) + (p ? ' — Facebook xác nhận bài đã lên lúc ' + gioStr(new Date(p.luc)) + ' (script sẽ kiểm comment)' : daHoi ? ' — người bấm xác nhận dù Facebook chưa thấy bài' : '')); veBangNgay(); return; }
     if (hd === 'bodanhdau' && k) { capNhatTT((s) => { const x = ttSlot(s, k); x.tt = 'cho'; x.may = ''; x.luc = 0; x.cmtOk = false; }); ghi('Bỏ đánh dấu: ' + tenSlot(k)); veBangNgay(); return; }
+    if (hd === 'mfnguon') { luu('mf_nguon6', k === 'tay' ? 'tay' : 'sheet'); ghi('Tạo ảnh manifest: chọn nguồn chữ ' + (k === 'tay' ? 'nhập trực tiếp' : 'lấy từ sheet')); veBangNgay(); return; } // (6.31)
+    if (hd === 'taianhmf') { const i = +a.getAttribute('data-i'); if (taiAnhMF(mf.ds[i], i + 1)) { ghi(`Tải ảnh manifest ${i + 1} về máy`); nhacNho(`Đang tải ảnh ${i + 1} — xem ở thư mục Tải xuống`); } return; }
+    if (hd === 'taiallmf') { phanHoi(a); taiTatCaMF().then((n) => nhacNho(`Đã tải ${n} ảnh — xem ở thư mục Tải xuống (Chrome hỏi "tải nhiều tệp" thì bấm Cho phép)`, 'ok', 8000)).catch((er) => alert(er.message)); return; }
+    if (hd === 'taoanh' && nguonMF() === 'tay') { const chu = lay('mf_chu6', '') || ''; if (!anhNenTam.length) { ui6.canhNen = true; veBangNgay(); alert('Bạn chưa chọn ảnh nền.\n\nBấm "📂 Chọn ảnh nền…" ở bước 1, chọn 1 hoặc nhiều ảnh, rồi bấm Tạo ảnh lại.'); return; } if (!tachKhoiMF(chu).length) { alert('Ô nội dung chưa có chữ.\n\nDán chữ vào ô ở bước 2 (mỗi ảnh cách nhau 1 dòng trống) rồi bấm Tạo ảnh.'); return; }
+      phanHoi(a); ghi('Bấm Tạo ảnh manifest (nhập trực tiếp)'); theoDoi('taoanh', async () => { const bd = Date.now(); try { const kq = await taoAnhXemTruoc('', chu); luu('hd_ket', { key: 'taoanh', ten: 'Đang tạo ảnh manifest', chu: kq + ' — bấm ⬇ Tải hoặc Tải tất cả', luc: Date.now(), tg: Date.now() - bd, mau: 'ok' }); } catch (er) { ghi('Tạo ảnh manifest chưa được: ' + er.message); luu('hd_ket', { key: 'taoanh', ten: 'Đang tạo ảnh manifest', chu: 'Lỗi: ' + er.message, luc: Date.now(), tg: Date.now() - bd, mau: 'vang' }); } veBang(); }, 'Đang tạo ảnh manifest'); return; }
     if (hd === 'taoanh') { const vung = lay('mf_vung6', 'G220:G223'); if (!anhNenTam.length) { ui6.canhNen = true; veBangNgay(); alert('Bạn chưa chọn ảnh nền.\n\nBấm "📂 Chọn ảnh nền…" ở bước 1, chọn 1 hoặc nhiều ảnh, rồi bấm Tạo ảnh lại.'); return; } try { docVungMF(vung); } catch (er) { alert(er.message); return; } phanHoi(a); ghi(`Bấm Tạo ảnh manifest (${vung})`); theoDoi('taoanh', async () => { const bd = Date.now(); try { const kq = await taoAnhXemTruoc(vung); luu('hd_ket', { key: 'taoanh', ten: 'Đang tạo ảnh manifest', chu: kq + ' — bấm từng ảnh để xem, rồi bấm Dán vào sheet', luc: Date.now(), tg: Date.now() - bd, mau: 'ok' }); } catch (er) { ghi('Tạo ảnh manifest chưa được: ' + er.message); luu('hd_ket', { key: 'taoanh', ten: 'Đang tạo ảnh manifest', chu: 'Lỗi: ' + er.message, luc: Date.now(), tg: Date.now() - bd, mau: 'vang' }); } veBang(); }, 'Đang tạo ảnh manifest'); return; }
     if (hd === 'chonkenhthe') { ui6.kenhThe = +k || 1; veBangNgay(); return; } // (6.19.3) chọn kênh để sửa thẻ video (chưa lưu thì vẫn giữ chữ đang sửa của từng kênh)
     if (hd === 'themd') { const t = nhapThe(); const c = ui6.kenhThe || 1; if (k === 'manifest') t.manifest = CAI_DAT.THE_MANIFEST.join('\n'); else t[truongThe()] = (c === 1 ? CAI_DAT.THE_VIDEO : CAI_DAT['THE_VIDEO_K' + c]).join('\n'); t.sua = true; nhacNho('Đã điền lại kho thẻ mẫu cho ' + (k === 'manifest' ? 'Manifest' : 'Video kênh ' + c) + ' — bấm Lưu kho thẻ để áp dụng'); veBangNgay(); return; }

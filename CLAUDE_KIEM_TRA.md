@@ -402,3 +402,9 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 4. Tab Facebook: `goi()` khi Lark bị chặn (hoặc vừa bị chặn) và là GET đọc ô → `webDocUrl` trả dữ liệu Lark web (tuổi ≤ 6 giờ) như API. `chanDocLark()` thay `chanLark()` ở các cổng đọc sheet (đọc theo lịch, đọc khi đăng, nhắc điền). Ghi lên sheet vẫn bị chặn như cũ. Nút Đọc ngay khi hết lượt: đặt `lark_webyc6`, chờ trợ lý ≤ 2 phút. Báo nhóm 1 lần/ngày `larkwebtab_` nếu hết lượt > 30 phút mà chưa có tab Lark nào đọc giúp.
 5. Sửa: các khoá lark_web6/lark_webdata6/lark_webtt6/lark_webcan6/lark_webyc6 thêm vào GIU (6.29 bị dọn lark_web6 mỗi lần khởi động).
 - Sim: webdoc (hết lượt từ đầu ngày, có dữ liệu Lark web → đọc sheet, đăng Video 1, tải file qua web, 0 lượt API), webkhong (không có tab Lark → báo nhóm), quotaweb.
+
+## 6.31 (27/10/2026) — tạo ảnh manifest từ chữ nhập trực tiếp (Demo 1)
+- Tab Manifest bước 2: nút chọn "✍ Nhập trực tiếp / ▦ Lấy từ sheet" (`mf_nguon6`; chưa chọn → Lark hết lượt thì mặc định nhập trực tiếp). Ô `textarea.mfnhap` (`mf_chu6`, lưu khi gõ, không vẽ lại khi đang gõ), đếm "N khối → N ảnh" (`tachKhoiMF`: tách theo dòng trống).
+- `taoAnhXemTruoc(vung, chuTay)`: có chuTay thì không đọc sheet (không gọi Lark), mỗi khối = 1 ảnh (x.tay, nhãn "Ảnh i"), dùng cùng `taoAnhManifest`/font/ảnh nền; Tạo lại và Vẽ lại font dùng như cũ.
+- Tải: `taiAnhMF` (thẻ a download, tên `manifest-ddmm-i.jpg|png`), `taiTatCaMF` (lần lượt, cách 0,7 giây). Nút "⬇ Tải" trên mọi ảnh (cả ảnh lấy từ sheet), "⬇ Tải tất cả (N)" cạnh nút Tạo. Ảnh nhập tay: ẩn "Dán vào sheet".
+- Sim: taoanhtay (3 khối → 3 ảnh, không gọi Lark khi tạo, tải 1 ảnh + tải tất cả = 4 file), taoanh (lấy từ sheet + dán 2/2 vẫn đạt).
