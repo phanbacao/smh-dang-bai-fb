@@ -226,6 +226,12 @@
    "moTa": "6.29: khoá lark_web6 không nằm trong danh sách giữ lại → bị dọn mỗi lần khởi động",
    "trangThai": "đã sửa 6.30",
    "ngay": "2026-10-26"
+  },
+  {
+   "ma": "web-doc-ma-het-han",
+   "moTa": "27/10: bấm Đọc ngay khi Lark hết lượt → lỗi 99991403 dù tab Lark web đã đọc (10:26): mã truy cập Lark hết hạn, xin mã mới bị chặn trước khi tới bước đọc qua Lark web",
+   "trangThai": "đã sửa 6.31.1 (goiLark đọc Lark web trước khi xin mã)",
+   "ngay": "2026-10-27"
   }
  ],
  "danhGiaTuan": [],
@@ -309,6 +315,10 @@
   {
    "ngay": "2026-10-27",
    "tomTat": "Ra bản 6.31: tạo ảnh manifest từ chữ nhập trực tiếp trên bảng (không cần Lark), tải từng ảnh / tải tất cả."
+  },
+  {
+   "ngay": "2026-10-27",
+   "tomTat": "Ra bản 6.31.1: sửa Đọc lại sheet khi hết lượt Lark (đọc qua Lark web trước khi xin mã)."
   }
  ],
  "capNhat": "2026-10-24"

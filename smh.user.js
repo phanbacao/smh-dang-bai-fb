@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.31
+// @version      6.31.1
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.31';
+  const PHIEN_BAN = '6.31.1';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -668,6 +668,7 @@
   //  việc phụ (bị chặn khi chạm trần): các ô Z khác (giữ chỗ Z1, comment Z3, thẻ Z4, báo cáo lỗi Z5/Z6, lịch Z8, thử nạp) + ghi cột G tab Bài viết (gộp)
   const laViecChinhLark = (viec, url) => { const v = viec || ''; if (!url || /tenant_access_token/.test(url || '')) return true; if (/đọc sheet|tải|lấy mã/.test(v)) return true; if (new RegExp(' ô ' + CAI_DAT.O_BAO_CAO + '$').test(v)) return true; if (/^ghi Bài viết \(gộp/.test(v)) return false; return /^(đọc|ghi) /.test(v) && !/ ô Z/.test(v); };
   async function goiLark(method, url, body, timeout) {
+    if (method === 'GET' && chanLark()) { const w = webDocUrl(url); if (w) return w; } // (6.31.1) hết lượt: đọc qua Lark web TRƯỚC khi xin mã Lark (xin mã cũng bị chặn khi mã cũ hết hạn)
     if (larkHomNay() >= TRAN_CUNG_LARK() && !laViecChinhLark(LARK_VIEC, url)) {
       if (!window.__tranCungBao) { window.__tranCungBao = 1; ghi(`⛔ Lượt gọi Lark hôm nay đã chạm trần cứng ${TRAN_CUNG_LARK()} (${TEN_MAY}) → dừng mọi việc phụ tới hôm sau (giữ chỗ ô Z1 chuyển sang kiểm trang Facebook)`); baoLoi(`⛔ ${TEN_MAY}: lượt gọi Lark hôm nay đã chạm trần cứng ${TRAN_CUNG_LARK()} lượt → dừng việc phụ tới hôm sau, việc đăng bài vẫn chạy (kiểm trang trước khi đăng)`, 'trancung_' + homNay()).catch(() => {}); }
       const e = new LoiMem('đã chạm trần cứng lượt Lark hôm nay (' + (LARK_VIEC || 'việc phụ') + ')'); e.tranCung = true; throw e;

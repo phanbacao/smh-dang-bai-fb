@@ -408,3 +408,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - `taoAnhXemTruoc(vung, chuTay)`: có chuTay thì không đọc sheet (không gọi Lark), mỗi khối = 1 ảnh (x.tay, nhãn "Ảnh i"), dùng cùng `taoAnhManifest`/font/ảnh nền; Tạo lại và Vẽ lại font dùng như cũ.
 - Tải: `taiAnhMF` (thẻ a download, tên `manifest-ddmm-i.jpg|png`), `taiTatCaMF` (lần lượt, cách 0,7 giây). Nút "⬇ Tải" trên mọi ảnh (cả ảnh lấy từ sheet), "⬇ Tải tất cả (N)" cạnh nút Tạo. Ảnh nhập tay: ẩn "Dán vào sheet".
 - Sim: taoanhtay (3 khối → 3 ảnh, không gọi Lark khi tạo, tải 1 ảnh + tải tất cả = 4 file), taoanh (lấy từ sheet + dán 2/2 vẫn đạt).
+
+## 6.31.1 (27/10/2026) — sửa: Đọc lại sheet khi hết lượt vẫn lỗi 99991403
+- Máy Cao 10:26: tab Lark web đã đọc xong (nhãn ✓ 10:26) nhưng Đọc ngay báo "Lark đã hết hạn mức API tháng — đang chờ kiểm tra lại", "Đọc lúc" vẫn 20:14 25/10. Nguyên nhân: `goiLark` gọi `larkToken()` trước; mã truy cập cũ hết hạn (2 giờ) → xin mã mới đi qua `goi()` → cổng chặn ném lỗi trước khi tới bước dùng dữ liệu Lark web.
+- Sửa: đầu `goiLark`, nếu GET và `chanLark()` → `webDocUrl(url)` trước.
+- Sim webdoc2 (đã hết lượt từ trước, không có mã Lark, bấm Đọc ngay): bản cũ lỗi đúng như máy thật; bản mới "Đọc lúc 09:50".
