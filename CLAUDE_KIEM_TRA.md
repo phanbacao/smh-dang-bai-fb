@@ -413,3 +413,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Máy Cao 10:26: tab Lark web đã đọc xong (nhãn ✓ 10:26) nhưng Đọc ngay báo "Lark đã hết hạn mức API tháng — đang chờ kiểm tra lại", "Đọc lúc" vẫn 20:14 25/10. Nguyên nhân: `goiLark` gọi `larkToken()` trước; mã truy cập cũ hết hạn (2 giờ) → xin mã mới đi qua `goi()` → cổng chặn ném lỗi trước khi tới bước dùng dữ liệu Lark web.
 - Sửa: đầu `goiLark`, nếu GET và `chanLark()` → `webDocUrl(url)` trước.
 - Sim webdoc2 (đã hết lượt từ trước, không có mã Lark, bấm Đọc ngay): bản cũ lỗi đúng như máy thật; bản mới "Đọc lúc 09:50".
+
+## 6.31.2 (28/10/2026) — báo cáo tuần: 28 ngày = 0 trong khi 7 ngày = 8.418
+- Thẻ 23/10: Lượt xem 7 ngày 8.418 (▲280.500%), 28 ngày 0 (—). Nguyên nhân: `docTrangCS` trang views: chưa tìm thấy con số (trang đang tải) nhưng trong trang có chữ "Chưa đủ dữ liệu" (biểu đồ con / mục khác) → trả `{so: 0}` ngay, không chờ hết 25 giây, không tải lại.
+- Sửa (p15_chiso): (1) không trả 0 khi có chữ "Chưa đủ dữ liệu" — chờ hết 25 giây, tải lại 1 lần; vẫn không có số mà trang ghi "Chưa đủ dữ liệu" → `{so: null, khongRo}` hiển thị "Không xác định được" (thẻ, tin chữ, bảng xem trước). (2) Kiểm hợp lý: 28 ngày views/messaging < 7 ngày → tải lại 1 lần; vẫn nhỏ hơn → "Không xác định được". (3) `trungKy` bỏ qua khi so null.
+- Sim: chiso28 (lần 1 trang 28 ngày chưa có số → tải lại → 41.337), chiso28k (mãi không có số → "Không xác định được" trong thẻ; bản 6.31.1 ghi 0).
