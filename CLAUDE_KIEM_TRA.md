@@ -425,3 +425,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - `thieuCuaNgay`: bỏ ô manifest; thêm cột J chưa "ĐÃ DUYỆT" (vẫn đăng, `videoCuaNgay` có tt/duyet); `canhBaoMuc`: ít hơn mức → thiếu N; ≥ 3× mức → quá nhiều. `canhBaoKenh`: bỏ "chưa có dòng nào" (theo mức), mức 0 → không nhắc gì (kể cả lỗi đọc tab).
 - Giao diện: dòng "Hôm nay: …" (ít/quá nhiều so với mức); bảng: ngày mai ô đỏ (tính vào việc), ngày kia ô vàng `bt-vang` (nhắc sớm, `khongDem`); chỉ có nhắc sớm → khung vàng "💡 Nhắc sớm". Cột kênh ghi mức/ngày, kênh mức 0 ghi "tạm dừng".
 - Sim: mucdat (mở ⚙, sửa K1 = 3, K2 = 1 → ghi Z9, cảnh báo đổi theo), ngay 9/9, thieu, ui, kenh, chuanbi, ngaymai, haimay, baocao, chot, lich2may, kenhtay, hx đạt.
+
+## 6.32.1 (29/10/2026) — cảnh báo đếm nhầm dòng dự phòng
+- Ảnh Cao: Hà Xá 30/10 có hàng 56 ĐÃ DUYỆT + video (đủ mức 1) và hàng 63 ĐÃ QUAY chưa video → báo "thiếu 1: hàng 63 chưa có video"; 31/10 có 1 dòng sẵn sàng + 2 dòng ĐÃ QUAY → "quá nhiều 3". Kênh 1 31/10: "Video 1, hàng 256 chưa duyệt" (2 mục cho 1 dòng).
+- Sửa: `demMuc` đếm dòng SẴN SÀNG (K1: có file; kênh phụ: `videoKenh` = ĐÃ DUYỆT/có video Hà Xá hoặc đã đăng) + `tong` (mọi dòng có ngày). Quá nhiều so theo dòng sẵn sàng. Thiếu theo mức chỉ khi tổng số dòng < mức (có dòng mà chưa xong → báo từng dòng); hôm nay (`homNayChe`) so theo dòng sẵn sàng. Đủ mức → dòng chưa xong là dự phòng: `canhBaoKenh` bỏ qua, ô video K1 chưa có file bỏ qua. Cột J chưa duyệt chỉ nhắc khi dòng có file (sẽ đăng), đánh dấu `nhac`. Ô bảng ghi "⚠ quá nhiều · thiếu N · N chưa duyệt".
+- Sim hxduphong (Hà Xá mai 1 sẵn sàng + 1 dự phòng, kia 1 + 2 dự phòng → cả 2 ngày "✓ đủ"), mucdat đạt.

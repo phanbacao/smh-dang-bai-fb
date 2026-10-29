@@ -238,6 +238,12 @@
    "moTa": "Báo cáo tuần 23/10: Lượt xem 7 ngày 8.418 nhưng 28 ngày = 0 — trang 28 ngày chưa tải xong số, chỉ có chữ 'Chưa đủ dữ liệu' (của biểu đồ con) → script ghi 0",
    "trangThai": "đã sửa 6.31.2: không coi 'Chưa đủ dữ liệu' là 0; 28 ngày < 7 ngày thì tải lại; vẫn không có số → 'Không xác định được'",
    "ngay": "2026-10-28"
+  },
+  {
+   "ma": "canh-bao-du-phong",
+   "moTa": "29/10: Hà Xá 30/10 đã có 1 video ĐÃ DUYỆT (đủ mức 1) nhưng vẫn báo 'hàng 63 chưa có video'; 31/10 báo 'quá nhiều 3' vì đếm cả dòng ĐÃ QUAY chưa có video",
+   "trangThai": "đã sửa 6.32.1: chỉ đếm dòng sẵn sàng đăng; đủ mức thì dòng chưa xong là dự phòng, không báo",
+   "ngay": "2026-10-29"
   }
  ],
  "danhGiaTuan": [],
@@ -333,6 +339,10 @@
   {
    "ngay": "2026-10-29",
    "tomTat": "Ra bản 6.32: mức đặt số bài/ngày (nút ⚙, đồng bộ ô Z9), kênh 1 đăng theo số dòng sheet, ngày mai đỏ / ngày kia vàng, cảnh báo quá nhiều (≥3 lần mức đặt), kênh 2 tạm dừng không báo."
+  },
+  {
+   "ngay": "2026-10-29",
+   "tomTat": "Ra bản 6.32.1: sửa cảnh báo đếm cả dòng dự phòng chưa có video."
   }
  ],
  "capNhat": "2026-10-24"

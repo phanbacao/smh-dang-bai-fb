@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.32
+// @version      6.32.1
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.32';
+  const PHIEN_BAN = '6.32.1';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -1110,18 +1110,20 @@
   function mucDat() { const m = lay('muc_dat6', null) || {}; const o = {}; for (const k of Object.keys(MUC_MD)) { const v = m[k]; o[k] = Number.isInteger(v) && v >= 0 && v <= 20 ? v : MUC_MD[k]; } o.luc = m.luc || 0; o.may = m.may || ''; return o; }
   function demMuc(ngay, d = duLieu()) { // số dòng sheet ghi ngày này của từng loại
     const n = d && d.ngay && d.ngay[ngay]; if (!n) return null;
-    const o = { k1v: (n.v || []).length, k1b: n.soHangBai || 0 };
-    for (const c of KENH_PHU) o['k' + c] = d.loiKenh && d.loiKenh[c] ? null : ((n['k' + c] || []).length);
+    const o = { k1v: (n.v || []).filter((x) => x.tep).length, k1b: n.soHangBai || 0 }; // (6.32.1) chỉ đếm dòng SẴN SÀNG đăng: kênh 1 có file video; kênh 2, 3, Hà Xá: ĐÃ DUYỆT (Hà Xá: có video) hoặc đã đăng
+    for (const c of KENH_PHU) o['k' + c] = d.loiKenh && d.loiKenh[c] ? null : videoKenh(n, c).length;
+    o.tong = { k1v: (n.v || []).length, k1b: n.soHangBai || 0 }; for (const c of KENH_PHU) o.tong['k' + c] = (n['k' + c] || []).length; // tổng số dòng ghi ngày này (kể cả chưa xong)
     return o;
   }
-  function canhBaoMuc(ngay, d = duLieu()) { // ít hơn mức đặt → thiếu · từ 3 lần mức đặt trở lên → quá nhiều (dễ là nhập nhầm cột Ngày đăng)
+  function canhBaoMuc(ngay, d = duLieu(), homNayChe) { // homNayChe: hôm nay — so theo dòng sẵn sàng (dòng chưa xong không còn kịp) // ít hơn mức đặt → thiếu · từ 3 lần mức đặt trở lên → quá nhiều (dễ là nhập nhầm cột Ngày đăng)
     const dm = demMuc(ngay, d); if (!dm) return []; const m = mucDat(); const out = [];
     const ten = { k1v: ['kenh1', 'video', 'tab "Kênh 1 Vòng Trầm Hương SMH" cột K'], k1b: ['kenh1', 'hàng bài viết', 'tab "Bài viết kênh 1" cột H'] };
     for (const c of KENH_PHU) ten['k' + c] = ['kenh' + c, 'video', `tab "${CAI_DAT.KENH[c].tenTab}" cột ${String.fromCharCode(65 + CAI_DAT.KENH[c].cot.ngay)}`];
     for (const k of Object.keys(ten)) {
       const so = dm[k], muc = m[k]; if (so == null || !muc) continue; const [kk, loai, cho] = ten[k];
-      if (so < muc) out.push({ k: kk + '_muc' + k, ten: tenKenhDai(+kk.slice(4)), muc: true, thieu: [`thiếu ${muc - so} ${loai} (mức đặt ${muc}, ${cho} mới có ${so} dòng ghi ngày này)`] });
-      else if (so >= 3 * muc) out.push({ k: kk + '_nhieu' + k, ten: tenKenhDai(+kk.slice(4)), nhieu: true, thieu: [`quá nhiều: ${so} ${loai} cùng ngày (mức đặt ${muc}) — kiểm tra ${cho} có nhập nhầm ngày không`] });
+      const sanSang = k === 'k1b' ? '' : ' sẵn sàng đăng';
+      if (so < muc && (homNayChe || (dm.tong[k] || 0) < muc)) out.push({ k: kk + '_muc' + k, ten: tenKenhDai(+kk.slice(4)), muc: true, thieu: [`thiếu ${muc - so} ${loai} (mức đặt ${muc}, ${cho} mới có ${homNayChe ? so + ' dòng sẵn sàng' : (dm.tong[k] || 0) + ' dòng'} ghi ngày này)`] });
+      else if (so >= 3 * muc) out.push({ k: kk + '_nhieu' + k, ten: tenKenhDai(+kk.slice(4)), nhieu: true, thieu: [`quá nhiều: ${so} ${loai}${sanSang} cùng ngày (mức đặt ${muc}) — kiểm tra ${cho} có nhập nhầm ngày không`] });
     }
     return out;
   }
@@ -1142,8 +1144,9 @@
   function thieuCuaNgay(ngay, d = duLieu()) {
     if (!d || !d.ngay || !d.ngay[ngay]) return null;
     const ds = [];
-    for (const it of lichNgay(ngay, d)) { if (it.loai === 'manifest') continue; const nd = noiDungSlot(ngay, it.k, d); if (nd.thieu.length) ds.push({ k: it.k, ten: it.ten, thieu: nd.thieu }); } // (6.32) manifest không báo thiếu
-    for (const x of d.ngay[ngay].v || []) if (!x.duyet && !x.daDang) ds.push({ k: 'kenh1_j' + x.hang, ten: 'Video kênh 1', thieu: [`hàng ${x.hang} cột J chưa "ĐÃ DUYỆT" (đang: "${x.tt || 'trống'}") — script vẫn đăng`] }); // (6.32)
+    const dm = demMuc(ngay, d) || {}; const du1 = (dm.k1v || 0) >= (mucDat().k1v || 0); // (6.32.1) kênh 1 đã đủ số video sẵn sàng → dòng chưa có file chỉ là dòng dự phòng, không báo
+    for (const it of lichNgay(ngay, d)) { if (it.loai === 'manifest') continue; const nd = noiDungSlot(ngay, it.k, d); if (!nd.thieu.length) continue; if (it.loai === 'video' && du1 && nd.hang && !nd.tep) continue; ds.push({ k: it.k, ten: it.ten, thieu: nd.thieu }); } // (6.32) manifest không báo thiếu
+    for (const x of d.ngay[ngay].v || []) if (x.tep && !x.duyet && !x.daDang) ds.push({ k: 'kenh1_j' + x.hang, ten: 'Video kênh 1', nhac: true, thieu: [`hàng ${x.hang} cột J chưa "ĐÃ DUYỆT" (đang: "${x.tt || 'trống'}") — script vẫn đăng`] }); // (6.32) có file mà chưa duyệt → vẫn đăng, nhắc duyệt
     for (const w of canhBaoMuc(ngay, d)) ds.push(w);
     for (const w of canhBaoKenh(ngay, d)) ds.push(w);
     return ds;
@@ -1236,6 +1239,7 @@
       const ds = n['k' + c]; if (!ds) continue;
       if (!ds.length) continue; // (6.32) thiếu dòng → tính theo mức đặt (canhBaoMuc)
       if (!mucDat()['k' + c]) continue; // (6.32) mức đặt 0 (kênh tạm dừng) → không nhắc dòng chưa có video / chưa duyệt; dòng nào đủ thì vẫn đăng
+      if (videoKenh(n, c).length >= mucDat()['k' + c]) continue; // (6.32.1) đã đủ số video sẵn sàng → các dòng chưa xong là dự phòng, không báo
       for (const x of ds) if (!x.duyet && !x.daDang && cfg.khongDuyet) out.push({ k: 'kenh' + c + '_' + x.hang, ten, thieu: [`hàng ${x.hang} có Ngày đăng nhưng chưa có video (cột ${String.fromCharCode(65 + cfg.cot.video)})`] });
         else if (!x.duyet && !x.daDang) out.push({ k: 'kenh' + c + '_' + x.hang, ten, thieu: [`hàng ${x.hang} có Ngày đăng nhưng Trạng thái (cột ${String.fromCharCode(65 + cfg.cot.tt)}) chưa "ĐÃ DUYỆT" (đang: "${x.tt || 'trống'}")${x.tep ? '' : ', chưa có video'}${x.cap ? '' : ', chưa có caption'}`] });
     }
@@ -6226,7 +6230,7 @@
     }
     if (false) for (const c of chuaNgay()) ds.push({ k: 'cn|' + c.chu, chu: c.chu + ' → script chưa biết đăng ngày nào, hãy điền ngày', nut: [['▦ Mở sheet', c.nut, '', 'chinh']] });
     const tn = thieuNgay();
-    { const hn = canhBaoMuc(homNay()); if (hn.length) ds.push({ k: 'hn|' + hn.map((x) => x.k).join(), chu: 'Hôm nay: ' + hn.map((x) => x.ten + ' ' + x.thieu[0]).join(' · '), nut: [['▦ Mở sheet', 'mosheet', ''], ['⚙ Mức đặt', 'mucdat', '']] }); } // (6.32) hôm nay ít / quá nhiều so với mức đặt
+    { const hn = canhBaoMuc(homNay(), duLieu(), true); if (hn.length) ds.push({ k: 'hn|' + hn.map((x) => x.k).join(), chu: 'Hôm nay: ' + hn.map((x) => x.ten + ' ' + x.thieu[0]).join(' · '), nut: [['▦ Mở sheet', 'mosheet', ''], ['⚙ Mức đặt', 'mucdat', '']] }); } // (6.32) hôm nay ít / quá nhiều so với mức đặt
     if (tn.length) { const mai = tn.find((x) => x.i === 1), kia = tn.find((x) => x.i === 2); // (6.32) ngày mai = đỏ, tính vào việc · ngày kia = vàng nhạt, nhắc sớm, không tính
       ds.push({ k: 'thieu|' + tn.map((x) => x.ngay + x.t.length).join(), khongDem: !mai, bang: bangThieu(tn), chu: mai ? `Ngày mai còn thiếu ${mai.t.length} mục${kia ? ` · ngày kia ${kia.t.length} mục (nhắc sớm)` : ''} — sửa sheet xong bấm Đọc lại` : `Ngày kia còn thiếu ${kia.t.length} mục (nhắc sớm, chưa gấp) — sửa sheet xong bấm Đọc lại`, tip: tn.map((x) => x.ngay + ': ' + x.t.map((y) => y.ten + ' ' + y.thieu.join(', ')).join('; ')).join('\n'), nut: [['▦ Mở sheet', 'mosheet', ''], ['Xem', 'xemsaptoi', ''], ['⚙ Mức đặt', 'mucdat', '']] }); }
     { const hk = hanKiemThe(); if (MAY && hk.den) ds.push({ k: 'the7|' + Math.floor(hk.luc / 864e5), chu: `🏷 Đã ${hk.qua} ngày chưa kiểm tra thẻ (Kênh 1, 2, 3, Hà Xá, Manifest) — mở xem, sửa nếu cần, hoặc bấm Xác nhận nếu vẫn dùng thẻ cũ`, nut: [['🏷 Kiểm tra thẻ', 'motabthe', '', 'chinh']] }); } // (6.26.9)
@@ -6244,7 +6248,7 @@
     const d = duLieu(); const ngays = [1, 2].map((i) => ngayStr(congNgay(i))); const m = mucDat();
     const o = (ng, c, i) => { const x = tn.find((y) => y.ngay === ng); const ds = (x ? x.t.filter((y) => kenhMuc(y) === c) : []).sort((p, q) => (q.nhieu ? 2 : q.muc ? 1 : 0) - (p.nhieu ? 2 : p.muc ? 1 : 0)); if (!d || !d.ngay || !d.ngay[ng]) return '<td class="bt-x">?</td>';
       if (!ds.length && c > 1 && !m['k' + c]) return '<td class="bt-x">tạm dừng</td>';
-      return ds.length ? `<td class="${i ? 'bt-vang' : 'bt-thieu'}" title="${esc(ds.map((y) => y.ten + ': ' + y.thieu.join(', ')).join('\n'))}">${ds.some((y) => y.nhieu) ? '⚠ ' : ''}thiếu ${ds.length}<div class="bt-ct">${esc(ds.slice(0, 3).map(nhanNgan).join(', '))}${ds.length > 3 ? '…' : ''}</div></td>` : '<td class="bt-du">✓ đủ</td>'; };
+      return ds.length ? `<td class="${i ? 'bt-vang' : 'bt-thieu'}" title="${esc(ds.map((y) => y.ten + ': ' + y.thieu.join(', ')).join('\n'))}">${(() => { const th = ds.filter((y) => !y.nhieu && !y.nhac).length, nh = ds.filter((y) => y.nhac).length; return [ds.some((y) => y.nhieu) ? '⚠ quá nhiều' : '', th ? `thiếu ${th}` : '', nh ? `${nh} chưa duyệt` : ''].filter(Boolean).join(' · '); })()}<div class="bt-ct">${esc(ds.slice(0, 3).map(nhanNgan).join(', '))}${ds.length > 3 ? '…' : ''}</div></td>` : '<td class="bt-du">✓ đủ</td>'; };
     const mucChu = (c) => (c === 1 ? `${m.k1v} video · ${m.k1b * 3} bài` : m['k' + c] ? `${m['k' + c]} video` : 'tạm dừng');
     return `<table class="bthieu"><tr><th></th>${ngays.map((ng, i) => `<th>${i ? 'Ngày kia' : 'Ngày mai'} ${ng.slice(0, 5).replace('-', '/')}${i ? ' <span style="font-weight:400">(nhắc sớm)</span>' : ''}</th>`).join('')}</tr>${KENH_ALL.map((c) => `<tr><td class="bt-k">${esc(tenKenhDai(c))}<div class="bt-ct">mức: ${esc(mucChu(c))}/ngày</div></td>${ngays.map((ng, i) => o(ng, c, i)).join('')}</tr>`).join('')}</table>`;
   }
