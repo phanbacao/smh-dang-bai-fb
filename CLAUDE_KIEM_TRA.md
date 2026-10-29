@@ -418,3 +418,10 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Thẻ 23/10: Lượt xem 7 ngày 8.418 (▲280.500%), 28 ngày 0 (—). Nguyên nhân: `docTrangCS` trang views: chưa tìm thấy con số (trang đang tải) nhưng trong trang có chữ "Chưa đủ dữ liệu" (biểu đồ con / mục khác) → trả `{so: 0}` ngay, không chờ hết 25 giây, không tải lại.
 - Sửa (p15_chiso): (1) không trả 0 khi có chữ "Chưa đủ dữ liệu" — chờ hết 25 giây, tải lại 1 lần; vẫn không có số mà trang ghi "Chưa đủ dữ liệu" → `{so: null, khongRo}` hiển thị "Không xác định được" (thẻ, tin chữ, bảng xem trước). (2) Kiểm hợp lý: 28 ngày views/messaging < 7 ngày → tải lại 1 lần; vẫn nhỏ hơn → "Không xác định được". (3) `trungKy` bỏ qua khi so null.
 - Sim: chiso28 (lần 1 trang 28 ngày chưa có số → tải lại → 41.337), chiso28k (mãi không có số → "Không xác định được" trong thẻ; bản 6.31.1 ghi 0).
+
+## 6.32 (29/10/2026) — mức đặt số bài/ngày + cảnh báo thiếu mới
+- Mức đặt (`mucDat`, `muc_dat6`, mặc định K1 1 video + 1 hàng bài, K2 0, K3 1, HX 1): nút "⚙ Mức đặt" trên khung việc → `khungMucDat` → `luuMucDat` (máy này + ô Z9 `MUCDAT|{…}`; ô Z9 có chữ khác hoặc Lark hết lượt → chỉ lưu máy này). Đọc Z8:Z9 cùng lượt đọc sheet → `dongBoMuc` (lấy bản có `luc` mới hơn).
+- Kênh 1 theo sheet: `ganDong` bỏ 3 ô v/m cố định (chỉ giữ khi ngày đó chưa có dữ liệu); `lichNgay` chỉ có Bài 1–3 khi có hàng bài viết; `dongBoLich` giữ ô b1–b3 đã làm. Manifest chỉ thành ô khi dòng có đủ chữ (G) + ảnh (H), không báo thiếu.
+- `thieuCuaNgay`: bỏ ô manifest; thêm cột J chưa "ĐÃ DUYỆT" (vẫn đăng, `videoCuaNgay` có tt/duyet); `canhBaoMuc`: ít hơn mức → thiếu N; ≥ 3× mức → quá nhiều. `canhBaoKenh`: bỏ "chưa có dòng nào" (theo mức), mức 0 → không nhắc gì (kể cả lỗi đọc tab).
+- Giao diện: dòng "Hôm nay: …" (ít/quá nhiều so với mức); bảng: ngày mai ô đỏ (tính vào việc), ngày kia ô vàng `bt-vang` (nhắc sớm, `khongDem`); chỉ có nhắc sớm → khung vàng "💡 Nhắc sớm". Cột kênh ghi mức/ngày, kênh mức 0 ghi "tạm dừng".
+- Sim: mucdat (mở ⚙, sửa K1 = 3, K2 = 1 → ghi Z9, cảnh báo đổi theo), ngay 9/9, thieu, ui, kenh, chuanbi, ngaymai, haimay, baocao, chot, lich2may, kenhtay, hx đạt.

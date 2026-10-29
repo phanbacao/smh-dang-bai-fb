@@ -329,6 +329,10 @@
   {
    "ngay": "2026-10-28",
    "tomTat": "Ra bản 6.31.2: sửa báo cáo tuần ghi 0 lượt xem 28 ngày."
+  },
+  {
+   "ngay": "2026-10-29",
+   "tomTat": "Ra bản 6.32: mức đặt số bài/ngày (nút ⚙, đồng bộ ô Z9), kênh 1 đăng theo số dòng sheet, ngày mai đỏ / ngày kia vàng, cảnh báo quá nhiều (≥3 lần mức đặt), kênh 2 tạm dừng không báo."
   }
  ],
  "capNhat": "2026-10-24"
