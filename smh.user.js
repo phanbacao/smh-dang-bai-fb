@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.32.1
+// @version      6.32.2
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.32.1';
+  const PHIEN_BAN = '6.32.2';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -3482,6 +3482,8 @@
     const s = trangThai(); const now = Date.now();
     { // video kênh 2, 3 đã rời trang của nó quá 12 phút mà chưa thả được cảm xúc → thôi (không quan trọng, không chuyển trang lại)
       const bo = LICH.filter((x) => x.kenh > 1 && x.kenh !== kt && (() => { const r = s.s[x.k]; return r && XONG.includes(r.tt) && r.link && !r.suaXong && now - (r.luc || 0) > (CAI_DAT.KENH[x.kenh].ganThe ? 40 : 12) * 60000; })()); // (6.26) kênh Hà Xá (gắn thẻ) chờ 40 phút
+      { const tt6 = lay('sua_toantrang6', {}) || {}; const bo2 = LICH.filter((x) => x.kenh > 1 && !CAI_DAT.KENH[x.kenh].ganThe && tt6[x.kenh] === homNay() && (() => { const r = s.s[x.k]; return r && XONG.includes(r.tt) && !r.suaXong; })()); // (6.32.2) trang này bấm Sửa là sang màn sửa toàn trang (tải lại trang) → hôm nay bỏ qua thả cảm xúc
+        if (bo2.length) { capNhatTT((s1) => { for (const x of bo2) Object.assign(ttSlot(s1, x.k), { suaXong: Date.now(), suaLoi: 'bỏ qua cảm xúc (trang mở màn sửa toàn trang)' }); }); ghi(`${bo2.map((x) => x.ten).join(', ')}: bỏ qua thả cảm xúc — trang này bấm Sửa là chuyển sang màn sửa toàn trang (cảm xúc không bắt buộc)`); } }
       if (bo.length) { capNhatTT((s1) => { for (const x of bo) Object.assign(ttSlot(s1, x.k), { suaXong: Date.now(), suaLoi: (s1.s[x.k].suaLoi ? s1.s[x.k].suaLoi + ' · ' : '') + 'bỏ qua cảm xúc (đã chuyển sang trang khác)' }); }); ghi(`${bo.map((x) => x.ten).join(', ')}: chưa thả được cảm xúc nhưng đã chuyển trang → bỏ qua (cảm xúc không bắt buộc)`); }
     }
     const it = LICH.find((x) => { const r = s.s[x.k]; const toiDa = (x.kenh || 1) > 1 && !CAI_DAT.KENH[x.kenh].ganThe ? CAI_DAT.KENH_SUA_TOI_DA : 4; return (x.kenh || 1) === kt && (x.loai === 'video' || x.loai === 'manifest') && r && XONG.includes(r.tt) && (r.may === MAY || ((r.may === 'tay' || r.may === 'khac') && (LA_GIAO || now - (r.luc || 0) > 30 * 60000))) && r.link && !r.suaXong && (r.suaLan || 0) < toiDa && now - (r.luc || 0) > 3 * 60000 && now >= (r.suaHen || 0); });
@@ -3507,6 +3509,7 @@
         if (dg.du || ((laKenhPhu || (tuGan && r.suaDaLuu)) && dg.cx)) { ghiSua({ suaXong: Date.now(), suaLoi: '' }); ghi(`${it.ten}: đã có ${laKenhPhu ? 'cảm xúc' : 'thẻ ' + CAI_DAT.TAG_TEN + ' + cảm xúc'} trên bài → không cần sửa`); return; }
         if ((r.suaLan || 0) >= 1 && r.suaDaLuu) ghi(`${it.ten}: lần trước đã Lưu nhưng trên bài chưa hiện đủ thẻ/cảm xúc → làm lại`);
         ghi(`Bắt đầu gắn thẻ "${CAI_DAT.TAG_TEN}" + cảm xúc cho ${it.ten}`);
+        luu('quet_kenh6', { kenh: it.kenh || 1, k: it.k, phu: laKenhPhu }); ghiSua({ suaLan: (r.suaLan || 0) + 1, suaHen: Date.now() + (laKenhPhu ? 3 : 10) * 60000 }); // (6.32.2) tính lần thử TRƯỚC khi mở màn sửa: Facebook có thể chuyển sang màn sửa toàn trang (trang tải lại, việc bị ngắt) → không mở lại liên tục
         const d = await moManHinhSua(k, text);
         let daLuu = false;
         try {
@@ -5490,6 +5493,7 @@
   function nguoiDangThaoTac() {
     const sua = dangODuongSua();
     if (Date.now() - (window.__smhMoSua || 0) < 4 * 60000 || (sua && Date.now() - ((lay('suanen_url6', null) || {}).t || 0) < 3 * 60000)) { window.__smhNguoi = null; return false; } // (6.26.6) màn sửa do script mở (sửa nền đỏ)
+    if (sua && Date.now() - (lay('quet_dang_sua', 0) || 0) < 5 * 60000) { window.__smhNguoi = null; return false; } // (6.32.2) màn sửa toàn trang do CHÍNH SCRIPT mở (gắn thẻ / cảm xúc) → không phải người, script tự rời được
     const el = sua ? hopSua() : (hopSoanBai() || hopDangDo() || (typeof hopSuaMoi === 'function' ? hopSuaMoi() : null)); // (6.24) cả hộp "Chỉnh sửa bài viết" kiểu mới do người mở
     if (!sua && !el) { window.__smhNguoi = null; return false; }
     if (!sua && window.__smhMoHop) return false; // script tự mở → script tự đóng được
@@ -5635,7 +5639,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['muc_dat6', 'muc_o6', 'mf_chu6', 'mf_nguon6', 'lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['quet_kenh6', 'sua_toantrang6', 'quet_dang_sua', 'muc_dat6', 'muc_o6', 'mf_chu6', 'mf_nguon6', 'lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;
@@ -5680,6 +5684,15 @@
         if (!(dd.video && dd.buoc === 'kiem_bai') && !choNhanSu('dangdo', `comment tiếp cho ${dd.ten || 'bài vừa đăng'}`)) { choDD(dd, 'bạn đang dùng trang (chờ tối đa ' + CAI_DAT.CHO_NGUOI_TOI_DA_PHUT + ' phút)'); return; }
         if (await theoDoi('dangdo', () => xuLyDangDo(), tenDangDo(dd))) return;
         datKenh(1); // (6.19.3) việc dở kênh 2, 3 trả về mà không làm gì → các bước sau vẫn theo kênh 1
+      }
+      // (6.32.2) đang kẹt ở màn sửa toàn trang /post/edit/ (script mở để gắn thẻ/cảm xúc rồi trang tải lại, hoặc người mở rồi bỏ quên ≥ 10 phút)
+      //  → rời về trang kênh bằng roiTrang (chặn hộp "Rời khỏi trang web?" của trình duyệt) TRƯỚC khi làm bài khác — tránh chuyển tư cách ngay trên màn sửa
+      if (dangODuongSua() && !dangBan && !lay('dang_do', null) && !lay('suanen_url6', null) && !nguoiDangThaoTac()) {
+        const tuScript = Date.now() - (lay('quet_dang_sua', 0) || 0) < 5 * 60000; luu('quet_dang_sua', 0);
+        if (tuScript) { const q = lay('quet_kenh6', null); if (q && q.phu) { const t6 = lay('sua_toantrang6', {}) || {}; t6[q.kenh] = homNay(); luu('sua_toantrang6', t6); } }
+        const url = CAI_DAT.KENH[KENH_HT || 1] ? CAI_DAT.KENH[KENH_HT || 1].url : CAI_DAT.KENH[1].url;
+        ghi(`Đang ở màn chỉnh sửa toàn trang (${tuScript ? 'script mở để gắn thẻ / thả cảm xúc, trang đã tải lại nên không làm tiếp được' : 'bỏ quên hơn 10 phút'}) → rời về trang kênh rồi làm tiếp`);
+        await sleep(800); roiTrang(url); return;
       }
       // 2) chạy thử: chờ người bấm Đăng
       if (!tatDang && lay('cho_tay6', null) && (await theoDoi('chotay', () => tiepChoTay()))) return;

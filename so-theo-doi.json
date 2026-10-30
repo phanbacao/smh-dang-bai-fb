@@ -244,6 +244,12 @@
    "moTa": "29/10: Hà Xá 30/10 đã có 1 video ĐÃ DUYỆT (đủ mức 1) nhưng vẫn báo 'hàng 63 chưa có video'; 31/10 báo 'quá nhiều 3' vì đếm cả dòng ĐÃ QUAY chưa có video",
    "trangThai": "đã sửa 6.32.1: chỉ đếm dòng sẵn sàng đăng; đủ mức thì dòng chưa xong là dự phòng, không báo",
    "ngay": "2026-10-29"
+  },
+  {
+   "ma": "kẹt-man-sua-toan-trang",
+   "moTa": "30/10 Máy Giao: 06:29 thả cảm xúc Kênh 3 → Facebook chuyển sang màn sửa toàn trang /post/edit/ (trang tải lại, việc bị ngắt) → script tưởng người mở, chờ 10 phút → Bài 1 trễ từ 06:37; 06:47 chuyển tư cách ngay trên màn sửa → hộp 'Rời khỏi trang web?' của trình duyệt chặn tiếp",
+   "trangThai": "đã sửa 6.32.2",
+   "ngay": "2026-10-30"
   }
  ],
  "danhGiaTuan": [],
@@ -343,6 +349,10 @@
   {
    "ngay": "2026-10-29",
    "tomTat": "Ra bản 6.32.1: sửa cảnh báo đếm cả dòng dự phòng chưa có video."
+  },
+  {
+   "ngay": "2026-10-30",
+   "tomTat": "Ra bản 6.32.2: sửa kẹt màn sửa toàn trang sau khi thả cảm xúc kênh 3 làm trễ Bài 1."
   }
  ],
  "capNhat": "2026-10-24"
