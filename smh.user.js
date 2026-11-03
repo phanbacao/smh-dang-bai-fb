@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.32.2
+// @version      6.32.3
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.32.2';
+  const PHIEN_BAN = '6.32.3';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -266,7 +266,7 @@
       3: { so: 3, ten: 'Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn', ngan: 'SMH Trầm Chuẩn', url: 'https://www.facebook.com/sonmochuongtramchuangiachuan/', duong: ['/sonmochuongtramchuangiachuan', '/61575413185162'], pageId: '',
         tab: '4OtbFA', tenTab: 'Kênh 3 Trầm Hương SMH', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=4OtbFA', cot: { cap: 3, tt: 6, ngay: 7, video: 8, link: 9 } },
       4: { so: 4, ten: 'Trầm Hương Hà Xá', ngan: 'Trầm Hương Hà Xá', url: 'https://www.facebook.com/100092534930523', duong: ['/100092534930523'], pageId: '', hx: true, anSo: true, viTri: { go: 'trầm hương hà xá', re: 'Hà Xá', ten: 'Trầm Hương HÀ XÁ' }, ganThe: true, tag: 'Trầm Hương Hà Xá', khongDuyet: true, // (6.26) thương hiệu khác: comment riêng, gắn thẻ chính trang, có video là đăng (không cần ĐÃ DUYỆT)
-        tab: 'ZSDDld', tenTab: 'Kênh Trầm Hương Hà Xá', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=ZSDDld', cot: { cap: 4, tt: 7, ngay: 8, video: 9, link: 10 } },
+        tab: 'ZSDDld', tenTab: 'Kênh Trầm Hương Hà Xá', link: 'https://zgml41unmm8.sg.larksuite.com/wiki/G9gOwWa7OiQxuCkYWKJlkHt4g2f?sheet=ZSDDld', cot: { cap: 5, tt: 8, ngay: 9, video: 10, link: 11 } }, // (6.32.3) thêm cột E Đạo cụ → F Tiêu đề, I Trạng thái, J Ngày đăng, K VIDEO, L Link
     },
     KENH_CACH_PHUT: 30,        // kênh 2, 3: 2 video cùng 1 trang cách nhau ít nhất 30 phút
     KENH_TRUOC_PHUT: [5, 15],  // kênh 2, 3 đăng trước bài đầu tiên của kênh 1 khoảng 5–15 phút (ngẫu nhiên)
@@ -278,6 +278,7 @@
   const idTrangKenh = (k) => { const c = CAI_DAT.KENH[k] || CAI_DAT.KENH[1]; return c.pageId || String((lay('kenh_id6', {}) || {})[c.so] || ''); };
   // (6.26) danh sách kênh + tên hiển thị (kênh Hà Xá chỉ ghi tên, không ghi "Kênh 4")
   const KENH_PHU = [2, 3, 4], KENH_ALL = [1, 2, 3, 4];
+  try { const cl = lay('cot_kenh6', {}) || {}; for (const c of KENH_PHU) { const x = cl[c]; if (x && ['cap', 'tt', 'ngay', 'video', 'link'].every((k) => Number.isInteger(x[k]) && x[k] >= 0 && x[k] < 26)) CAI_DAT.KENH[c].cot = x; } } catch (e) { /* (6.32.3) vị trí cột kênh phụ đã dò theo tiêu đề */ }
   const tenKenh = (c) => { const x = CAI_DAT.KENH[c] || CAI_DAT.KENH[1]; return x.anSo ? x.ngan : `Kênh ${c}`; };
   const tenKenhDai = (c) => { const x = CAI_DAT.KENH[c] || CAI_DAT.KENH[1]; return x.anSo ? x.ngan : `Kênh ${c} (${x.ngan})`; };
   const duongNay = () => { const p = location.pathname.toLowerCase().replace(/\/+$/, ''); if (p === '/profile.php') { const id = new URLSearchParams(location.search).get('id'); if (id) return '/' + id; } return p; };
@@ -951,9 +952,23 @@
   // dữ liệu đã đọc (lưu trong Tampermonkey) — dùng cho cả ngày, không đọc lại
   const duLieu = () => lay('du_lieu6', null);
   // ---- (6.19) kênh 2, 3: tab riêng — mỗi dòng có Ngày đăng (H) + Trạng thái (G) + video (I) + caption (E/D) ----
-  const vungKenh = (c) => 'A1:' + String.fromCharCode(65 + Math.max(9, ...Object.values(CAI_DAT.KENH[c].cot))) + '3000'; // (6.26) đọc tới cột link xa nhất (Hà Xá: K)
+  const vungKenh = (c) => 'A1:' + String.fromCharCode(65 + Math.max(19, ...Object.values(CAI_DAT.KENH[c].cot))) + '3000'; // (6.32.3) đọc rộng tới cột T để dò cột theo tiêu đề khi tab chèn thêm cột
+  function doCotKenh(h) { // (6.32.3) dò vị trí cột theo chữ tiêu đề hàng 1
+    const t = (i) => thuong(chuan(chuO(h[i]))); const tim = (f) => { for (let i = 0; i < h.length; i++) if (f(t(i))) return i; return -1; };
+    const ngay = tim((x) => x.includes('ngày đăng')), tt = tim((x) => x.includes('trạng thái')), video = tim((x) => x.includes('video') && !x.includes('link'));
+    let cap = tim((x) => x.includes('tiêu đề')); if (cap < 0) cap = tim((x) => x.includes('caption'));
+    let link = tim((x) => x.includes('link')); if (link < 0 && video >= 0) link = video + 1;
+    if ([ngay, tt, video, cap, link].some((x) => x < 0 || x > 25)) return null;
+    return { cap, tt, ngay, video, link };
+  }
   function kiemCotKenh(values, c) {
     const h = (values || [])[0] || []; const cfg = CAI_DAT.KENH[c]; const t = (i) => thuong(chuO(h[i]));
+    const moi = doCotKenh(h);
+    if (moi && ['cap', 'tt', 'ngay', 'video', 'link'].some((k) => moi[k] !== cfg.cot[k])) {
+      const L = (i) => String.fromCharCode(65 + i);
+      ghi(`Tab "${cfg.tenTab}" đổi vị trí cột → script tự theo: Tiêu đề ${L(moi.cap)}, Trạng thái ${L(moi.tt)}, Ngày đăng ${L(moi.ngay)}, VIDEO ${L(moi.video)}, Link ${L(moi.link)}`);
+      cfg.cot = moi; const cl = lay('cot_kenh6', {}) || {}; cl[c] = moi; luu('cot_kenh6', cl);
+    }
     const sai = [];
     if (!t(cfg.cot.ngay).includes('ngày đăng')) sai.push(`cột ${String.fromCharCode(65 + cfg.cot.ngay)} không phải "Ngày đăng" (đang là "${chuan(chuO(h[cfg.cot.ngay])) || 'trống'}")`);
     if (!t(cfg.cot.tt).includes('trạng thái')) sai.push(`cột ${String.fromCharCode(65 + cfg.cot.tt)} không phải "Trạng thái"`);
@@ -3832,12 +3847,13 @@
     const L = (i) => String.fromCharCode(65 + i); const theoTab = {};
     for (const dd of ds) { const c = kenhCua(dd.slot); const tab = c > 1 ? CAI_DAT.KENH[c].tab : CAI_DAT.TAB_VIDEO; (theoTab[tab] = theoTab[tab] || { c, ds: [] }).ds.push(dd); }
     for (const [tab, g] of Object.entries(theoTab)) {
-      const cfg = g.c > 1 ? CAI_DAT.KENH[g.c] : null; const cot = cfg ? cfg.cot : { cap: 4, tt: 9, ngay: 10, link: 1 }; const tenTab = cfg ? `tab "${cfg.tenTab}"` : 'tab Kênh 1';
+      const cfg = g.c > 1 ? CAI_DAT.KENH[g.c] : null; let cot = cfg ? cfg.cot : { cap: 4, tt: 9, ngay: 10, link: 1 }; const tenTab = cfg ? `tab "${cfg.tenTab}"` : 'tab Kênh 1';
       try {
         // (6.25) dữ liệu sheet vừa đọc (≤ 60 phút) xác nhận đúng dòng → ghi luôn, không đọc lại cả tab
         const dl = duLieu(); const moi = dl && Date.now() - (dl.luc || 0) < 60 * 60000;
         const hangCache = (dd) => { if (!moi) return 0; try { const nd = noiDungSlot(dd.ngay || homNay(), dd.slot, dl); return nd.hang && khoaSo(nd.text).slice(0, 40) === khoaSo(dd.bai).slice(0, 40) ? nd.hang : 0; } catch (e) { return 0; } };
-        const v = g.ds.every((dd) => hangCache(dd)) ? null : await docBang(tab, 'A1:N3000'); const o = []; const xong = [];
+        const v = g.ds.every((dd) => hangCache(dd)) ? null : await docBang(tab, 'A1:T3000'); const o = []; const xong = [];
+        if (v && cfg) { const lc = kiemCotKenh(v, g.c); if (lc) throw new Error(lc); cot = cfg.cot; } // (6.32.3) kiểm lại tiêu đề cột trước khi ghi
         if (!v) ghi(`Ghi gom: dùng dữ liệu sheet vừa đọc (${gioStr(new Date(dl.luc))}) → không đọc lại ${tenTab}`);
         for (const dd of g.ds) {
           const khoa = khoaSo(dd.bai).slice(0, 40); let hang = v ? dd.hang : hangCache(dd);
@@ -3924,7 +3940,7 @@
     try {
       if (chanLark()) throw new Error('Lark đang tạm ngừng');
       const khoa = khoaSo(dd.bai).slice(0, 40);
-      let hang = dd.hang; const r = (await docBang(tab, `A${hang}:N${hang}`))[0] || [];
+      let hang = dd.hang; const r = (await docBang(tab, `A${hang}:T${hang}`))[0] || [];
       if (khoaSo(chuO(r[cot.cap])).slice(0, 40) !== khoa) {
         const v = await docBang(tab, 'A1:N3000'); const ung = [];
         for (let i = 1; i < v.length; i++) { const x = v[i] || []; if (khoaSo(chuO(x[cot.cap])).slice(0, 40) !== khoa) continue; if (dd.ngay && ngayO(x[cot.ngay]) !== dd.ngay) continue; if (/đã đăng/i.test(chuO(x[cot.tt]))) continue; ung.push(i + 1); }
@@ -5639,7 +5655,7 @@
     if (typeof GM_listValues !== 'function' || lay('don6', '') === homNay()) return;
     luu('don6', homNay());
     const giuNgay = new Set(Array.from({ length: 8 }, (_, i) => ngayStr(congNgay(-i))));
-    const GIU = new Set(['quet_kenh6', 'sua_toantrang6', 'quet_dang_sua', 'muc_dat6', 'muc_o6', 'mf_chu6', 'mf_nguon6', 'lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
+    const GIU = new Set(['cot_kenh6', 'quet_kenh6', 'sua_toantrang6', 'quet_dang_sua', 'muc_dat6', 'muc_o6', 'mf_chu6', 'mf_nguon6', 'lark_web6', 'lark_webdata6', 'lark_webtt6', 'lark_webcan6', 'lark_webyc6', 'khoa_minh6', 'lark_thang6', 'the6_bd', 'csnhac6', 'csghichu6', 'tv24_6', 'lichghi6', 'khong_nhom6', 'v24_6', 'nhay6', 'bimat6', 'capnhat6', 'drive6', 'thunap6b', 'trang6_k2', 'trang6_k3', 'trang6_k4', 'nhacsheet6', 'cs6', 'ghij_cho6', 'ghigom6', 'k1_cu', 'k1_trang6', 'nhacsheet6_thu', 'lich_t6', 'fb_hong1', 'tc_mo_trang6', 'tc_trang6', 'tc_reload_luc', 'fb_token_nguoi_luc', 'fb_token', 'fb_token_luc', 'fb_token_nhac', 'gan_the', 'khanh', 'khanh_kq', 'khanh_thu', 'khanh_dang', 'may6', 'nhac6', 'nhac6_info', 'o_nhac6', 'tam_dung', 'tam_dung_luc', 'cham6', 'lo_batch6', 'trung6', 'dung_moc', 'tu_dong6', 'chay_thu6', 'lark_gate', 'lark_tok', 'suc_khoe', 'mf_vung6', 'lam_ngay6', 'mf_font6', 'mf_fonts6', 'tg_hoc6', 'cmt6', 'cmt6_dongbo', 'the6', 'the6_dongbo', 'ui_tab6', 'ui_co_chu6', 'du_lieu6', 'dang_do', 'cho_tay6', 'trang6', 'mo6', 'song6', 'hoan6', 'lark_dem', 'tai6', 'yc6', 'hang_bu6', 'hoat_dong', 'cho_nguoi', 'bai_cuoi6', 'mf_tien6', 'don6', 'ui_co_chu', 'hd_ket', 'lan_chuyen', 'tc_reload_luc', 'cho_tab_an', 'sk6', 'loi_trang6', 'nghi_loi6', 'fb_token_nguoi', 'fb_token_nguoi_luc', 'fb_tok_trang6', 'kenh_id6', 'kenh_ma6', 'lich_k6']);
     let xoa = 0;
     for (const k0 of GM_listValues()) {
       const k = String(k0); if (!k.startsWith('that_')) continue;

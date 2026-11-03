@@ -1,359 +1,369 @@
 {
- "mucKiem": "ky",
- "ghiChuMuc": "ky = kiểm kỹ (vào máy soạn thử); vua = sửa trên giả lập; nhanh = chỉ đọc báo cáo. Bắt đầu 'ky' vì các ngày 11–12/10 lỗi dày; 3 ngày liền không lỗi mới → hạ 1 mức.",
- "loi": [
-  {
-   "ma": "dang-khong-an",
-   "moTa": "Video bấm Đăng không ăn, hộp đăng vẫn mở (12/10 07:49 Máy Giao)",
-   "gap": [
-    "2026-10-12"
-   ],
-   "suaO": "6.15",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "thu-nho-khuat",
-   "moTa": "Nút Chỉnh sửa hình thu nhỏ bị cuộn khuất",
-   "gap": [
-    "2026-10-10"
-   ],
-   "suaO": "6.9",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "sai-ten-hop",
-   "moTa": "Hộp soạn chưa hiện tên trang (dòng 100% chen vào)",
-   "gap": [
-    "2026-10-10"
-   ],
-   "suaO": "6.9",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "the-khong-nhan",
-   "moTa": "Thẻ không được nhận khi gắn",
-   "gap": [
-    "2026-10-11"
-   ],
-   "suaO": "6.11",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "luc-khac",
-   "moTa": "Hộp nhắc Lúc khác / Gọi ngay chặn nút Đăng",
-   "gap": [
-    "2026-10-11",
-    "2026-10-12"
-   ],
-   "suaO": "6.11",
-   "lapLaiSauSua": [
-    "2026-10-12"
-   ]
-  },
-  {
-   "ma": "nen-do-con-anh",
-   "moTa": "Bài 2 sửa nền đỏ báo vẫn còn ảnh — chưa rõ gốc",
-   "gap": [
-    "2026-10-11"
-   ],
-   "suaO": "6.11 (dự phòng API)",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "cmt-trung",
-   "moTa": "Bài 2 bị 2 comment trùng (máy cũ giữ may:CAO)",
-   "gap": [
-    "2026-10-11"
-   ],
-   "suaO": "6.13",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "video-nhan-nham",
-   "moTa": "Video 3 bị nhận nhầm là bài của Video 2 (cùng thân bài, chỉ khác câu mở đầu; 1 thước phim hiện 2 lần trong danh sách Facebook) → Video 3 không được đăng, phải đăng tay 18:22",
-   "gap": [
-    "2026-10-12"
-   ],
-   "suaO": "6.17",
-   "lapLaiSauSua": []
-  },
-  {
-   "ma": "manifest-dinh-chu",
-   "moTa": "Facebook dính chữ ở chỗ xuống dòng → so câu mở đầu (6.17) không khớp → manifest bị coi là chưa lên sau 20 phút",
-   "trangThai": "đã sửa 6.19",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "bu-sai-tu-cach",
-   "moTa": "Gửi bù comment kênh 2/3: ô bình luận đứng tên nick cá nhân / trang kênh khác → không chuyển tư cách, tải lại 4 lần rồi bỏ; vẫn đếm 'đã gửi bù' → báo nhầm 'gửi bù 2 lần vẫn thiếu' (Máy Cao 14/10 19:38)",
-   "trangThai": "đã sửa 6.19.2",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "kiem-cmt-lap",
-   "moTa": "Chờ nhân sự rảnh để gửi bù → hỏi Facebook lại mỗi vài giây (9 lần/80 giây); lượt 19:00 vẫn kiểm bài đã báo cần comment tay",
-   "trangThai": "đã sửa 6.19.2",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "ma-kenh1-bi-thay",
-   "moTa": "Bấm Đổi mã khoá lúc script đang làm kênh 2 → mã kênh 1 bị thay bằng mã trang kênh 2 → Facebook báo 190 (Máy Giao 14/10 19:22)",
-   "trangThai": "đã sửa 6.19.2",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "cai-giua-ngay-k",
-   "moTa": "Cài 6.19 giữa ngày: video kênh 2/3 (giờ 06:2x) đã đăng tay từ chiều → script định đăng lại ngay (Máy Giao 19:22, may có Tạm dừng). Thêm: hỏi Facebook lỗi → nhìn trang; trễ >1 giờ → nhìn trang; sheet ĐÃ ĐĂNG → không đăng",
-   "trangThai": "đã sửa 6.19.2",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "lich-co-dinh-3-video",
-   "moTa": "Sheet có hơn 3 video/manifest trong ngày → dòng thứ 4 trở đi không lên lịch; đăng tay thì bị xếp 'ngoài lịch' (14/10 tối 4 video)",
-   "trangThai": "đã sửa 6.19.3",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "soan-k-mat-yeu-cau",
-   "moTa": "Bấm Soạn bài kênh 2 ngày mai: đổi trang/tư cách làm trang tải lại → mất yêu cầu soạn, popup báo Xong sai",
-   "trangThai": "đã sửa 6.19.3",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "nhan-theo-thu-tu-sai",
-   "moTa": "Video đăng tay của dòng sheet chưa đọc bị gán vào ô Video 3 chưa tới giờ → Video 3 không đăng, video kia bị đăng trùng (giả lập themgiua)",
-   "trangThai": "đã sửa 6.19.3",
-   "ngay": "2026-10-14"
-  },
-  {
-   "ma": "don-du-lieu-xoa-bimat",
-   "moTa": "Dọn dữ liệu hằng ngày không có 'bimat6' trong danh sách giữ → có thể xoá mã Lark đã lưu trong máy",
-   "trangThai": "đã sửa 6.20",
-   "ngay": "2026-10-15"
-  },
-  {
-   "ma": "chiso-ten-undefined",
-   "moTa": "Chỉ số tuần: bị ngắt sau bước 6 (buoc = 7) → lượt sau báo lỗi \"Cannot read properties of undefined (reading 'ten')\"",
-   "trangThai": "đã sửa 6.28.1",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "version-ket-622",
-   "moTa": "@version trong đầu script kẹt 6.22 → Tampermonkey không tự cập nhật bản mới",
-   "trangThai": "đã sửa 6.28.1 (build6.py tự chép PHIEN_BAN)",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "lich-2-may-lech",
-   "moTa": "22/10: lịch bài thêm Máy Giao (tạo từ bản cũ) khác Máy Cao → Video 4 đăng trước Video 1, Video 5 định đăng 12:32 cùng lúc Máy Cao đăng Video 2",
-   "trangThai": "đã sửa 6.28.2 (lịch chung ô Z8 + xếp lại khi đổi bản + kiểm 20 phút trước khi bấm Đăng)",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "thu-vien-khop-nham",
-   "moTa": "Báo cáo tuần: lượt xem từng video toàn 10 vì Thư viện nội dung khớp theo chữ, nhiều video cùng câu mở đầu",
-   "trangThai": "đã sửa 6.28.2 (khớp theo mã bài)",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "lich-tre-2230",
-   "moTa": "22/10: lịch dự kiến kéo tới 22:31 (Manifest 4/5, Bài 6 bị đẩy sau Manifest 3; bài thêm được tới 22:30; trễ trưa dồn 30 phút/bài)",
-   "trangThai": "đã sửa 6.28.3 (rải đều 06:30–20:00, sát giờ cách 15 phút)",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "bao-cao-tuan-thieu-quyen",
-   "moTa": "Báo cáo tuần: lượt xem/follow từng video 'chưa đọc được' — mã đọc trang thiếu read_insights; Thư viện nội dung cuộn hụt",
-   "trangThai": "đã xử lý 22/10 (thêm quyền + mã mới) + 6.28.4 dự phòng trang Thông tin chi tiết từng video",
-   "ngay": "2026-10-22"
-  },
-  {
-   "ma": "nut-tai-khoan-doi-nhan",
-   "moTa": "24/10: Facebook đổi nhãn nút tài khoản thành 'Account, your profile' → không chuyển được trang, cả 2 máy không đăng được bài sáng 24/10",
-   "trangThai": "đã sửa 6.28.6",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "hop-trang-moi",
-   "moTa": "24/10: hộp 'Đã cập nhật Trang của bạn!' / 'Chào mừng bạn đến với Trang mới!' che trang khi chuyển trang",
-   "trangThai": "đã sửa 6.28.7 (tự bấm Dùng Trang)",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "ket-dang-lam",
-   "moTa": "24/10: Bài 1 kênh 1, Video 1 kênh 2 kẹt 'Đang làm…' sau khi trang tải lại giữa lúc đăng",
-   "trangThai": "đã sửa 6.28.7 (gỡ kẹt sau 8 phút)",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "z1-ton-luot",
-   "moTa": "24/10: Máy Cao 349 lượt Lark/ngày, 319 lượt ở ô giữ chỗ Z1 (mỗi lần thử lại đều giữ chỗ từ đầu)",
-   "trangThai": "đã sửa 6.28.8 (nhớ khoá 25 phút + trần cứng Cao 60 / Giao 100)",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "bc-ngay-trung",
-   "moTa": "24/10: nhóm nhận 2 thẻ báo cáo ngày (Máy Giao 20/20, Máy Cao 19/19 lúc 22:31) — Máy Cao chạm trần cứng nên không đọc được ô Z2 rồi vẫn gửi",
-   "trangThai": "đã sửa 6.28.9 (Z2 là việc chính; nhánh đủ bài cũng xem Z2, Máy Cao chờ 5 phút)",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "hx-ghi-tran",
-   "moTa": "Ghi 'ĐÃ ĐĂNG' tab Hà Xá bị trần cứng chặn (tên tab không khớp luật việc chính)",
-   "trangThai": "đã sửa 6.28.9",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "bc-loi-lap",
-   "moTa": "Chạm trần: 'Ghi báo cáo lỗi lên Lark chưa được' lặp mỗi 15 giây (36 lần)",
-   "trangThai": "đã sửa 6.28.9",
-   "ngay": "2026-10-24"
-  },
-  {
-   "ma": "lark-het-luot-thang",
-   "moTa": "26/10: cả công ty hết 10.000 lượt API Lark/tháng (mã 99991403) → bấm Soạn video/manifest hỏng, Video 3/4, Manifest 4 không đăng được (không tải được file)",
-   "trangThai": "đã sửa 6.29: tải video/ảnh qua Lark web (phiên đăng nhập Chrome, không tốn lượt), tải sẵn 2 ngày tới, cảnh báo lượt cao",
-   "ngay": "2026-10-26"
-  },
-  {
-   "ma": "lark-web-doc-sheet",
-   "moTa": "Hết lượt API thì nội dung sheet mới không đọc được",
-   "trangThai": "đã sửa 6.30: trợ lý chạy trên tab sheet Lark (MKT 10) đọc sheet bằng phiên Lark web, tab Facebook dùng như đọc API",
-   "ngay": "2026-10-26"
-  },
-  {
-   "ma": "giu-lark-web6",
-   "moTa": "6.29: khoá lark_web6 không nằm trong danh sách giữ lại → bị dọn mỗi lần khởi động",
-   "trangThai": "đã sửa 6.30",
-   "ngay": "2026-10-26"
-  },
-  {
-   "ma": "web-doc-ma-het-han",
-   "moTa": "27/10: bấm Đọc ngay khi Lark hết lượt → lỗi 99991403 dù tab Lark web đã đọc (10:26): mã truy cập Lark hết hạn, xin mã mới bị chặn trước khi tới bước đọc qua Lark web",
-   "trangThai": "đã sửa 6.31.1 (goiLark đọc Lark web trước khi xin mã)",
-   "ngay": "2026-10-27"
-  },
-  {
-   "ma": "cs-28ngay-0",
-   "moTa": "Báo cáo tuần 23/10: Lượt xem 7 ngày 8.418 nhưng 28 ngày = 0 — trang 28 ngày chưa tải xong số, chỉ có chữ 'Chưa đủ dữ liệu' (của biểu đồ con) → script ghi 0",
-   "trangThai": "đã sửa 6.31.2: không coi 'Chưa đủ dữ liệu' là 0; 28 ngày < 7 ngày thì tải lại; vẫn không có số → 'Không xác định được'",
-   "ngay": "2026-10-28"
-  },
-  {
-   "ma": "canh-bao-du-phong",
-   "moTa": "29/10: Hà Xá 30/10 đã có 1 video ĐÃ DUYỆT (đủ mức 1) nhưng vẫn báo 'hàng 63 chưa có video'; 31/10 báo 'quá nhiều 3' vì đếm cả dòng ĐÃ QUAY chưa có video",
-   "trangThai": "đã sửa 6.32.1: chỉ đếm dòng sẵn sàng đăng; đủ mức thì dòng chưa xong là dự phòng, không báo",
-   "ngay": "2026-10-29"
-  },
-  {
-   "ma": "kẹt-man-sua-toan-trang",
-   "moTa": "30/10 Máy Giao: 06:29 thả cảm xúc Kênh 3 → Facebook chuyển sang màn sửa toàn trang /post/edit/ (trang tải lại, việc bị ngắt) → script tưởng người mở, chờ 10 phút → Bài 1 trễ từ 06:37; 06:47 chuyển tư cách ngay trên màn sửa → hộp 'Rời khỏi trang web?' của trình duyệt chặn tiếp",
-   "trangThai": "đã sửa 6.32.2",
-   "ngay": "2026-10-30"
-  }
- ],
- "danhGiaTuan": [],
- "nhatKyNgay": [
-  {
-   "ngay": "2026-10-12",
-   "tomTat": "Video 1 kẹt nút Đăng (đã có dự phòng 6.15); Video 3 nhận nhầm bài Video 2 → đăng tay; Máy Giao 17:59 lỗi tư cách 'Trầm Hương Thủ Đức Sơn Mộc Hương'"
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.18: tự chụp hiện trường khi lỗi, báo cáo tối 21:30, nhắc sheet ngày mai lúc 16:00, chuẩn bị trước giờ đăng 10 phút, đối chiếu sau đăng 15 phút, nút Cập nhật ngay, 🛟 cho cả 2 máy, thông báo tự ẩn sau 1 phút, thử nguồn cập nhật Google Drive."
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.18.1/6.18.2: thử cập nhật qua Lark (Facebook chặn chạy mã kiểu thường, kiểu blob chạy được; cất mã vào ô sheet được; Lark Drive thiếu quyền). Sửa: lượt thử không còn làm Lark tạm ngừng 60 phút."
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.19: đăng 3 kênh (kênh 2 Trầm Hương Thủ Đức tab em39qJ, kênh 3 SMH Trầm Chuẩn tab 4OtbFA — dòng có Ngày đăng hôm nay + Trạng thái ĐÃ DUYỆT), video kênh 2/3 đăng trước kênh 1 5–15 phút, cùng trang cách ≥30 phút; comment như video kênh 1 (tick CTA Zalo theo kênh); chỉ thả cảm xúc; ghi ĐÃ ĐĂNG (G) + link (J); nhắc 16:00 cho kênh 2/3; tự lấy mã đọc trang kênh 2/3 từ /me/accounts; chưa có mã thì xác nhận bằng nhìn trang, Máy Cao không đăng thay kênh 2/3. Sửa thêm: nhận bài khi Facebook dính chữ ở chỗ xuống dòng (manifest)."
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.19.1: kênh 2/3 khi chưa có mã khoá đọc trang → trước khi đăng tự mở trang nhìn xem video đã lên chưa (tránh trùng, kể cả đăng tay); Máy Cao đăng thay kênh 2/3 được; bỏ cảnh báo bắt dán mã khoá."
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.19.2 (tổng kiểm tra 3 kênh): gửi bù tự chuyển tư cách trang; đếm gửi bù đúng; không kiểm comment lặp; dò trùng chắc hơn (API lỗi → nhìn trang, sheet ĐÃ ĐĂNG, bỏ bài đã thuộc ô khác); mã khoá luôn theo kênh 1 + tự lấy lại khi 190; nút Kiểm tra bài/kiểm comment gồm cả kênh 2/3; giữ chỗ không nhường nhầm. 77/77 kịch bản giả lập đạt."
-  },
-  {
-   "ngay": "2026-10-14",
-   "tomTat": "Ra bản 6.19.3: lịch theo dòng sheet (Video/Manifest 4+ tự lên lịch, tới 22:30), ghim dòng cho mọi video/manifest/kênh 2-3, giờ đăng 2 máy giống nhau + Máy Giao liếc ô giữ chỗ, Soạn/Đăng ngay giữ yêu cầu qua tải lại, ghi ĐÃ ĐĂNG đúng dòng + ghi bù, chống trùng video xử lý lâu và ảnh comment, kho thẻ video riêng từng kênh. 85/85 kịch bản giả lập đạt."
-  },
-  {
-   "ngay": "2026-10-15",
-   "tomTat": "Ra bản 6.20 = 6.19.3 + báo cáo chỉ số tuần fb kênh 1 (Máy Cao, thứ 6 7:00–9:30, nhường việc chính, 2 nhóm Lark riêng, tab Chỉ số tuần với Soạn thử / Gửi thử / Gửi ngay). 90/90 kịch bản giả lập đạt."
-  },
-  {
-   "ngay": "2026-10-22",
-   "tomTat": "Ra bản 6.28.1: Soạn thử chỉ số tuần hiện khung giống hệt tin Lark + ghi chú thêm, Gửi thử/Gửi ngay trong 30 phút dùng lại bản soạn; video nổi bật đủ 4 mục (lượt xem, follow, nhắn tin ước tính từ comment hỏi mua, tương tác), mục thiếu ghi 'chưa đọc được' + báo nhóm lỗi; dự phòng Thư viện nội dung khi mã không trả lượt xem (cả lượt xem 24h); sửa lỗi 'ten'; @version tự theo PHIEN_BAN; quy trình tối luôn lấy du-an mới nhất từ GitHub."
-  },
-  {
-   "ngay": "2026-10-22",
-   "tomTat": "Ra bản 6.28.2: báo cáo tuần chỉ video chính (bỏ manifest, bỏ mục comment hỏi mua), giao diện 3 ô số + huy chương, khớp Thư viện nội dung theo mã bài; lịch bài thêm chung 2 máy qua ô Z8 (1 máy tắt vẫn tự xếp), đổi bản tự xếp lại, kiểm đủ 20 phút trước khi bấm Đăng."
-  },
-  {
-   "ngay": "2026-10-22",
-   "tomTat": "Ra bản 6.28.3: lịch kênh 1 rải đều 06:30–20:00 (nhiều bài tới 21:00, sát giờ cách 15 phút), lịch chung 2 máy cho toàn bộ bài kênh 1; panel chia 3 khung Sáng/Chiều/Tối có viền + đếm bài + thanh tiến độ, nút Mở bài rộng hơn."
-  },
-  {
-   "ngay": "2026-10-22",
-   "tomTat": "Ra bản 6.28.4: dự phòng đọc số từng video qua trang Thông tin chi tiết (cả lượt xem 24h), lỗi 1 dòng ngắn, ▲100% → 'mới', tên video trống lấy từ sheet. Mã đọc trang đã thêm quyền read_insights."
-  },
-  {
-   "ngay": "2026-10-23",
-   "tomTat": "Ra bản 6.28.5: giảm lượt gọi Lark của script khoảng 1/3 (bỏ đọc ô khoá khi Máy Giao đăng đúng giờ, trần mềm/ngày, báo cáo lỗi 8 tiếng/lần, Máy Cao ghi cột G 1 lần cuối ngày). Hạn mức tổ chức còn ~1.199 lượt cho 23–31/10."
-  },
-  {
-   "ngay": "2026-10-24",
-   "tomTat": "Ra bản 6.28.6 sửa gấp nút tài khoản Facebook đổi nhãn (tìm theo nhiều cách). Máy Cao sáng nay tab bị ẩn tới ~09:00."
-  },
-  {
-   "ngay": "2026-10-24",
-   "tomTat": "Ra bản 6.28.7: tự bấm 'Dùng Trang' trên hộp Trang mới; gỡ kẹt bài 'Đang làm' quá 8 phút."
-  },
-  {
-   "ngay": "2026-10-24",
-   "tomTat": "Ra bản 6.28.8: nhớ khoá giữ chỗ 25 phút, trần cứng lượt Lark mỗi ngày (Cao 60, Giao 100)."
-  },
-  {
-   "ngay": "2026-10-24",
-   "tomTat": "Ra bản 6.28.9: chống 2 máy gửi trùng báo cáo ngày, ghi Hà Xá không bị trần chặn, dừng lặp ghi báo cáo lỗi, nhật ký khi việc dở phải chờ."
-  },
-  {
-   "ngay": "2026-10-26",
-   "tomTat": "Ra bản 6.29: tải file qua Lark web khi hết lượt API, tải sẵn 2 ngày tới cho cả 2 máy, báo nhóm khi lượt Lark cao. Đọc sheet mới khi hết lượt vẫn chưa làm được (Lark web mã hoá dữ liệu sheet)."
-  },
-  {
-   "ngay": "2026-10-26",
-   "tomTat": "Ra bản 6.30: đọc sheet qua tab Lark web khi hết lượt API (giải mã dữ liệu ô Lark), script tự đăng tiếp không cần đăng tay."
-  },
-  {
-   "ngay": "2026-10-27",
-   "tomTat": "Ra bản 6.31: tạo ảnh manifest từ chữ nhập trực tiếp trên bảng (không cần Lark), tải từng ảnh / tải tất cả."
-  },
-  {
-   "ngay": "2026-10-27",
-   "tomTat": "Ra bản 6.31.1: sửa Đọc lại sheet khi hết lượt Lark (đọc qua Lark web trước khi xin mã)."
-  },
-  {
-   "ngay": "2026-10-28",
-   "tomTat": "Ra bản 6.31.2: sửa báo cáo tuần ghi 0 lượt xem 28 ngày."
-  },
-  {
-   "ngay": "2026-10-29",
-   "tomTat": "Ra bản 6.32: mức đặt số bài/ngày (nút ⚙, đồng bộ ô Z9), kênh 1 đăng theo số dòng sheet, ngày mai đỏ / ngày kia vàng, cảnh báo quá nhiều (≥3 lần mức đặt), kênh 2 tạm dừng không báo."
-  },
-  {
-   "ngay": "2026-10-29",
-   "tomTat": "Ra bản 6.32.1: sửa cảnh báo đếm cả dòng dự phòng chưa có video."
-  },
-  {
-   "ngay": "2026-10-30",
-   "tomTat": "Ra bản 6.32.2: sửa kẹt màn sửa toàn trang sau khi thả cảm xúc kênh 3 làm trễ Bài 1."
-  }
- ],
- "capNhat": "2026-10-24"
+  "mucKiem": "ky",
+  "ghiChuMuc": "ky = kiểm kỹ (vào máy soạn thử); vua = sửa trên giả lập; nhanh = chỉ đọc báo cáo. Bắt đầu 'ky' vì các ngày 11–12/10 lỗi dày; 3 ngày liền không lỗi mới → hạ 1 mức.",
+  "loi": [
+    {
+      "ma": "dang-khong-an",
+      "moTa": "Video bấm Đăng không ăn, hộp đăng vẫn mở (12/10 07:49 Máy Giao)",
+      "gap": [
+        "2026-10-12"
+      ],
+      "suaO": "6.15",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "thu-nho-khuat",
+      "moTa": "Nút Chỉnh sửa hình thu nhỏ bị cuộn khuất",
+      "gap": [
+        "2026-10-10"
+      ],
+      "suaO": "6.9",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "sai-ten-hop",
+      "moTa": "Hộp soạn chưa hiện tên trang (dòng 100% chen vào)",
+      "gap": [
+        "2026-10-10"
+      ],
+      "suaO": "6.9",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "the-khong-nhan",
+      "moTa": "Thẻ không được nhận khi gắn",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.11",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "luc-khac",
+      "moTa": "Hộp nhắc Lúc khác / Gọi ngay chặn nút Đăng",
+      "gap": [
+        "2026-10-11",
+        "2026-10-12"
+      ],
+      "suaO": "6.11",
+      "lapLaiSauSua": [
+        "2026-10-12"
+      ]
+    },
+    {
+      "ma": "nen-do-con-anh",
+      "moTa": "Bài 2 sửa nền đỏ báo vẫn còn ảnh — chưa rõ gốc",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.11 (dự phòng API)",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "cmt-trung",
+      "moTa": "Bài 2 bị 2 comment trùng (máy cũ giữ may:CAO)",
+      "gap": [
+        "2026-10-11"
+      ],
+      "suaO": "6.13",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "video-nhan-nham",
+      "moTa": "Video 3 bị nhận nhầm là bài của Video 2 (cùng thân bài, chỉ khác câu mở đầu; 1 thước phim hiện 2 lần trong danh sách Facebook) → Video 3 không được đăng, phải đăng tay 18:22",
+      "gap": [
+        "2026-10-12"
+      ],
+      "suaO": "6.17",
+      "lapLaiSauSua": []
+    },
+    {
+      "ma": "manifest-dinh-chu",
+      "moTa": "Facebook dính chữ ở chỗ xuống dòng → so câu mở đầu (6.17) không khớp → manifest bị coi là chưa lên sau 20 phút",
+      "trangThai": "đã sửa 6.19",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "bu-sai-tu-cach",
+      "moTa": "Gửi bù comment kênh 2/3: ô bình luận đứng tên nick cá nhân / trang kênh khác → không chuyển tư cách, tải lại 4 lần rồi bỏ; vẫn đếm 'đã gửi bù' → báo nhầm 'gửi bù 2 lần vẫn thiếu' (Máy Cao 14/10 19:38)",
+      "trangThai": "đã sửa 6.19.2",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "kiem-cmt-lap",
+      "moTa": "Chờ nhân sự rảnh để gửi bù → hỏi Facebook lại mỗi vài giây (9 lần/80 giây); lượt 19:00 vẫn kiểm bài đã báo cần comment tay",
+      "trangThai": "đã sửa 6.19.2",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "ma-kenh1-bi-thay",
+      "moTa": "Bấm Đổi mã khoá lúc script đang làm kênh 2 → mã kênh 1 bị thay bằng mã trang kênh 2 → Facebook báo 190 (Máy Giao 14/10 19:22)",
+      "trangThai": "đã sửa 6.19.2",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "cai-giua-ngay-k",
+      "moTa": "Cài 6.19 giữa ngày: video kênh 2/3 (giờ 06:2x) đã đăng tay từ chiều → script định đăng lại ngay (Máy Giao 19:22, may có Tạm dừng). Thêm: hỏi Facebook lỗi → nhìn trang; trễ >1 giờ → nhìn trang; sheet ĐÃ ĐĂNG → không đăng",
+      "trangThai": "đã sửa 6.19.2",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "lich-co-dinh-3-video",
+      "moTa": "Sheet có hơn 3 video/manifest trong ngày → dòng thứ 4 trở đi không lên lịch; đăng tay thì bị xếp 'ngoài lịch' (14/10 tối 4 video)",
+      "trangThai": "đã sửa 6.19.3",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "soan-k-mat-yeu-cau",
+      "moTa": "Bấm Soạn bài kênh 2 ngày mai: đổi trang/tư cách làm trang tải lại → mất yêu cầu soạn, popup báo Xong sai",
+      "trangThai": "đã sửa 6.19.3",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "nhan-theo-thu-tu-sai",
+      "moTa": "Video đăng tay của dòng sheet chưa đọc bị gán vào ô Video 3 chưa tới giờ → Video 3 không đăng, video kia bị đăng trùng (giả lập themgiua)",
+      "trangThai": "đã sửa 6.19.3",
+      "ngay": "2026-10-14"
+    },
+    {
+      "ma": "don-du-lieu-xoa-bimat",
+      "moTa": "Dọn dữ liệu hằng ngày không có 'bimat6' trong danh sách giữ → có thể xoá mã Lark đã lưu trong máy",
+      "trangThai": "đã sửa 6.20",
+      "ngay": "2026-10-15"
+    },
+    {
+      "ma": "chiso-ten-undefined",
+      "moTa": "Chỉ số tuần: bị ngắt sau bước 6 (buoc = 7) → lượt sau báo lỗi \"Cannot read properties of undefined (reading 'ten')\"",
+      "trangThai": "đã sửa 6.28.1",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "version-ket-622",
+      "moTa": "@version trong đầu script kẹt 6.22 → Tampermonkey không tự cập nhật bản mới",
+      "trangThai": "đã sửa 6.28.1 (build6.py tự chép PHIEN_BAN)",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "lich-2-may-lech",
+      "moTa": "22/10: lịch bài thêm Máy Giao (tạo từ bản cũ) khác Máy Cao → Video 4 đăng trước Video 1, Video 5 định đăng 12:32 cùng lúc Máy Cao đăng Video 2",
+      "trangThai": "đã sửa 6.28.2 (lịch chung ô Z8 + xếp lại khi đổi bản + kiểm 20 phút trước khi bấm Đăng)",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "thu-vien-khop-nham",
+      "moTa": "Báo cáo tuần: lượt xem từng video toàn 10 vì Thư viện nội dung khớp theo chữ, nhiều video cùng câu mở đầu",
+      "trangThai": "đã sửa 6.28.2 (khớp theo mã bài)",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "lich-tre-2230",
+      "moTa": "22/10: lịch dự kiến kéo tới 22:31 (Manifest 4/5, Bài 6 bị đẩy sau Manifest 3; bài thêm được tới 22:30; trễ trưa dồn 30 phút/bài)",
+      "trangThai": "đã sửa 6.28.3 (rải đều 06:30–20:00, sát giờ cách 15 phút)",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "bao-cao-tuan-thieu-quyen",
+      "moTa": "Báo cáo tuần: lượt xem/follow từng video 'chưa đọc được' — mã đọc trang thiếu read_insights; Thư viện nội dung cuộn hụt",
+      "trangThai": "đã xử lý 22/10 (thêm quyền + mã mới) + 6.28.4 dự phòng trang Thông tin chi tiết từng video",
+      "ngay": "2026-10-22"
+    },
+    {
+      "ma": "nut-tai-khoan-doi-nhan",
+      "moTa": "24/10: Facebook đổi nhãn nút tài khoản thành 'Account, your profile' → không chuyển được trang, cả 2 máy không đăng được bài sáng 24/10",
+      "trangThai": "đã sửa 6.28.6",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "hop-trang-moi",
+      "moTa": "24/10: hộp 'Đã cập nhật Trang của bạn!' / 'Chào mừng bạn đến với Trang mới!' che trang khi chuyển trang",
+      "trangThai": "đã sửa 6.28.7 (tự bấm Dùng Trang)",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "ket-dang-lam",
+      "moTa": "24/10: Bài 1 kênh 1, Video 1 kênh 2 kẹt 'Đang làm…' sau khi trang tải lại giữa lúc đăng",
+      "trangThai": "đã sửa 6.28.7 (gỡ kẹt sau 8 phút)",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "z1-ton-luot",
+      "moTa": "24/10: Máy Cao 349 lượt Lark/ngày, 319 lượt ở ô giữ chỗ Z1 (mỗi lần thử lại đều giữ chỗ từ đầu)",
+      "trangThai": "đã sửa 6.28.8 (nhớ khoá 25 phút + trần cứng Cao 60 / Giao 100)",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "bc-ngay-trung",
+      "moTa": "24/10: nhóm nhận 2 thẻ báo cáo ngày (Máy Giao 20/20, Máy Cao 19/19 lúc 22:31) — Máy Cao chạm trần cứng nên không đọc được ô Z2 rồi vẫn gửi",
+      "trangThai": "đã sửa 6.28.9 (Z2 là việc chính; nhánh đủ bài cũng xem Z2, Máy Cao chờ 5 phút)",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "hx-ghi-tran",
+      "moTa": "Ghi 'ĐÃ ĐĂNG' tab Hà Xá bị trần cứng chặn (tên tab không khớp luật việc chính)",
+      "trangThai": "đã sửa 6.28.9",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "bc-loi-lap",
+      "moTa": "Chạm trần: 'Ghi báo cáo lỗi lên Lark chưa được' lặp mỗi 15 giây (36 lần)",
+      "trangThai": "đã sửa 6.28.9",
+      "ngay": "2026-10-24"
+    },
+    {
+      "ma": "lark-het-luot-thang",
+      "moTa": "26/10: cả công ty hết 10.000 lượt API Lark/tháng (mã 99991403) → bấm Soạn video/manifest hỏng, Video 3/4, Manifest 4 không đăng được (không tải được file)",
+      "trangThai": "đã sửa 6.29: tải video/ảnh qua Lark web (phiên đăng nhập Chrome, không tốn lượt), tải sẵn 2 ngày tới, cảnh báo lượt cao",
+      "ngay": "2026-10-26"
+    },
+    {
+      "ma": "lark-web-doc-sheet",
+      "moTa": "Hết lượt API thì nội dung sheet mới không đọc được",
+      "trangThai": "đã sửa 6.30: trợ lý chạy trên tab sheet Lark (MKT 10) đọc sheet bằng phiên Lark web, tab Facebook dùng như đọc API",
+      "ngay": "2026-10-26"
+    },
+    {
+      "ma": "giu-lark-web6",
+      "moTa": "6.29: khoá lark_web6 không nằm trong danh sách giữ lại → bị dọn mỗi lần khởi động",
+      "trangThai": "đã sửa 6.30",
+      "ngay": "2026-10-26"
+    },
+    {
+      "ma": "web-doc-ma-het-han",
+      "moTa": "27/10: bấm Đọc ngay khi Lark hết lượt → lỗi 99991403 dù tab Lark web đã đọc (10:26): mã truy cập Lark hết hạn, xin mã mới bị chặn trước khi tới bước đọc qua Lark web",
+      "trangThai": "đã sửa 6.31.1 (goiLark đọc Lark web trước khi xin mã)",
+      "ngay": "2026-10-27"
+    },
+    {
+      "ma": "cs-28ngay-0",
+      "moTa": "Báo cáo tuần 23/10: Lượt xem 7 ngày 8.418 nhưng 28 ngày = 0 — trang 28 ngày chưa tải xong số, chỉ có chữ 'Chưa đủ dữ liệu' (của biểu đồ con) → script ghi 0",
+      "trangThai": "đã sửa 6.31.2: không coi 'Chưa đủ dữ liệu' là 0; 28 ngày < 7 ngày thì tải lại; vẫn không có số → 'Không xác định được'",
+      "ngay": "2026-10-28"
+    },
+    {
+      "ma": "canh-bao-du-phong",
+      "moTa": "29/10: Hà Xá 30/10 đã có 1 video ĐÃ DUYỆT (đủ mức 1) nhưng vẫn báo 'hàng 63 chưa có video'; 31/10 báo 'quá nhiều 3' vì đếm cả dòng ĐÃ QUAY chưa có video",
+      "trangThai": "đã sửa 6.32.1: chỉ đếm dòng sẵn sàng đăng; đủ mức thì dòng chưa xong là dự phòng, không báo",
+      "ngay": "2026-10-29"
+    },
+    {
+      "ma": "kẹt-man-sua-toan-trang",
+      "moTa": "30/10 Máy Giao: 06:29 thả cảm xúc Kênh 3 → Facebook chuyển sang màn sửa toàn trang /post/edit/ (trang tải lại, việc bị ngắt) → script tưởng người mở, chờ 10 phút → Bài 1 trễ từ 06:37; 06:47 chuyển tư cách ngay trên màn sửa → hộp 'Rời khỏi trang web?' của trình duyệt chặn tiếp",
+      "trangThai": "đã sửa 6.32.2",
+      "ngay": "2026-10-30"
+    },
+    {
+      "ma": "hx-chen-cot-dao-cu",
+      "moTa": "03/11: tab Kênh Trầm Hương Hà Xá chèn cột E 'Đạo cụ' → các cột dịch phải (Tiêu đề F, Trạng thái I, Ngày đăng J, VIDEO K, Link L); script cũ báo sai cột và ngừng đọc Hà Xá",
+      "trangThai": "đã sửa 6.32.3",
+      "ngay": "2026-11-03"
+    }
+  ],
+  "danhGiaTuan": [],
+  "nhatKyNgay": [
+    {
+      "ngay": "2026-10-12",
+      "tomTat": "Video 1 kẹt nút Đăng (đã có dự phòng 6.15); Video 3 nhận nhầm bài Video 2 → đăng tay; Máy Giao 17:59 lỗi tư cách 'Trầm Hương Thủ Đức Sơn Mộc Hương'"
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.18: tự chụp hiện trường khi lỗi, báo cáo tối 21:30, nhắc sheet ngày mai lúc 16:00, chuẩn bị trước giờ đăng 10 phút, đối chiếu sau đăng 15 phút, nút Cập nhật ngay, 🛟 cho cả 2 máy, thông báo tự ẩn sau 1 phút, thử nguồn cập nhật Google Drive."
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.18.1/6.18.2: thử cập nhật qua Lark (Facebook chặn chạy mã kiểu thường, kiểu blob chạy được; cất mã vào ô sheet được; Lark Drive thiếu quyền). Sửa: lượt thử không còn làm Lark tạm ngừng 60 phút."
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.19: đăng 3 kênh (kênh 2 Trầm Hương Thủ Đức tab em39qJ, kênh 3 SMH Trầm Chuẩn tab 4OtbFA — dòng có Ngày đăng hôm nay + Trạng thái ĐÃ DUYỆT), video kênh 2/3 đăng trước kênh 1 5–15 phút, cùng trang cách ≥30 phút; comment như video kênh 1 (tick CTA Zalo theo kênh); chỉ thả cảm xúc; ghi ĐÃ ĐĂNG (G) + link (J); nhắc 16:00 cho kênh 2/3; tự lấy mã đọc trang kênh 2/3 từ /me/accounts; chưa có mã thì xác nhận bằng nhìn trang, Máy Cao không đăng thay kênh 2/3. Sửa thêm: nhận bài khi Facebook dính chữ ở chỗ xuống dòng (manifest)."
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.19.1: kênh 2/3 khi chưa có mã khoá đọc trang → trước khi đăng tự mở trang nhìn xem video đã lên chưa (tránh trùng, kể cả đăng tay); Máy Cao đăng thay kênh 2/3 được; bỏ cảnh báo bắt dán mã khoá."
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.19.2 (tổng kiểm tra 3 kênh): gửi bù tự chuyển tư cách trang; đếm gửi bù đúng; không kiểm comment lặp; dò trùng chắc hơn (API lỗi → nhìn trang, sheet ĐÃ ĐĂNG, bỏ bài đã thuộc ô khác); mã khoá luôn theo kênh 1 + tự lấy lại khi 190; nút Kiểm tra bài/kiểm comment gồm cả kênh 2/3; giữ chỗ không nhường nhầm. 77/77 kịch bản giả lập đạt."
+    },
+    {
+      "ngay": "2026-10-14",
+      "tomTat": "Ra bản 6.19.3: lịch theo dòng sheet (Video/Manifest 4+ tự lên lịch, tới 22:30), ghim dòng cho mọi video/manifest/kênh 2-3, giờ đăng 2 máy giống nhau + Máy Giao liếc ô giữ chỗ, Soạn/Đăng ngay giữ yêu cầu qua tải lại, ghi ĐÃ ĐĂNG đúng dòng + ghi bù, chống trùng video xử lý lâu và ảnh comment, kho thẻ video riêng từng kênh. 85/85 kịch bản giả lập đạt."
+    },
+    {
+      "ngay": "2026-10-15",
+      "tomTat": "Ra bản 6.20 = 6.19.3 + báo cáo chỉ số tuần fb kênh 1 (Máy Cao, thứ 6 7:00–9:30, nhường việc chính, 2 nhóm Lark riêng, tab Chỉ số tuần với Soạn thử / Gửi thử / Gửi ngay). 90/90 kịch bản giả lập đạt."
+    },
+    {
+      "ngay": "2026-10-22",
+      "tomTat": "Ra bản 6.28.1: Soạn thử chỉ số tuần hiện khung giống hệt tin Lark + ghi chú thêm, Gửi thử/Gửi ngay trong 30 phút dùng lại bản soạn; video nổi bật đủ 4 mục (lượt xem, follow, nhắn tin ước tính từ comment hỏi mua, tương tác), mục thiếu ghi 'chưa đọc được' + báo nhóm lỗi; dự phòng Thư viện nội dung khi mã không trả lượt xem (cả lượt xem 24h); sửa lỗi 'ten'; @version tự theo PHIEN_BAN; quy trình tối luôn lấy du-an mới nhất từ GitHub."
+    },
+    {
+      "ngay": "2026-10-22",
+      "tomTat": "Ra bản 6.28.2: báo cáo tuần chỉ video chính (bỏ manifest, bỏ mục comment hỏi mua), giao diện 3 ô số + huy chương, khớp Thư viện nội dung theo mã bài; lịch bài thêm chung 2 máy qua ô Z8 (1 máy tắt vẫn tự xếp), đổi bản tự xếp lại, kiểm đủ 20 phút trước khi bấm Đăng."
+    },
+    {
+      "ngay": "2026-10-22",
+      "tomTat": "Ra bản 6.28.3: lịch kênh 1 rải đều 06:30–20:00 (nhiều bài tới 21:00, sát giờ cách 15 phút), lịch chung 2 máy cho toàn bộ bài kênh 1; panel chia 3 khung Sáng/Chiều/Tối có viền + đếm bài + thanh tiến độ, nút Mở bài rộng hơn."
+    },
+    {
+      "ngay": "2026-10-22",
+      "tomTat": "Ra bản 6.28.4: dự phòng đọc số từng video qua trang Thông tin chi tiết (cả lượt xem 24h), lỗi 1 dòng ngắn, ▲100% → 'mới', tên video trống lấy từ sheet. Mã đọc trang đã thêm quyền read_insights."
+    },
+    {
+      "ngay": "2026-10-23",
+      "tomTat": "Ra bản 6.28.5: giảm lượt gọi Lark của script khoảng 1/3 (bỏ đọc ô khoá khi Máy Giao đăng đúng giờ, trần mềm/ngày, báo cáo lỗi 8 tiếng/lần, Máy Cao ghi cột G 1 lần cuối ngày). Hạn mức tổ chức còn ~1.199 lượt cho 23–31/10."
+    },
+    {
+      "ngay": "2026-10-24",
+      "tomTat": "Ra bản 6.28.6 sửa gấp nút tài khoản Facebook đổi nhãn (tìm theo nhiều cách). Máy Cao sáng nay tab bị ẩn tới ~09:00."
+    },
+    {
+      "ngay": "2026-10-24",
+      "tomTat": "Ra bản 6.28.7: tự bấm 'Dùng Trang' trên hộp Trang mới; gỡ kẹt bài 'Đang làm' quá 8 phút."
+    },
+    {
+      "ngay": "2026-10-24",
+      "tomTat": "Ra bản 6.28.8: nhớ khoá giữ chỗ 25 phút, trần cứng lượt Lark mỗi ngày (Cao 60, Giao 100)."
+    },
+    {
+      "ngay": "2026-10-24",
+      "tomTat": "Ra bản 6.28.9: chống 2 máy gửi trùng báo cáo ngày, ghi Hà Xá không bị trần chặn, dừng lặp ghi báo cáo lỗi, nhật ký khi việc dở phải chờ."
+    },
+    {
+      "ngay": "2026-10-26",
+      "tomTat": "Ra bản 6.29: tải file qua Lark web khi hết lượt API, tải sẵn 2 ngày tới cho cả 2 máy, báo nhóm khi lượt Lark cao. Đọc sheet mới khi hết lượt vẫn chưa làm được (Lark web mã hoá dữ liệu sheet)."
+    },
+    {
+      "ngay": "2026-10-26",
+      "tomTat": "Ra bản 6.30: đọc sheet qua tab Lark web khi hết lượt API (giải mã dữ liệu ô Lark), script tự đăng tiếp không cần đăng tay."
+    },
+    {
+      "ngay": "2026-10-27",
+      "tomTat": "Ra bản 6.31: tạo ảnh manifest từ chữ nhập trực tiếp trên bảng (không cần Lark), tải từng ảnh / tải tất cả."
+    },
+    {
+      "ngay": "2026-10-27",
+      "tomTat": "Ra bản 6.31.1: sửa Đọc lại sheet khi hết lượt Lark (đọc qua Lark web trước khi xin mã)."
+    },
+    {
+      "ngay": "2026-10-28",
+      "tomTat": "Ra bản 6.31.2: sửa báo cáo tuần ghi 0 lượt xem 28 ngày."
+    },
+    {
+      "ngay": "2026-10-29",
+      "tomTat": "Ra bản 6.32: mức đặt số bài/ngày (nút ⚙, đồng bộ ô Z9), kênh 1 đăng theo số dòng sheet, ngày mai đỏ / ngày kia vàng, cảnh báo quá nhiều (≥3 lần mức đặt), kênh 2 tạm dừng không báo."
+    },
+    {
+      "ngay": "2026-10-29",
+      "tomTat": "Ra bản 6.32.1: sửa cảnh báo đếm cả dòng dự phòng chưa có video."
+    },
+    {
+      "ngay": "2026-10-30",
+      "tomTat": "Ra bản 6.32.2: sửa kẹt màn sửa toàn trang sau khi thả cảm xúc kênh 3 làm trễ Bài 1."
+    },
+    {
+      "ngay": "2026-11-03",
+      "tomTat": "Ra bản 6.32.3: Hà Xá theo bố cục mới có cột Đạo cụ; kênh phụ tự dò cột theo tiêu đề hàng 1."
+    }
+  ],
+  "capNhat": "2026-10-24"
 }

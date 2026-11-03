@@ -435,3 +435,11 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Nhật ký 30/10: 06:29:33 "Bắt đầu gắn thẻ + cảm xúc cho Kênh 3 · Video 1" → bấm Chỉnh sửa trên trang SMH Trầm Chuẩn → Facebook chuyển sang /post/edit/ (tải lại trang, việc gắn thẻ bị ngắt, `suaLan` chưa kịp tăng). 06:37 `nguoiDangThaoTac` coi màn sửa là "do người mở" → chờ 10 phút. 06:47 "bỏ quên" → bắt đầu Bài 1, chuyển tư cách ngay trên /post/edit/ → hộp "Rời khỏi trang web?" của trình duyệt (không qua `roiTrang`) → Cao bấm tay; trang lại về /post/edit/ → chờ tiếp.
 - Sửa: (1) `nguoiDangThaoTac`: /post/edit/ trong 5 phút sau `quet_dang_sua` (script vừa bấm Chỉnh sửa) → không phải người. (2) Nhịp chính: đang ở /post/edit/ mà không có việc dở / sửa nền dở / người thao tác → `roiTrang(trang kênh)` (chặn hộp rời trang) trước mọi việc khác. (3) Gắn thẻ: tăng `suaLan` TRƯỚC khi mở màn sửa (`quet_kenh6`), không mở lại liên tục. (4) Kênh phụ (chỉ thả cảm xúc) mà bấm Sửa ra màn toàn trang → `sua_toantrang6[kênh] = hôm nay` → hôm nay bỏ qua cảm xúc kênh đó.
 - Sim suareload (trang kênh 3 bấm Chỉnh sửa → tải lại /post/edit/): script rời ngay, đánh dấu kênh, Bài 1 đăng bình thường; không có "do người mở".
+
+
+## 6.32.3 (03/11/2026) — Hà Xá chèn cột "Đạo cụ"
+- Tab ZSDDld mới: A STT, B Hook, C Kịch bản chưa duyệt, D Sau duyệt, E Đạo cụ, F Tiêu đề FB/Tiktok, G Note Dương, H Ngày quay, I Trạng thái, J Ngày đăng, K VIDEO, L LINK VIDEO.
+- `KENH[4].cot` mặc định = { cap: 5, tt: 8, ngay: 9, video: 10, link: 11 }.
+- Mới: `doCotKenh(header)` dò cột theo chữ tiêu đề (Ngày đăng / Trạng thái / VIDEO không chứa "link" / Tiêu đề hoặc caption / Link, thiếu Link thì lấy VIDEO+1). Khác cấu hình → ghi nhật ký, dùng vị trí mới, lưu `cot_kenh6` (GIU), đầu script nạp lại. Vẫn giữ kiểm tra tiêu đề cũ — sai thì không đọc kênh đó.
+- Đọc kênh phụ rộng tới cột T; ghi gom ĐÃ ĐĂNG kiểm lại tiêu đề trước khi ghi; đọc 1 dòng A:T.
+- Sim: bảng Hà Xá mới (12 cột) + kịch bản `hxcu` (bảng cũ, script tự dò về cột cũ). Đạt: hx, hxcu, hxduphong, bangthieu, kenh.
