@@ -443,3 +443,14 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Mới: `doCotKenh(header)` dò cột theo chữ tiêu đề (Ngày đăng / Trạng thái / VIDEO không chứa "link" / Tiêu đề hoặc caption / Link, thiếu Link thì lấy VIDEO+1). Khác cấu hình → ghi nhật ký, dùng vị trí mới, lưu `cot_kenh6` (GIU), đầu script nạp lại. Vẫn giữ kiểm tra tiêu đề cũ — sai thì không đọc kênh đó.
 - Đọc kênh phụ rộng tới cột T; ghi gom ĐÃ ĐĂNG kiểm lại tiêu đề trước khi ghi; đọc 1 dòng A:T.
 - Sim: bảng Hà Xá mới (12 cột) + kịch bản `hxcu` (bảng cũ, script tự dò về cột cũ). Đạt: hx, hxcu, hxduphong, bangthieu, kenh.
+
+
+## 6.32.4 (06/11/2026) — tổng kiểm tra 2 máy
+- Máy Giao: `lark_gate` quota lúc 01/11 00:00:04, `thang` 2026-11, `den` 01/12 → khoá cả tháng 11. Nguyên nhân: Lark mở lượt tháng mới trễ hơn 0 giờ VN.
+- Sửa: gate quota có `thuLai` (3 ngày đầu tháng ~30 phút, sau đó ~2 giờ, ngẫu nhiên); `chanLark()` trả null khi tới `thuLai` → gọi thử 1 lượt; vẫn 99991403 → hẹn lại, ghi "Gọi thử Lark: vẫn hết lượt tháng → thử lại lúc HH:MM". Gate cũ không có `thuLai` → thử ngay khi cập nhật. Lấy tenant token thành công KHÔNG xoá gate. Bảng: "tự gọi thử lại lúc HH:MM".
+- Hàng đợi `ghigom6` (ĐÃ ĐĂNG Hà Xá 01–06/11 của Máy Giao) tự ghi bù khi Lark mở lại (có mục ngày cũ → ghi ngay).
+- Gắn thẻ (vu6324.py): so khớp không phân biệt hoa thường; chưa thấy kết quả sau 9 giây → gõ lại tên, chờ thêm 12 giây.
+- vongSuaVideo: Máy Cao chỉ kiểm thẻ bài của chính nó + bài đăng tay; bài `may: khac` chỉ Máy Giao kiểm.
+- videoCuaNgay: dòng ĐÃ ĐĂNG + không file + cột B không phải link Facebook → bỏ qua, `cuNham` → nhắc vàng.
+- p1 bắt lỗi: bỏ lỗi đến từ tệp của Facebook (fbcdn/facebook.com).
+- Sim mới: quotamo (gate cũ, Lark đã mở → phục hồi), quotavan (vẫn hết lượt → hẹn lại, đọc qua web). Đạt thêm: quotadang, quotaweb, webdoc, webdoc2, hx, thieu, ngay, haimay, caothay.

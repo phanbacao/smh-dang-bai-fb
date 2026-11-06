@@ -256,6 +256,30 @@
       "moTa": "03/11: tab Kênh Trầm Hương Hà Xá chèn cột E 'Đạo cụ' → các cột dịch phải (Tiêu đề F, Trạng thái I, Ngày đăng J, VIDEO K, Link L); script cũ báo sai cột và ngừng đọc Hà Xá",
       "trangThai": "đã sửa 6.32.3",
       "ngay": "2026-11-03"
+    },
+    {
+      "ma": "khoa-lark-ca-thang",
+      "moTa": "01/11 00:00:04 Máy Giao gọi Lark đúng lúc sang tháng, Lark chưa mở lượt mới → 99991403 → script khoá Lark tới 01/12 (Máy Cao vẫn gọi được). Hậu quả: Máy Giao không ghi ĐÃ ĐĂNG Hà Xá, không ghi báo cáo Z5, bảng báo 'hết hạn mức'",
+      "trangThai": "đã sửa 6.32.4",
+      "ngay": "2026-11-06"
+    },
+    {
+      "ma": "gan-the-lan1-hut",
+      "moTa": "Gắn thẻ Trầm Hương Hà Xá: lần 1 ngày nào cũng không thấy Trang trong kết quả tìm (kết quả về chậm), lần 2 mới được",
+      "trangThai": "đã sửa 6.32.4",
+      "ngay": "2026-11-06"
+    },
+    {
+      "ma": "cao-kiem-the-bai-giao",
+      "moTa": "Máy Cao tự kiểm thẻ/cảm xúc cả bài Máy Giao đăng (Manifest 05/11: cuộn 10 lần không thấy, lặp 2–4 lần)",
+      "trangThai": "đã sửa 6.32.4",
+      "ngay": "2026-11-06"
+    },
+    {
+      "ma": "dong-cu-nham-ngay",
+      "moTa": "Tab Kênh 1 hàng 42 (đã ĐÃ ĐĂNG từ tháng 6) bị ghi Ngày đăng 06/11 → script lấy làm Video 1 và báo thiếu file",
+      "trangThai": "6.32.4 bỏ qua + nhắc; cần sửa ngày trên sheet",
+      "ngay": "2026-11-06"
     }
   ],
   "danhGiaTuan": [],
@@ -363,6 +387,10 @@
     {
       "ngay": "2026-11-03",
       "tomTat": "Ra bản 6.32.3: Hà Xá theo bố cục mới có cột Đạo cụ; kênh phụ tự dò cột theo tiêu đề hàng 1."
+    },
+    {
+      "ngay": "2026-11-06",
+      "tomTat": "Tổng kiểm tra 2 máy → bản 6.32.4: Lark hết lượt không khoá cả tháng (tự gọi thử), gắn thẻ gõ lại khi kết quả chậm, Máy Cao không kiểm thẻ bài Máy Giao, bỏ qua dòng cũ ghi nhầm ngày, bỏ lỗi do mã Facebook."
     }
   ],
   "capNhat": "2026-10-24"
