@@ -454,3 +454,15 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - videoCuaNgay: dòng ĐÃ ĐĂNG + không file + cột B không phải link Facebook → bỏ qua, `cuNham` → nhắc vàng.
 - p1 bắt lỗi: bỏ lỗi đến từ tệp của Facebook (fbcdn/facebook.com).
 - Sim mới: quotamo (gate cũ, Lark đã mở → phục hồi), quotavan (vẫn hết lượt → hẹn lại, đọc qua web). Đạt thêm: quotadang, quotaweb, webdoc, webdoc2, hx, thieu, ngay, haimay, caothay.
+
+
+## 6.33 (06/11/2026) — tab Mức đặt, giờ đăng, kênh 1 đăng tay
+- Tab: Hôm nay · Ngày mai · Sắp tới · Hôm qua · Manifest · Comment & Thẻ · **Mức đặt** · **Hệ thống** (2 nút Tình trạng | Nhật ký) · Khanh TH · Chỉ số tuần. Bỏ Lịch sử. ui_tab6 cũ 'nhatky' → 'hethong'.
+- Mức đặt: MUC_MD thêm k1m (manifest kênh 1, mặc định 1, thiếu thì báo). `tatK1(loai)`: k1v/k1b/k1m = 0 → lichNgay bỏ ô loại đó (dongBoLich bỏ cả ô chưa lên), không cảnh báo, bảng thiếu ghi "đăng tay".
+- Giờ đăng: `gio_dang6` / ô Z10 `GIODANG|{k1:[tu,den],k2,k3,k4,luc,may}`; mặc định K1 06:30–20:00, K2/K3 trống (như cũ), Hà Xá 13:30–14:00. `khungKenh(c)` → ganGioKenh rải trong khung (≥10 phút). xepDeuK1 dùng khung K1 (banXep kèm khung). `apGioMoi()` xoá giờ bài chưa đăng hôm nay + mai rồi xếp lại; chạy 1 lần khi lên 6.33 (`gio_ban6`). Ô Z8 lịch kèm `gd: sigGio()`; khác khung → không theo.
+- docDuLieu đọc Z8:Z10; thứ tự dongBoMuc → dongBoGio → dongBoLich.
+- Bài kênh 1 đăng tay (ngoai): thêm bài viết (laVideoApi === false, không trùng chữ sheet hôm nay) với can kiểu b3; video có cờ `video`. Kiểm comment: Máy Giao sau 1 phút, Máy Cao sau 30 phút. vongSuaVideo: video/manifest ngoai → gắn thẻ + cảm xúc (Giao 1 phút, Cao 30 phút), ghi vào s.ngoai[id].
+- phutDoTrang: có loại kênh 1 mức 0 → 3 phút/lần (6:00–22:00).
+- Tab Hôm nay: không có bài tự đăng → không lỗi theSlot.
+- Nhật ký: sửa lọc "Quan trọng".
+- Sim mới: mdui, k1tay, k1taycao; sửa mucdat, hx (tới 14:30). Đạt: mdui, mucdat, k1tay, k1taycao, hx, hxduphong, ngay, bu, haimay, caothay, cmt, tay, kenh, kenhcao, bangthieu, thieu, suamoi, lich2may, xep9, xeptre, kenhtay, gantay.

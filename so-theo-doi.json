@@ -280,6 +280,12 @@
       "moTa": "Tab Kênh 1 hàng 42 (đã ĐÃ ĐĂNG từ tháng 6) bị ghi Ngày đăng 06/11 → script lấy làm Video 1 và báo thiếu file",
       "trangThai": "6.32.4 bỏ qua + nhắc; cần sửa ngày trên sheet",
       "ngay": "2026-11-06"
+    },
+    {
+      "ma": "nhatky-loc-quan-trong",
+      "moTa": "Nút 'Quan trọng' ở Nhật ký thực ra hiện tất cả (lọc 'qt' khác 'quan')",
+      "trangThai": "đã sửa 6.33",
+      "ngay": "2026-11-06"
     }
   ],
   "danhGiaTuan": [],
@@ -391,6 +397,10 @@
     {
       "ngay": "2026-11-06",
       "tomTat": "Tổng kiểm tra 2 máy → bản 6.32.4: Lark hết lượt không khoá cả tháng (tự gọi thử), gắn thẻ gõ lại khi kết quả chậm, Máy Cao không kiểm thẻ bài Máy Giao, bỏ qua dòng cũ ghi nhầm ngày, bỏ lỗi do mã Facebook."
+    },
+    {
+      "ngay": "2026-11-06",
+      "tomTat": "Ra bản 6.33: tab Mức đặt (mức + giờ đăng, ô Z9/Z10), Hà Xá 13:30–14:00, kênh 1 mức 0 = đăng tay (không tự đăng/không báo, tự comment + gắn thẻ bài tay), gộp Hệ thống + Nhật ký, bỏ tab Lịch sử."
     }
   ],
   "capNhat": "2026-10-24"
