@@ -497,3 +497,9 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Ghi vào `so-theo-doi.json` mục `followPagePhu` dạng { "ngay": "dd-mm-yyyy", "follow": N } (cùng ngày thì ghi đè).
 - Cuối tin nhắn tối nay thêm 1 dòng: "Page phụ: N người theo dõi (hôm qua M, mục tiêu tuần: ≥100 / ≥300 / ≥600 / ≥1000)". Không đọc được thì ghi "chưa đọc được", không ghi 0.
 - Nếu 3 ngày liền không tăng: nói rõ trong tin nhắn để Claude phiên page phụ chỉnh hướng (không tự đổi nội dung).
+
+## Bản 6.35 — Tự trả lời bình luận page phụ (kênh 5, chỉ Máy Cao)
+- Chu kỳ: 7 phút/lần khi có bài đăng trong 90 phút gần nhất, 35 phút/lần nếu bài trong 48 giờ. Tối đa 6 lần trả lời/lượt, 40 lần/ngày, cách nhau 20–60 giây, 6h–23h.
+- Trả lời: "tham gia", size 6/7/8, bình luận chung (mẫu câu xoay vòng, xưng "anh chị"). Hỏi giá/mua, link, spam: KHÔNG trả lời tự động (ghi nhật ký "cần người trả lời tay"). Biểu tượng cảm xúc: chỉ thả Thích.
+- Mỗi bình luận chỉ trả lời 1 lần (nhớ trong máy: tl_da6). Công tắc: CAI_DAT.TRA_LOI_CMT_GH.
+- Khi kiểm tra ban đêm: đọc nhật ký xem có dòng "Tự trả lời bình luận" và dòng lỗi nào không; nếu thấy "thấy 0 khung bình luận" dù bài có bình luận thật → báo Cao (cấu trúc trang Facebook có thể khác dự kiến).

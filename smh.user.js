@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.34.2
+// @version      6.35
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.34.2';
+  const PHIEN_BAN = '6.35';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -256,6 +256,7 @@
     FB_PAGE_ID: '1196332230224812',
     FB_TOKEN: '',
     CAM_XUC_CHON: ['hạnh phúc', 'hào hứng', 'tuyệt vời', 'tích cực', 'biết ơn', 'cảm kích', 'vui vẻ', 'thư giãn', 'hân hoan'],
+    TRA_LOI_CMT_GH: true,  // (6.35) page phụ: tự trả lời bình luận (Máy Cao)
     SUA_VIDEO_SAU_DANG: true,  // (6.11) video/manifest đăng xong: mở "Chỉnh sửa thước phim" gắn thẻ Trang Sơn Mộc Hương + cảm xúc
     // ---- (6.19) 3 KÊNH (3 fanpage). Kênh 1 giữ nguyên như cũ; kênh 2, 3 chỉ đăng video theo sheet ----
     //  cot: số thứ tự cột (A = 0): ngay = Ngày đăng, video = file video, cap = caption, tt = Trạng thái, link = nơi ghi link bài
@@ -3635,6 +3636,116 @@
   }
   // ---- (6.11) sau khi đăng video / manifest: gắn thẻ Trang "Sơn Mộc Hương" + cảm xúc (màn Chỉnh sửa thước phim) ----
   // chạy khi bài đã lên + comment xong; mỗi bài thử tối đa 4 lần (cách nhau 5–10 phút), có kiểm lại trên trang sau khi Lưu
+  // ---- (6.35) tự trả lời bình luận page phụ ----
+  const TL_NHOM = [
+    { ten: 'thamgia', re: /tham gia|^\s*(tg|đăng ký|dang ky)\b/i, tl: ['Đã ghi nhận lượt tham gia của anh chị ạ 🌿 Chúc anh chị may mắn, kết quả sẽ công bố ngay trên page nhé!', 'Cảm ơn anh chị đã tham gia 🌿 Chúc anh chị may mắn nhé, kết quả sẽ báo trên page ạ!', 'Page đã ghi nhận ạ 🌿 Anh chị nhớ theo dõi page để xem kết quả nhé, chúc anh chị may mắn!'] },
+    { ten: 'size', re: /^\s*(size\s*)?([678])\s*(li|ly|mm)?\s*[.!]*$/i, tl: ['Đã ghi nhận size {s} li của anh chị ạ 🌿', 'Page ghi nhận size {s} li rồi ạ 🌿 Chúc anh chị may mắn!'] },
+    { ten: 'hoi_mua', re: /giá|bao nhiêu|bn\b|mua|ship|đặt hàng|địa chỉ|inbox|\bib\b|sđt|số điện thoại|zalo|ở đâu|showroom|bán/i, tl: null },
+    { ten: 'bo', re: /https?:\/\/|www\.|\.com\b|\.vn\b|kiếm tiền|vay|cá cược|link/i, tl: null },
+    { ten: 'chung', re: /./, tl: ['Cảm ơn anh chị đã ghé page 🌿 Chúc anh chị một ngày nhẹ nhàng, bình an ạ!', 'Cảm ơn anh chị đã chia sẻ 🌿 Mong những điều tốt lành đến với anh chị mỗi ngày ạ!', 'Page cảm ơn anh chị nhiều ạ 🌿 Chúc anh chị thật nhiều bình an và sức khoẻ!', 'Cảm ơn anh chị đã đồng hành cùng page 🌿 Chúc anh chị ngày mới an yên ạ!'] },
+  ];
+  function tlPhanLoai(text) {
+    const t = chuan(text); if (!t) return null;
+    if (!/[\p{L}\p{N}]/u.test(t)) return { ten: 'bieu_tuong', tl: null }; // chỉ có biểu tượng cảm xúc → chỉ thả Thích
+    return TL_NHOM.find((g) => g.re.test(t));
+  }
+  function tlChonCau(g, text) {
+    let c = g.tl[Math.floor(Math.random() * g.tl.length)];
+    const m = chuan(text).match(/([678])/); c = c.replace('{s}', m ? m[1] : '');
+    return c;
+  }
+  function tlDocCmt(art) {
+    const l = chuan(art.getAttribute('aria-label') || '');
+    const m = l.match(/^Bình luận của (.+?)(?: (?:vào|lúc|cách)\b.*)?$/);
+    if (!m) return null; // trả lời / không phải bình luận gốc
+    const ten = chuan(m[1]);
+    if (chuanTen(ten) === chuanTen(CAI_DAT.TEN_TRANG)) return null; // bình luận của chính page
+    let t = chuan(art.innerText); const i = t.indexOf(ten); if (i === 0) t = chuan(t.slice(ten.length));
+    t = chuan(t.replace(/\b(Thích|Trả lời|Chia sẻ|Phản hồi|Đã chỉnh sửa|Tác giả|Người theo dõi hàng đầu)\b/g, ' ').replace(/\b\d+\s*(giây|phút|giờ|ngày|tuần|năm|[smhdw])\b/gi, ' '));
+    return { ten, text: t, khoa: chuanTen(ten) + '|' + chuan(t).slice(0, 60) };
+  }
+  const tlNgay = () => { const o = lay('tl_dem6', null); return o && o.ngay === homNay() ? o : { ngay: homNay(), n: 0 }; };
+  async function tlTraLoiMot(art, ten, cau) {
+    const timA = taoTimArt(art, () => Array.from(document.querySelectorAll('[role="article"]')));
+    try { timA().scrollIntoView({ block: 'center' }); } catch (e) { /* */ }
+    await sleep(600);
+    const nut = nutCuaCmt(timA(), 'Trả lời'); if (!nut) throw new Error('không thấy nút "Trả lời"');
+    kiemDung(); try { ganBam(nut); } catch (e) { nut.click(); }
+    const ed = await cho(() => Array.from(document.querySelectorAll('div[role="textbox"][contenteditable="true"][data-lexical-editor]')).find((e) => dangHien(e) && /^Trả lời/.test(chuan(e.getAttribute('aria-label') || '')) && chuan(e.getAttribute('aria-label')).includes(ten)), 6000, 400);
+    if (!ed) throw new Error('không mở được ô trả lời đúng người ' + ten);
+    if (cheDoThu) return 'thu';
+    kiemDung();
+    const ok = await datChu(ed, cau); if (!ok) throw new Error('gõ chữ vào ô trả lời chưa khớp');
+    kiemDung(); await sleep(500);
+    ed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true }));
+    const gui = await cho(() => !ed.isConnected || !chuan(ed.innerText), 6000, 400);
+    if (!gui) throw new Error('đã gõ nhưng Facebook chưa gửi');
+    return 'ok';
+  }
+  async function vongTraLoiGh() {
+    if (!CAI_DAT.TRA_LOI_CMT_GH || !MAY || !LA_CAO || tamDung() || !laTabChinh() || dangBan || lay('dang_do', null) || lay('cho_tay6', null)) return false;
+    if (document.visibilityState !== 'visible') return false;
+    const x = lay('gh_xong6', {}) || {}; const now = Date.now();
+    const moiNhat = Math.max(0, ...Object.values(x).map((r) => (r && r.luc) || 0));
+    if (!moiNhat || now - moiNhat > 48 * 3600000) return false; // chưa có bài nào trong 48 giờ
+    const chuKy = (now - moiNhat < 90 * 60000 ? 7 : 35) * 60000;
+    const tl = lay('tl_cmt6', {}) || {};
+    if (now - (tl.luc || 0) < chuKy) return false;
+    const dem = tlNgay(); if (dem.n >= 40) return false;
+    const gio = new Date().getHours(); if (gio < 6 || gio >= 23) return false;
+    datKenh(5);
+    if (kenhCuaDuong() !== 5) { // không ở trang page phụ → mở trang (tối đa mỗi chu kỳ 1 lần), lượt sau mới đọc bình luận
+      if (now - (tl.moTrang || 0) < 4 * 60000) { datKenh(1); return false; }
+      luu('tl_cmt6', Object.assign({}, tl, { moTrang: now })); ghi('Tự trả lời bình luận: mở trang page phụ để xem bình luận mới'); roiTrang(CAI_DAT.URL_TRANG); return true;
+    }
+    if (!choNhanSu('traloi_gh', 'trả lời bình luận page phụ')) return false;
+    luu('tl_cmt6', Object.assign({}, tl, { luc: now })); // đặt mốc ngay: có lỗi cũng không thử lại dồn dập
+    const daTL = lay('tl_da6', {}) || {}; const canNguoi = lay('tl_can_nguoi6', []) || [];
+    dangBan = true; giuKhoa();
+    let soTL = 0, soThich = 0, soBo = 0;
+    try {
+      await theoDoi('traloigh', async () => {
+        await sleep(2500);
+        const khungs = cacKhungBai().map((k) => k.khung);
+        const arts = [];
+        for (const kh of khungs) for (const a of kh.querySelectorAll('[role="article"]')) if (!arts.includes(a)) arts.push(a);
+        ghi(`Tự trả lời bình luận page phụ: thấy ${arts.length} khung bình luận trên ${khungs.length} bài`);
+        for (const art of arts) {
+          if (soTL >= 6 || dem.n + soTL >= 40) break;
+          const c = tlDocCmt(art); if (!c || !c.text) continue;
+          if (daTL[c.khoa]) continue;
+          const g = tlPhanLoai(c.text);
+          if (!g || !g.tl) { // câu hỏi mua hàng / spam / biểu tượng → không trả lời tự động
+            daTL[c.khoa] = { luc: Date.now(), loai: g ? g.ten : 'rong' };
+            if (g && g.ten === 'hoi_mua') { canNguoi.push({ luc: Date.now(), ten: c.ten, text: c.text.slice(0, 120) }); ghi(`Bình luận cần người trả lời tay (hỏi mua/giá): "${c.text.slice(0, 80)}" — ${c.ten}`); }
+            if (g && g.ten === 'bieu_tuong') { try { const r = await thichMotCmt(taoTimArt(art, () => Array.from(document.querySelectorAll('[role="article"]')))); if (r.tt === 'ok') soThich++; } catch (e) { if (e instanceof LoiDung) throw e; } }
+            soBo++; continue;
+          }
+          kiemDung();
+          const cau = tlChonCau(g, c.text);
+          ghi(`Trả lời bình luận của ${c.ten} ("${c.text.slice(0, 40)}") [${g.ten}] → "${cau.slice(0, 50)}…"`);
+          try {
+            await tlTraLoiMot(art, c.ten, cau);
+            daTL[c.khoa] = { luc: Date.now(), loai: g.ten }; soTL++;
+            try { const r = await thichMotCmt(taoTimArt(art, () => Array.from(document.querySelectorAll('[role="article"]')))); if (r.tt === 'ok') soThich++; } catch (e) { if (e instanceof LoiDung) throw e; }
+          } catch (e) {
+            if (e instanceof LoiDung) throw e;
+            ghi(`Lỗi trả lời bình luận của ${c.ten}: ${e.message} — thử lại ở lượt sau`);
+            break;
+          }
+          await sleepThat(20000 + Math.random() * 40000);
+        }
+      }, 'Tự trả lời bình luận page phụ');
+    } finally {
+      dangBan = false;
+      for (const k of Object.keys(daTL)) if (Date.now() - (daTL[k].luc || 0) > 30 * 86400000) delete daTL[k];
+      luu('tl_da6', daTL); luu('tl_can_nguoi6', canNguoi.slice(-50));
+      luu('tl_dem6', { ngay: homNay(), n: dem.n + soTL });
+      datKenh(1);
+    }
+    ghi(`Tự trả lời bình luận xong: trả lời ${soTL}, thả Thích ${soThich}, bỏ qua/để người trả lời ${soBo} (hôm nay tổng ${dem.n + soTL}/40)`);
+    return soTL > 0;
+  }
   async function vongSuaVideo() {
     if (!CAI_DAT.SUA_VIDEO_SAU_DANG || !MAY || tamDung() || !laTabChinh() || dangBan || lay('dang_do', null) || lay('cho_tay6', null)) return false;
     const kt = kenhCuaDuong(); // (6.19) chỉ sửa bài của trang ĐANG MỞ (không chuyển trang chỉ để thả cảm xúc)
@@ -5758,6 +5869,7 @@
   //  Thanh "đang làm gì" (dưới thanh trên cùng của popup)
   // =====================================================================
   const HD_TEN = {
+    traloigh: 'Tự trả lời bình luận page phụ',
     chiso: 'Đang xem chỉ số tuần fb kênh 1', dangdo: 'Đang làm tiếp việc dở', dang: 'Đang đăng bài', chotay: 'Chạy thử: chờ bấm Đăng', khanh: 'Đang đọc trang ' + CAI_DAT.KHANH_TEN,
     docsheet: 'Đang đọc Lark sheet', dotrang: 'Đang kiểm tra bài trên trang', kiemcmt: 'Đang kiểm tra comment', taisan: 'Đang tải sẵn đồ đăng',
     baocao: 'Đang gửi báo cáo ngày', suavideo: 'Đang kiểm tra / gắn thẻ + cảm xúc video', danmf: 'Đang dán ảnh manifest vào sheet', yeucau: 'Đang làm việc bạn vừa bấm trên popup', taoanh: 'Đang tạo ảnh manifest', nhac: 'Đang lấy nhạc nền',
@@ -5926,6 +6038,8 @@
       if (!tatDang && (await theoDoi('kiemcmt', () => vongKiemCmt()))) return;
       datKenh(1);
       if (!tatDang && await vongSuaVideo().catch((e) => { ghi('Gắn thẻ + cảm xúc video lỗi: ' + e.message); return false; })) return;
+      datKenh(1);
+      if (!tatDang && await vongTraLoiGh().catch((e) => { ghi('Tự trả lời bình luận lỗi: ' + e.message); datKenh(1); return false; })) return; // (6.35)
       datKenh(1);
       // (6.18) chuẩn bị trước giờ đăng ~10 phút · đối chiếu bài sau khi đăng ~15 phút · 16:00 nhắc sheet ngày mai
       if (!tatDang && await theoDoi('chuanbi', () => chuanBiTruoc()).catch((e) => { ghi('Chuẩn bị trước giờ đăng lỗi: ' + e.message); return false; })) return;
