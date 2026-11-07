@@ -8,3 +8,4 @@
 - Thêm vào lich.json (không xoá bài cũ < 30 ngày), kiểm JSON + đủ tệp, commit + push main, kiểm lại raw link.
 - Không sửa smh.user.js, du-an.tar.gz, CLAUDE_KIEM_TRA.md.
 - Báo cáo 4–6 dòng: tuần nào, chủ đề, link https://github.com/phanbacao/smh-dang-bai-fb/tree/main/page-phu, lỗi nếu có; nhắc Cao gửi số người theo dõi để chỉnh hướng + cân nhắc quảng cáo (dưới 1 triệu).
+- (07/11) Lời kêu tương tác: dùng "gửi cho người thân/bạn bè qua tin nhắn" và câu hỏi thật (size, tay nào, kể trải nghiệm). KHÔNG dùng "bình luận đón nhận / bình luận số / gắn tên bạn" (Meta coi là câu tương tác). Đọc page-phu/CHIEN_LUOC.md trước khi soạn tuần mới và theo mục "Điều đã học" mới nhất.
