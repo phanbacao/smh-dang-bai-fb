@@ -491,3 +491,9 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Nguyên nhân: bài mở đầu "Trầm Hương Mỗi Ngày – mỗi ngày một chút trầm." có đoạn đầu ngắn; Facebook cắt "… Xem thêm" ngay sau đoạn đầu nên khoá tìm 60 ký tự không khớp → script báo "không rõ", nhân sự đăng tay thêm → trùng bài. Script KHÔNG tự đăng lại (đúng thiết kế).
 - Sửa: timBai dùng đoạn (dòng) đầu khi nó ngắn hơn 60 ký tự (≥ 18). Mã khoá K5 của page phụ vẫn chưa có (⚪) nên kiểm bằng giao diện.
 - Khi kiểm đêm: nếu thấy "không rõ" cho Page phụ, mở trang kiểm tra bằng mắt rồi bấm "Đã đăng tay"; đừng bấm "Đăng lại" khi bài đã lên.
+
+## Page phụ — số người theo dõi (thêm 07/11/2026)
+- Mỗi lượt kiểm tra tối (mức nhanh cũng làm): mở trang https://www.facebook.com/profile.php?id=61596079720520 ở TAB MỚI (không đụng tab đang đăng bài, không bấm gì), đọc dòng "N người theo dõi" dưới tên trang, đóng tab.
+- Ghi vào `so-theo-doi.json` mục `followPagePhu` dạng { "ngay": "dd-mm-yyyy", "follow": N } (cùng ngày thì ghi đè).
+- Cuối tin nhắn tối nay thêm 1 dòng: "Page phụ: N người theo dõi (hôm qua M, mục tiêu tuần: ≥100 / ≥300 / ≥600 / ≥1000)". Không đọc được thì ghi "chưa đọc được", không ghi 0.
+- Nếu 3 ngày liền không tăng: nói rõ trong tin nhắn để Claude phiên page phụ chỉnh hướng (không tự đổi nội dung).
