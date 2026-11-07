@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.34.1
+// @version      6.34.2
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.34.1';
+  const PHIEN_BAN = '6.34.2';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -2031,8 +2031,10 @@
   const oCuaNguoiKhac = (ed) => { const l = chuan(ed.getAttribute('aria-label') || ''); const m = l.match(/dưới tên (.+)$/); return !!(m && chuanTen(m[1]) !== chuanTen(CAI_DAT.TEN_TRANG)); };
   function ghiTuCachO(ed) { try { const m = chuan(ed.getAttribute('aria-label') || '').match(/dưới tên (.+)$/); if (!m || Date.now() - (window.__smhTcO || 0) < 30000) return; window.__smhTcO = Date.now(); capNhat('suc_khoe', { tuCach: m[1] + ' (ô bình luận)', tuCachLuc: Date.now(), tuCachDung: chuanTen(m[1]) === chuanTen(CAI_DAT.TEN_TRANG) }); } catch (e) { /* */ } }
   function timBai(text) {
-    const khoa = chuan(text).slice(0, 60);
-    const khoa2 = khoaSo(text).slice(0, 45); // (4.5) dự phòng: so chữ bỏ emoji / dấu câu / link rút gọn
+    const _d1 = chuan(String(text || '').split('\n').map((x) => x.trim()).find((x) => x) || '');
+    const _kd = _d1.length >= 18 && _d1.length < 60 ? _d1 : '';
+    const khoa = _kd || chuan(text).slice(0, 60);
+    const khoa2 = (_kd ? khoaSo(_kd) : khoaSo(text)).slice(0, 45); // (4.5) dự phòng: so chữ bỏ emoji / dấu câu / link rút gọn
     if (khoa2) for (const ed of document.querySelectorAll('div[contenteditable="true"][data-lexical-editor][aria-label^="Bình luận"]')) {
       if (oCuaNguoiKhac(ed)) { window.__smhSaiTuCach = Date.now(); continue; }
       let p = ed.parentElement;

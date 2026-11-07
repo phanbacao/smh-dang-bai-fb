@@ -486,3 +486,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Lỗi: sáng 07/11 Máy Cao lên 6.34 nhưng lịch hôm nay không có ô P5 vì lich.json chỉ được đọc trong lượt đọc Lark (Máy Cao chủ yếu đọc 16:00). Bấm "Đọc lại sheet" thì có ngay.
 - Sửa: `lamMoiGh()` + `nhipGh()` — Máy Cao (tab chính) tự đọc lich.json riêng (GitHub, không tốn lượt Lark): sau khi mở trang ~25 giây nếu đã quá hạn; 60–100 phút/lần; hôm nay chưa có bài page phụ → 20 phút/lần. Trộn vào `du_lieu6` rồi `dongBoLich()`. Mốc đọc cuối `gh_doc6`. Nhật ký: "Page phụ: đã đọc lich.json (…) — hôm nay N bài".
 - Sim mới `pagephutre` (2 lần đầu lich.json chưa có bài → tự đọc lại và đăng đúng giờ). Đạt: pagephu, pagephutre, pagephugiao, caothay, kenhcao.
+
+## 6.34.2 (07/11/2026) — sửa lỗi "bấm Đăng nhưng không thấy bài trên trang" của page phụ
+- Nguyên nhân: bài mở đầu "Trầm Hương Mỗi Ngày – mỗi ngày một chút trầm." có đoạn đầu ngắn; Facebook cắt "… Xem thêm" ngay sau đoạn đầu nên khoá tìm 60 ký tự không khớp → script báo "không rõ", nhân sự đăng tay thêm → trùng bài. Script KHÔNG tự đăng lại (đúng thiết kế).
+- Sửa: timBai dùng đoạn (dòng) đầu khi nó ngắn hơn 60 ký tự (≥ 18). Mã khoá K5 của page phụ vẫn chưa có (⚪) nên kiểm bằng giao diện.
+- Khi kiểm đêm: nếu thấy "không rõ" cho Page phụ, mở trang kiểm tra bằng mắt rồi bấm "Đã đăng tay"; đừng bấm "Đăng lại" khi bài đã lên.
