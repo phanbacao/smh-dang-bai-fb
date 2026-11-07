@@ -503,3 +503,6 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Trả lời: "tham gia", size 6/7/8, bình luận chung (mẫu câu xoay vòng, xưng "anh chị"). Hỏi giá/mua, link, spam: KHÔNG trả lời tự động (ghi nhật ký "cần người trả lời tay"). Biểu tượng cảm xúc: chỉ thả Thích.
 - Mỗi bình luận chỉ trả lời 1 lần (nhớ trong máy: tl_da6). Công tắc: CAI_DAT.TRA_LOI_CMT_GH.
 - Khi kiểm tra ban đêm: đọc nhật ký xem có dòng "Tự trả lời bình luận" và dòng lỗi nào không; nếu thấy "thấy 0 khung bình luận" dù bài có bình luận thật → báo Cao (cấu trúc trang Facebook có thể khác dự kiến).
+
+## Bản 6.36 — Bình luận đầu page phụ
+- lich.json mỗi bài có thể có "cmt": [{"anh": "tệp.jpg"}, {"text": "..."}]; script gửi theo thứ tự sau khi đăng (như comment kênh 1). Bài không có "cmt" thì không bình luận.

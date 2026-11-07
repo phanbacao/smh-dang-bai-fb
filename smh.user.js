@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.35
+// @version      6.36
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.35';
+  const PHIEN_BAN = '6.36';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -1016,7 +1016,8 @@
       const tepDs = (Array.isArray(b.tep) ? b.tep : []).map((t) => String(t || '').trim()).filter(Boolean).map((t) => (/^https?:/.test(t) ? t : cfg.gh + encodeURIComponent(t)));
       const loaiBai = /reel|video/i.test(b.loai || '') ? 'reel' : (tepDs.length > 1 ? 'cuon' : 'anh');
       const id = String(b.id || ('gh' + (i + 1))); const daDang = !!(xong[id] || xong[ngay + '|' + id]);
-      out.push({ hang: i + 2, id, cap: String(b.caption || '').trim(), tep: tepDs.length ? { gh: tepDs, loaiBai, ten: id } : null, tt: daDang ? 'ĐÃ ĐĂNG' : '', duyet: !!tepDs.length && !daDang, daDang, link: '', gio: String(b.gio || '').trim() });
+      const cmtGh = (Array.isArray(b.cmt) ? b.cmt : []).map((x) => (x && x.anh ? { k: 'anh', v: /^https?:/.test(x.anh) ? x.anh : cfg.gh + encodeURIComponent(String(x.anh).trim()) } : x && x.text ? { k: 'text', v: String(x.text).trim() } : null)).filter(Boolean); // (6.36)
+      out.push({ cmtGh, hang: i + 2, id, cap: String(b.caption || '').trim(), tep: tepDs.length ? { gh: tepDs, loaiBai, ten: id } : null, tt: daDang ? 'ĐÃ ĐĂNG' : '', duyet: !!tepDs.length && !daDang, daDang, link: '', gio: String(b.gio || '').trim() });
     });
     return out;
   }
@@ -1177,7 +1178,7 @@
       const cot = (i) => String.fromCharCode(65 + i);
       if (!x) th.push(`video ${tenKenh(c)} thứ ${it.so + 1} (tab "${cfg.tenTab}" chưa có dòng ghi ngày này với Trạng thái "ĐÃ DUYỆT")`);
       else { if (!x.tep) th.push(`file video ${it.ten} (cột ${cot(cfg.cot.video)} hàng ${x.hang})`); if (!x.cap) th.push(`caption ${it.ten} (cột ${cot(cfg.cot.cap)} hàng ${x.hang})`); }
-      return { thieu: th, text: x ? x.cap : '', tep: x ? x.tep : null, hang: x ? x.hang : 0, daDang: x ? x.daDang : false, link: x ? x.link : '', kenh: c, loaiBai: x && x.tep ? x.tep.loaiBai || '' : '', gio: x ? x.gio || '' : '', id: x ? x.id || '' : '' }; // (6.34) kênh GitHub: loại bài + giờ + mã bài
+      return { cmtGh: x ? x.cmtGh || [] : [], thieu: th, text: x ? x.cap : '', tep: x ? x.tep : null, hang: x ? x.hang : 0, daDang: x ? x.daDang : false, link: x ? x.link : '', kenh: c, loaiBai: x && x.tep ? x.tep.loaiBai || '' : '', gio: x ? x.gio || '' : '', id: x ? x.id || '' : '' }; // (6.34) kênh GitHub: loại bài + giờ + mã bài
     }
     const b = hangBaiGhim(ngay, it.hangSo || 0, n); const th = []; // (6.26) bài của hàng thứ 2, 3… trong ngày
     if (it.loai === 'b1') { if (!b) th.push('bài viết (cột H chưa có hàng ghi ngày này)'); else if (!b.bai) th.push('chữ Bài 1 (cột B)'); if (b && b.bai && !b.cmt) th.push('comment Bài 1 (cột C)'); return { thieu: th, text: b ? b.bai : '', cmt: b ? b.cmt : '', hang: b ? b.hang : 0 }; }
@@ -2635,7 +2636,7 @@
     });
     await khoLuu(k, blob, { loai, gh: 1 }); ghi(`Đã tải ${ten} từ GitHub (${(blob.size / 1048576).toFixed(1)} MB)`); return blob;
   }
-  async function taiAnhKho(token, ten) { return thuNhoAnh(await taiTepLark(token, { ten: 'ảnh ' + ten, loai: 'anh' }), ten); }
+  async function taiAnhKho(token, ten) { if (/^https?:/.test(String(token))) return thuNhoAnh(await taiTepGh(token, 'anh', 'ảnh ' + ten), ten); return thuNhoAnh(await taiTepLark(token, { ten: 'ảnh ' + ten, loai: 'anh' }), ten); } // (6.36) ảnh comment page phụ từ GitHub
   async function taiVideoKho(tep) {
     const b = await taiTepLark(tep.fileToken, { ten: 'video "' + tep.ten + '"', loai: 'video', size: tep.size, timeout: 300000 });
     const ten = /\.(mp4|mov|m4v|webm)$/i.test(tep.ten || '') ? tep.ten : (tep.ten || 'video') + '.mp4';
@@ -3196,7 +3197,7 @@
     return `${chonCTA(it.k, ngay)}\n>>> ${c.link}`; // (6.12) không ghi chữ "CTA:" / "Link:"
   }
   function canCmt(it, nd, chung, ngay) { // các comment cần có dưới bài (để kiểm và gửi bù)
-    if (it && it.k && (CAI_DAT.KENH[kenhCua(it.k)] || {}).khongCmt) return { text: [], anh: [] }; // (6.34) page phụ: không comment
+    if (it && it.k && (CAI_DAT.KENH[kenhCua(it.k)] || {}).khongCmt) { const g = (nd && nd.cmtGh) || []; return { text: g.filter((x) => x.k === 'text').map((x) => x.v), anh: g.filter((x) => x.k === 'anh').map((x) => x.v) }; } // (6.34) page phụ: chỉ comment theo lich.json (6.36)
     chung = chung || ((duLieu() || {}).chung) || { co: '', pool: [] };
     const it2 = it.k ? it : { loai: it.loai || 'video' };
     if (it.k && (CAI_DAT.KENH[kenhCua(it.k)] || {}).hx) { const g = (cauHinhCmt().gocHx || CAI_DAT.CMT_HX).trim(); return { text: g ? [g] : [], anh: [] }; } // (6.26) kênh Hà Xá: chỉ 1 comment thông tin riêng (không CTA Zalo SMH, không ảnh SMH)
@@ -3870,7 +3871,7 @@
       if (!(await damBaoTuCach())) { luiCho(); return; }
       if (!dungTrang()) { luiCho(); veTrang(); return; }
       if (hopDangDo() || hopSoanBai() || ganManHinh()) { ghi('Có hộp đăng bài mở dở → đóng lại'); if (!(await dongHopSoan()) || ganManHinh()) { await dongHopVideo(); if (ganManHinh() || hopSoanBai()) { luiCho(); roiTrang(); return; } } }
-      const kq = await dangVideoFb({ slot: it.k, ten: it.ten, loai: 4, text: nd.text, file, cmts: [], hang: nd.hang, ngay }, { soanThu: thu });
+      const kq = await dangVideoFb({ slot: it.k, ten: it.ten, loai: 4, text: nd.text, file, cmts: nd.cmtGh || [], hang: nd.hang, ngay }, { soanThu: thu });
       if (thu) { choTay({ video: true }); return; }
       void kq; return;
     }
@@ -3880,7 +3881,7 @@
     if (!dungTrang()) { luiCho(); veTrang(); return; }
     if (hopDangDo() || hopSoanBai()) { ghi('Có hộp đăng bài mở dở → đóng lại'); if (!(await dongHopSoan())) { luiCho(); roiTrang(); return; } }
     const bai = { ngay, hang: nd.hang, khoa: ngay + '|' + it.k, bai: nd.text, cmt: '', files,
-      ddThem: { slot: it.k, loai: 3, ten: it.ten, cmts: [], cmtIdx: 0, soAnh: files.length, ghiChuTruoc: window.__smhBoQua || [] } };
+      ddThem: { slot: it.k, loai: 3, ten: it.ten, cmts: nd.cmtGh || [], cmtIdx: 0, soAnh: files.length, ghiChuTruoc: window.__smhBoQua || [] } };
     const soNhom = await dangLenFacebook(bai, { soanThu: thu });
     if (thu) { choTay({}); return; }
     const thay = await cho(() => timBai(nd.text), 60000, 1000);

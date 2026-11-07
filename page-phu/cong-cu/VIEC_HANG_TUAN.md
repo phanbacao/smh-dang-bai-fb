@@ -13,3 +13,6 @@
 ## Quy tắc làm ảnh (Cao góp ý 07/11, từ bài minigame)
 - Chữ tiêu đề lớn trên ảnh nền có hoa văn/vòng (VD "Tặng 3 chuỗi 108 hạt trầm hương") phải có viền mảnh hoặc bóng đổ nhẹ để nổi bật; không để chữ trơn.
 - Làm xong ảnh phải tự xem lại một lượt: chữ có lệch không, có đủ nổi không, có che vòng/mặt không — rồi mới đưa vào lịch.
+
+## Bình luận đầu (Cao 07/11)
+- Mọi bài page phụ phải có "cmt": 1 ảnh + 1 câu nhắc minigame (khi minigame còn mở), không link, không rao bán.
