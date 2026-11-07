@@ -28,3 +28,8 @@ Cập nhật lần cuối: 07/11/2026. File này do Claude (phiên page phụ + 
 
 ## Việc học định kỳ
 Chạy 2 lần/tuần (xem tác vụ định kỳ "Học hỏi page phụ"): tìm thay đổi mới về thuật toán/chính sách Meta, mẹo Reels, quy định minigame, quảng cáo tăng theo dõi (nguồn Meta + tiếng Việt), đối chiếu với kế hoạch, ghi vào mục "Điều đã học" kèm ngày + nguồn, đề xuất chỉnh sửa cho Cao (không tự đổi quyết định của Cao).
+
+## Quyết định 07/11 tối: quảng cáo thử sớm
+- Cao chốt: thử quảng cáo từ Chủ nhật 08/11, 100.000đ/ngày × 3 ngày (300.000đ), quảng cáo bài minigame trước. Cao không kéo follow từ kênh/nhân viên/khách khác ("để page tự bơi").
+- Cách làm: Việt Nam, 25–60 tuổi, sở thích trầm hương/phong thủy/thiền/Phật giáo. Sau 24 giờ xem giá mỗi người theo dõi + mỗi bình luận; bài nào rẻ hơn thì dồn tiền. Phần còn lại dưới 1 triệu dành cho đợt chính 10/11 trở đi.
+- Phải báo Cao số tiền + nhóm người xem rồi chờ đồng ý trước khi bấm thanh toán.
