@@ -1,0 +1,8 @@
+# Việc hằng tuần (thứ 4, 14:37 giờ VN): soạn nội dung tuần kế tiếp cho page phụ
+- Tuần kế tiếp = 7 ngày nối tiếp ngày cuối trong page-phu/lich.json. 14 bài: 11:30 bài ảnh (anh/cuon 4 ảnh), 19:30 Reels.
+- Cơ cấu: ~4 kiến thức ngắn, ~3 tương tác (bình chọn số, "đón nhận", hỏi size, chọn lu thống), ~3 Reels cảm hứng, ~2 hậu trường đội ngũ/showroom Thủ Đức, ~2 quà tặng/mùa lễ; ≥1 bài kêu gọi chia sẻ/gắn tên bạn. Không trùng chủ đề tuần trước.
+- Lời: văn nói, câu ngắn, mở bằng hiểu lầm/băn khoăn; "anh chị", "Sơn Mộc Hương", đủ cụm "vòng trầm hương", "để mộc / không keo, không sáp, không phủ sơn"; Trầm chuẩn = trầm tốc vườn (không gọi trầm tự nhiên), Tốc kiến = trầm tự nhiên; Gió trắng, bach xanh không phải trầm; nhang/nụ "bột gỗ trầm kết hợp vỏ cây bời lời"; không bịa giá/chính sách/công dụng; phong thuỷ "theo quan niệm…"; không kết luận thật-giả bằng 1 dấu hiệu; chưa bán hàng: không giá, không kêu gọi mua. Hashtag #tramhuongmoingay + 1–3 hashtag liên quan.
+- Hình: dùng cong-cu (README.md); vùng an toàn 10% (Reels trên 12%, dưới 20%); vòng là trung tâm, không bị chữ đè/cắt; logo vàng góc + 1–2 logo chìm; không ảnh hộp đỏ; không đăng lại ảnh thiết kế sẵn của kênh 1; không đánh số trang; tự xem lại trước khi đưa lên.
+- Thêm vào lich.json (không xoá bài cũ < 30 ngày), kiểm JSON + đủ tệp, commit + push main, kiểm lại raw link.
+- Không sửa smh.user.js, du-an.tar.gz, CLAUDE_KIEM_TRA.md.
+- Báo cáo 4–6 dòng: tuần nào, chủ đề, link https://github.com/phanbacao/smh-dang-bai-fb/tree/main/page-phu, lỗi nếu có; nhắc Cao gửi số người theo dõi để chỉnh hướng + cân nhắc quảng cáo (dưới 1 triệu).
