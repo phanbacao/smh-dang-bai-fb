@@ -9,3 +9,7 @@
 - Không sửa smh.user.js, du-an.tar.gz, CLAUDE_KIEM_TRA.md.
 - Báo cáo 4–6 dòng: tuần nào, chủ đề, link https://github.com/phanbacao/smh-dang-bai-fb/tree/main/page-phu, lỗi nếu có; nhắc Cao gửi số người theo dõi để chỉnh hướng + cân nhắc quảng cáo (dưới 1 triệu).
 - (07/11) Lời kêu tương tác: dùng "gửi cho người thân/bạn bè qua tin nhắn" và câu hỏi thật (size, tay nào, kể trải nghiệm). KHÔNG dùng "bình luận đón nhận / bình luận số / gắn tên bạn" (Meta coi là câu tương tác). Đọc page-phu/CHIEN_LUOC.md trước khi soạn tuần mới và theo mục "Điều đã học" mới nhất.
+
+## Quy tắc làm ảnh (Cao góp ý 07/11, từ bài minigame)
+- Chữ tiêu đề lớn trên ảnh nền có hoa văn/vòng (VD "Tặng 3 chuỗi 108 hạt trầm hương") phải có viền mảnh hoặc bóng đổ nhẹ để nổi bật; không để chữ trơn.
+- Làm xong ảnh phải tự xem lại một lượt: chữ có lệch không, có đủ nổi không, có che vòng/mặt không — rồi mới đưa vào lịch.
