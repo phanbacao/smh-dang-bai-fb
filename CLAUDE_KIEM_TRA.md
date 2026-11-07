@@ -466,3 +466,18 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Tab Hôm nay: không có bài tự đăng → không lỗi theSlot.
 - Nhật ký: sửa lọc "Quan trọng".
 - Sim mới: mdui, k1tay, k1taycao; sửa mucdat, hx (tới 14:30). Đạt: mdui, mucdat, k1tay, k1taycao, hx, hxduphong, ngay, bu, haimay, caothay, cmt, tay, kenh, kenhcao, bangthieu, thieu, suamoi, lich2may, xep9, xeptre, kenhtay, gantay.
+
+
+## 6.34 (07/11/2026) — KÊNH 5: PAGE PHỤ "Trầm Hương Mỗi Ngày - SMH" (làm ở hội thoại khác, đọc kỹ)
+- Page: https://www.facebook.com/profile.php?id=61596079720520 (nick Nguyễn Hoàng Giang quản trị). Mục tiêu 1000 người theo dõi trong 1 tháng (từ 07/11/2026). Nội dung do Claude ở hội thoại "page phụ" soạn 100%, anh Cao không duyệt.
+- **Không dùng Lark.** Lịch + ảnh/video nằm trên GitHub: thư mục `page-phu/` (`lich.json` + `T1-xx.jpg/.mp4`). `lich.json` = `{ bai: [{ id, ngay "dd-mm-yyyy", gio "HH:MM", loai "anh"|"cuon"|"reel", caption, tep: [tên file trong page-phu/] }] }`. Script đọc qua `raw.githubusercontent.com` (không tốn lượt Lark).
+- **Chỉ Máy Cao đăng** (`chiCao`). Máy Giao đọc lich.json nhưng bỏ qua ô k5. Máy Cao đăng đúng giờ trong lich.json (± 10 phút, ngẫu nhiên theo ngày) — không chờ Máy Giao, không giữ chỗ ô Z1, không báo "đăng thay".
+- Ô lịch `k5a`, `k5b`… (nhãn `P5·1`, tên "Page phụ · Bài 1"). Bài `anh`/`cuon` → đăng như Bài 3 kênh 1 (nhiều ảnh, không nền đỏ). Bài `reel` → đăng như video kênh phụ.
+- Page phụ **không** gắn vị trí, **không** chia sẻ nhóm, **không** gắn thẻ, **không** comment; **có** thả cảm xúc. Kênh 1–4 giữ nguyên như cũ (cờ `__smhBoViTri/__smhBoNhom` reset ở mỗi bài kênh 1 / video).
+- "Đã đăng" của page phụ lưu trong máy (`gh_xong6`, giữ 60 ngày), không ghi sheet. Báo cáo cuối ngày vẫn gộp như các kênh.
+- Mã: `v6/vu634.py` (bản vá trong build) + cấu hình kênh 5 trong `p1_dau.js` (`KENH[5]`, `KENH_LARK`, `laGh`). Sim mới: `pagephu` (Máy Cao đăng 1 ảnh cuộn + 1 reel từ GitHub giả, không vị trí/nhóm/giữ chỗ), `pagephugiao` (Máy Giao không đăng gì lên page phụ).
+
+### Lượt kiểm tra 21:59 — thêm cho page phụ
+- Đọc ô `k5*` trong báo cáo Máy Cao (`slot`, `loi`): bài nào chưa lên / lỗi thì ghi sổ như kênh khác. Lỗi đọc lich.json hiện ở nhật ký "Page phụ: chưa đọc được lich.json trên GitHub (…)".
+- **Không** sửa nội dung `page-phu/` (caption, ảnh, lịch) — đó là việc của hội thoại page phụ. Nếu thấy lịch thiếu bài ngày mai: chỉ ghi 1 dòng vào tin nhắn cuối "Page phụ thiếu bài ngày mai".
+- Bài page phụ lên đúng giờ mà mức kiểm `nhanh` thì không cần tăng mức vì page phụ.
