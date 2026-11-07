@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.34
+// @version      6.34.1
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.34';
+  const PHIEN_BAN = '6.34.1';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -1045,6 +1045,32 @@
     return out;
   }
   let docDLCho = null;
+  async function lamMoiGh(lyDo) { // (6.34.1) đọc lich.json (GitHub, không tốn lượt Lark) và trộn vào dữ liệu đang có, dựng lại lịch
+    const ds = KENH_PHU.filter((c) => laGh(c) && !(CAI_DAT.KENH[c].chiCao && !LA_CAO)); if (!ds.length) return;
+    const d = duLieu(); if (!d || !d.ngay) return; // chưa có dữ liệu → lượt đọc sheet đầu tiên sẽ đọc luôn lich.json
+    const t0 = Date.now(); let doi = false;
+    for (const c of ds) {
+      let j; try { j = await docLichGh(c); } catch (e) { (d.loiKenh = d.loiKenh || {})[c] = `chưa đọc được lich.json trên GitHub (${e.message})`; ghi(`${tenKenh(c)}: ${d.loiKenh[c]} — thử lại sau`); doi = true; continue; }
+      if (d.loiKenh) delete d.loiKenh[c];
+      for (let i = 0; i <= 3; i++) { const ngay = ngayStr(congNgay(i)); if (!d.ngay[ngay]) continue; const cu = JSON.stringify(d.ngay[ngay]['k' + c] || []); d.ngay[ngay]['k' + c] = hangGh(j, c, ngay); if (JSON.stringify(d.ngay[ngay]['k' + c]) !== cu) doi = true; }
+    }
+    luu('gh_doc6', Date.now());
+    if (!doi) return;
+    luu('du_lieu6', d);
+    try { dongBoLich(); } catch (e) { ghi('Page phụ: dựng lịch lỗi ' + e.message); }
+    const n = (d.ngay[homNay()] || {}); ghi(`Page phụ: đã đọc lich.json (${lyDo}) — hôm nay ${ds.map((c) => (n['k' + c] || []).length).join('+')} bài · ${((Date.now() - t0) / 1000).toFixed(1)} giây`);
+  }
+  async function nhipGh() { // mở trang sau ~25 giây; sau đó 60–100 phút/lần (ngẫu nhiên); hôm nay chưa có bài page phụ → 20 phút/lần
+    try {
+      if (!LA_CAO || !laTabChinh()) return;
+      const d = duLieu(); const n = d && d.ngay && d.ngay[homNay()]; const coBai = KENH_PHU.some((c) => laGh(c) && n && (n['k' + c] || []).length);
+      const cach = coBai ? (60 + Math.floor(Math.random() * 40)) * 60000 : 20 * 60000;
+      if (Date.now() - (lay('gh_doc6', 0) || 0) < cach) return;
+      await lamMoiGh(coBai ? 'định kỳ' : 'hôm nay chưa có bài page phụ');
+    } catch (e) { ghi('Page phụ: đọc lich.json lỗi ' + e.message); }
+  }
+  setTimeout(nhipGh, 25000);
+  setInterval(nhipGh, 5 * 60000);
   async function docDuLieu(loai) {
     if (docDLCho) return docDLCho;
     docDLCho = (async () => {

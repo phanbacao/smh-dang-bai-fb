@@ -481,3 +481,8 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Đọc ô `k5*` trong báo cáo Máy Cao (`slot`, `loi`): bài nào chưa lên / lỗi thì ghi sổ như kênh khác. Lỗi đọc lich.json hiện ở nhật ký "Page phụ: chưa đọc được lich.json trên GitHub (…)".
 - **Không** sửa nội dung `page-phu/` (caption, ảnh, lịch) — đó là việc của hội thoại page phụ. Nếu thấy lịch thiếu bài ngày mai: chỉ ghi 1 dòng vào tin nhắn cuối "Page phụ thiếu bài ngày mai".
 - Bài page phụ lên đúng giờ mà mức kiểm `nhanh` thì không cần tăng mức vì page phụ.
+
+## 6.34.1 (07/11/2026) — page phụ không phụ thuộc lượt đọc Lark
+- Lỗi: sáng 07/11 Máy Cao lên 6.34 nhưng lịch hôm nay không có ô P5 vì lich.json chỉ được đọc trong lượt đọc Lark (Máy Cao chủ yếu đọc 16:00). Bấm "Đọc lại sheet" thì có ngay.
+- Sửa: `lamMoiGh()` + `nhipGh()` — Máy Cao (tab chính) tự đọc lich.json riêng (GitHub, không tốn lượt Lark): sau khi mở trang ~25 giây nếu đã quá hạn; 60–100 phút/lần; hôm nay chưa có bài page phụ → 20 phút/lần. Trộn vào `du_lieu6` rồi `dongBoLich()`. Mốc đọc cuối `gh_doc6`. Nhật ký: "Page phụ: đã đọc lich.json (…) — hôm nay N bài".
+- Sim mới `pagephutre` (2 lần đầu lich.json chưa có bài → tự đọc lại và đăng đúng giờ). Đạt: pagephu, pagephutre, pagephugiao, caothay, kenhcao.
