@@ -23,3 +23,6 @@
 2. **Chuỗi "30 ngày hiểu trầm – Ngày X/30"**: mỗi ngày 1 bài ảnh gốc + 1 kiến thức ngắn đã duyệt (để mộc, size, bảo quản, phân biệt nấu dầu, 108 hạt...). Câu mở đầu luôn khác nhau (bắt đầu bằng "Ngày X/30:" + chủ đề), cuối bài "Theo dõi trang để không lỡ ngày tiếp theo".
 3. Bình luận đầu: 1 ảnh vòng thật + 1 mẹo, KHÔNG nhắc minigame (đã dừng 11/11).
 4. Cơ cấu mỗi ngày (thay cơ cấu cũ): 1 Reels + 1 bài chuỗi 30 ngày + 1 bài ảnh gốc/hỏi đáp + 1 bài sáng nhẹ nhàng.
+
+## Nhật ký
+- (11/11) Tuần 2 (14–20/11): 21 bài/ngày 3 khung 07:30 ảnh sáng nhẹ nhàng, 11:30 chuỗi "30 ngày hiểu trầm" Ngày 1–7/30, 19:30 Reels video thật (lam_anh_t2.py, lam_reel_t2.py). Tuần 3 tiếp từ Ngày 8/30. Clip đã dùng tuần 2: 108,17,9,40,4,27,49,96,15,23,84,65,13,68,53,26,42,57,88,1,16,75,46,14,18,29,71. Tránh clip soi gương (chữ trên áo bị ngược): 33,34,36,38,44,52,80,83,86,93,104,112.
