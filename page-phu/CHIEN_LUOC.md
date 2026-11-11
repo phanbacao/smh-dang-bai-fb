@@ -38,3 +38,6 @@ Chạy 2 lần/tuần (xem tác vụ định kỳ "Học hỏi page phụ"): tì
 - Cao chốt: thử quảng cáo từ Chủ nhật 08/11, 100.000đ/ngày × 3 ngày (300.000đ), quảng cáo bài minigame trước. Cao không kéo follow từ kênh/nhân viên/khách khác ("để page tự bơi").
 - Cách làm: Việt Nam, 25–60 tuổi, sở thích trầm hương/phong thủy/thiền/Phật giáo. Sau 24 giờ xem giá mỗi người theo dõi + mỗi bình luận; bài nào rẻ hơn thì dồn tiền. Phần còn lại dưới 1 triệu dành cho đợt chính 10/11 trở đi.
 - Phải báo Cao số tiền + nhóm người xem rồi chờ đồng ý trước khi bấm thanh toán.
+
+## 11/11: Cao dừng minigame
+- Không còn phù hợp: dừng quảng cáo bài minigame, ẩn (lưu trữ) các bài minigame; bình luận đầu không nhắc minigame nữa, chỉ mẹo + ảnh thật.
