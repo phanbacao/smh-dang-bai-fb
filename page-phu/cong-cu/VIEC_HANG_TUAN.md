@@ -17,3 +17,9 @@
 ## Bình luận đầu (Cao 07/11)
 - Mọi bài page phụ phải có "cmt": 1 ảnh + 1 câu nhắc minigame (khi minigame còn mở), không link, không rao bán.
 - (09/11) Reels phải tự quay (hạt/vòng thật, có tay người), không dùng lại clip có watermark hay clip của người khác: Meta giảm phân phối nội dung không gốc từ 3/2026. Mỗi Reels có phụ đề + hook trong 3 giây đầu. (https://www.socialpilot.co/blog/facebook-algorithm — nguồn tham khảo)
+
+## Cách mới tăng follow (Cao duyệt 11/11) — áp dụng từ tuần 2
+1. **Reels mỗi ngày 1 bài**: video thật từ kho (đeo tay, cận hạt), 10–15 giây, chữ ngắn ở vùng an toàn, câu cuối "Theo dõi Trầm Hương Mỗi Ngày để xem tiếp". Dùng lam_reel_that.py.
+2. **Chuỗi "30 ngày hiểu trầm – Ngày X/30"**: mỗi ngày 1 bài ảnh gốc + 1 kiến thức ngắn đã duyệt (để mộc, size, bảo quản, phân biệt nấu dầu, 108 hạt...). Câu mở đầu luôn khác nhau (bắt đầu bằng "Ngày X/30:" + chủ đề), cuối bài "Theo dõi trang để không lỡ ngày tiếp theo".
+3. Bình luận đầu: 1 ảnh vòng thật + 1 mẹo, KHÔNG nhắc minigame (đã dừng 11/11).
+4. Cơ cấu mỗi ngày (thay cơ cấu cũ): 1 Reels + 1 bài chuỗi 30 ngày + 1 bài ảnh gốc/hỏi đáp + 1 bài sáng nhẹ nhàng.

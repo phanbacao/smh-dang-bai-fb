@@ -41,3 +41,8 @@ Chạy 2 lần/tuần (xem tác vụ định kỳ "Học hỏi page phụ"): tì
 
 ## 11/11: Cao dừng minigame
 - Không còn phù hợp: dừng quảng cáo bài minigame, ẩn (lưu trữ) các bài minigame; bình luận đầu không nhắc minigame nữa, chỉ mẹo + ảnh thật.
+
+## 11/11: 4 cách mới Cao duyệt
+- Mời người đã thả cảm xúc theo dõi trang (làm tay trong Chrome mỗi lần Cao nhắn, cần đăng nhập).
+- Quảng cáo mục tiêu Theo dõi Trang bằng bài hữu ích (Đo size / Thở 1 phút), 50.000đ/ngày × 3 ngày — cần nick Phan Cao + Cao xác nhận tổng tiền.
+- Reels mỗi ngày; chuỗi "30 ngày hiểu trầm".
