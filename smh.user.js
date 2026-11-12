@@ -2,7 +2,7 @@
 // @name         Smh dang bai fb kenh 1 CHAY THAT 6.15
 // @name:vi      Smh đăng bài FB kênh 1 (tự cập nhật — xem số bản trên popup)
 // @namespace    smh-dang-bai-fb-kenh1-chay-that
-// @version      6.36
+// @version      6.37
 // @description  Tự đăng bài mỗi ngày lên 3 fanpage: kênh 1 "Vòng Trầm Hương Sơn Mộc Hương ." (9 bài), kênh 2 "Trầm Hương Thủ Đức Sơn Mộc Hương" và kênh 3 "Sơn Mộc Hương - Trầm Chuẩn - Giá Chuẩn" (video theo sheet) — 1 file dùng chung cho Máy Giao (máy chính) và Máy Cao (máy dự phòng)
 // @match        https://www.facebook.com/*
 // @match        https://zgml41unmm8.sg.larksuite.com/wiki/*
@@ -52,7 +52,7 @@
   const MAY = lay('may6', '');                 // 'GIAO' | 'CAO' | '' (chưa chọn)
   const LA_GIAO = MAY === 'GIAO', LA_CAO = MAY === 'CAO';
   const TEN_MAY = LA_GIAO ? 'Máy Giao' : LA_CAO ? 'Máy Cao' : 'Máy chưa chọn';
-  const PHIEN_BAN = '6.36';
+  const PHIEN_BAN = '6.37';
   const TEN_HE_THONG = 'Đăng bài fb kênh 1';
   // mã riêng của tab này (giữ nguyên khi tải lại chính tab này; tab mới mở → mã mới)
   const MA_TAB = (() => { let id = null; try { id = sessionStorage.getItem('smhdb_ma_tab'); } catch (e) { /* */ }
@@ -288,7 +288,7 @@
   try { const cl = lay('cot_kenh6', {}) || {}; for (const c of KENH_LARK) { const x = cl[c]; if (x && ['cap', 'tt', 'ngay', 'video', 'link'].every((k) => Number.isInteger(x[k]) && x[k] >= 0 && x[k] < 26)) CAI_DAT.KENH[c].cot = x; } } catch (e) { /* (6.32.3) vị trí cột kênh phụ đã dò theo tiêu đề */ }
   const tenKenh = (c) => { const x = CAI_DAT.KENH[c] || CAI_DAT.KENH[1]; return x.anSo ? x.ngan : `Kênh ${c}`; };
   const tenKenhDai = (c) => { const x = CAI_DAT.KENH[c] || CAI_DAT.KENH[1]; return x.anSo ? x.ngan : `Kênh ${c} (${x.ngan})`; };
-  const duongNay = () => { const p = location.pathname.toLowerCase().replace(/\/+$/, ''); if (p === '/profile.php') { const id = new URLSearchParams(location.search).get('id'); if (id) return '/' + id; } return p; };
+  const duongNay = () => { const p = location.pathname.toLowerCase().replace(/\/+$/, ''); if (p === '/profile.php') { const id = new URLSearchParams(location.search).get('id'); if (id) return '/' + id; } const mp = p.match(/^\/people\/[^/]+\/(\d{6,})$/); if (mp) return '/' + mp[1]; return p; }; // (6.37) /people/<tên>/<id>
   function datKenh(k) { k = +k || 1; if (!CAI_DAT.KENH[k]) k = 1; KENH_HT = k; return k; }
   for (const [ten, f] of [['TAG_TEN', () => kenhHT().tag || 'Sơn Mộc Hương'], ['TEN_TRANG', () => kenhHT().ten], ['TEN_NGAN', () => kenhHT().ngan], ['URL_TRANG', () => kenhHT().url], ['DUONG_DAN_TRANG', () => kenhHT().duong[0]], ['FB_PAGE_ID', () => idTrangKenh(KENH_HT)]]) {
     Object.defineProperty(CAI_DAT, ten, { get: f, configurable: true, enumerable: true });
@@ -1066,7 +1066,7 @@
     try {
       if (!LA_CAO || !laTabChinh()) return;
       const d = duLieu(); const n = d && d.ngay && d.ngay[homNay()]; const coBai = KENH_PHU.some((c) => laGh(c) && n && (n['k' + c] || []).length);
-      const cach = coBai ? (60 + Math.floor(Math.random() * 40)) * 60000 : 20 * 60000;
+      const cach = coBai ? (30 + Math.floor(Math.random() * 15)) * 60000 : 20 * 60000; // (6.37) 30–45 phút/lần
       if (Date.now() - (lay('gh_doc6', 0) || 0) < cach) return;
       await lamMoiGh(coBai ? 'định kỳ' : 'hôm nay chưa có bài page phụ');
     } catch (e) { ghi('Page phụ: đọc lich.json lỗi ' + e.message); }
@@ -3639,8 +3639,7 @@
   // chạy khi bài đã lên + comment xong; mỗi bài thử tối đa 4 lần (cách nhau 5–10 phút), có kiểm lại trên trang sau khi Lưu
   // ---- (6.35) tự trả lời bình luận page phụ ----
   const TL_NHOM = [
-    { ten: 'thamgia', re: /tham gia|^\s*(tg|đăng ký|dang ky)\b/i, tl: ['Đã ghi nhận lượt tham gia của anh chị ạ 🌿 Chúc anh chị may mắn, kết quả sẽ công bố ngay trên page nhé!', 'Cảm ơn anh chị đã tham gia 🌿 Chúc anh chị may mắn nhé, kết quả sẽ báo trên page ạ!', 'Page đã ghi nhận ạ 🌿 Anh chị nhớ theo dõi page để xem kết quả nhé, chúc anh chị may mắn!'] },
-    { ten: 'size', re: /^\s*(size\s*)?([678])\s*(li|ly|mm)?\s*[.!]*$/i, tl: ['Đã ghi nhận size {s} li của anh chị ạ 🌿', 'Page ghi nhận size {s} li rồi ạ 🌿 Chúc anh chị may mắn!'] },
+    // (6.37) đã bỏ nhóm 'tham gia' + 'size' (minigame dừng 11/11) → trả lời như bình luận thường
     { ten: 'hoi_mua', re: /giá|bao nhiêu|bn\b|mua|ship|đặt hàng|địa chỉ|inbox|\bib\b|sđt|số điện thoại|zalo|ở đâu|showroom|bán/i, tl: null },
     { ten: 'bo', re: /https?:\/\/|www\.|\.com\b|\.vn\b|kiếm tiền|vay|cá cược|link/i, tl: null },
     { ten: 'chung', re: /./, tl: ['Cảm ơn anh chị đã ghé page 🌿 Chúc anh chị một ngày nhẹ nhàng, bình an ạ!', 'Cảm ơn anh chị đã chia sẻ 🌿 Mong những điều tốt lành đến với anh chị mỗi ngày ạ!', 'Page cảm ơn anh chị nhiều ạ 🌿 Chúc anh chị thật nhiều bình an và sức khoẻ!', 'Cảm ơn anh chị đã đồng hành cùng page 🌿 Chúc anh chị ngày mới an yên ạ!'] },
@@ -5979,7 +5978,23 @@
   //  NHỊP CHÍNH (15 giây/lần)
   // =====================================================================
   const trongGioDo = () => { const m = phutTrongNgay(new Date()); return m >= docGio(CAI_DAT.GIO_DO_TU) && m < docGio(CAI_DAT.GIO_DO_DEN); };
+  // (6.37) canh tài khoản Facebook: bị đăng xuất / đang dùng nick khác → báo Lark (mỗi loại tối đa 1 lần/ngày) + ghi nhật ký
+  const NICK_DUNG = () => ['Nguyễn Hoàng Giang', ...KENH_ALL.map((c) => CAI_DAT.KENH[c].ten)];
+  function canhTaiKhoan() {
+    try {
+      if (!MAY || !laTabChinh()) return;
+      if (Date.now() - (window.__smhCanhTK || 0) < 3 * 60000) return; window.__smhCanhTK = Date.now();
+      const p = location.pathname;
+      const dx = /^\/(login|checkpoint|auth_platform|recover)/.test(p) || (!!document.querySelector('input[name="pass"]') && !document.querySelector('[aria-label="Tài khoản, trang cá nhân của bạn"]'));
+      if (dx) { ghi('⚠️ Facebook trên máy này đang bị ĐĂNG XUẤT / chờ xác minh đăng nhập → script không đăng được'); baoLoi(`⚠️ ${TEN_MAY}: Facebook đang bị đăng xuất hoặc chờ xác minh đăng nhập → không đăng bài được. Đăng nhập lại nick Nguyễn Hoàng Giang trên Chrome máy này.`, 'loitrang_dangxuat_' + homNay()); return; }
+      const ed = Array.from(document.querySelectorAll('div[role="textbox"][aria-label*="dưới tên "]')).map((e) => chuan(e.getAttribute('aria-label') || '').match(/dưới tên (.+)$/)).find(Boolean);
+      if (!ed) return;
+      const ten = ed[1].trim(); const dung = NICK_DUNG().some((x) => chuanTen(x) === chuanTen(ten));
+      if (!dung) { ghi(`⚠️ Facebook trên máy này đang dùng nick "${ten}" (không phải Nguyễn Hoàng Giang / tên trang)`); baoLoi(`⚠️ ${TEN_MAY}: Facebook đang dùng nick "${ten}" — script cần nick Nguyễn Hoàng Giang để đăng đúng tư cách. Đăng nhập lại nick Giang.`, 'loitrang_nick_' + homNay() + '_' + chuanTen(ten).slice(0, 20)); }
+    } catch (e) { ghi('Canh tài khoản lỗi: ' + e.message); }
+  }
   async function nhip() {
+    canhTaiKhoan();
     if (!MAY) { veBang(); return; } // chưa chọn máy → không làm gì
     if (!(await nhanQuyen())) { veBang(); return; }
     try {
@@ -6553,12 +6568,12 @@
     const hdx = hdHien(); if (hdx) return { den: 'vang', nhay: true, chu: esc(hdx.ten) + '…' };
     const loi = L.filter((x) => ['loi', 'khong_ro', 'thieu'].includes(x.r.tt));
     if (!kt) return { den: loi.length ? 'vang' : 'xanh', chu: nXong === L.length ? `✅ Đã lên đủ ${L.length}/${L.length} bài hôm nay` : `Hôm nay xong lịch · đã lên <b>${nXong}/${L.length}</b> bài` };
-    let bd = kt.den; if (LA_CAO) bd = Math.max(kt.den + CAI_DAT.CAO_TRE_PHUT * 60000, moLuc + CAI_DAT.CAO_CHO_MO_PHUT * 60000);
+    const _gh = laGh(kt.kenh || 1); let bd = kt.den; if (LA_CAO && !_gh) bd = Math.max(kt.den + CAI_DAT.CAO_TRE_PHUT * 60000, moLuc + CAI_DAT.CAO_CHO_MO_PHUT * 60000); // (6.37) page phụ: đúng giờ
     const dau = `<b>${nXong}/${L.length}</b> bài · `;
     if (!tuDong()) return { den: 'xam', chu: dau + `⏸ ĐĂNG BÀI đang TẮT trên máy này (chỉ dò bài + báo cáo) · bài kế tiếp ${kt.ten}` };
     if (dangHoan()) return { den: 'vang', chu: dau + `Đang hoãn đến ${gioStr(new Date(lay('hoan6', 0)))}` };
     if (kt.r.loi && kt.r.thuLai > Date.now()) return { den: 'do', chu: dau + `⚠ ${kt.ten} lỗi — thử lại lúc ${gioStr(new Date(kt.r.thuLai))}` };
-    if (Date.now() < bd) return { den: loi.length ? 'vang' : 'xanh', chu: dau + `${kt.ten} lúc <b>${gioStr(new Date(bd))}</b>${LA_CAO ? ' (nếu Máy Giao chưa đăng)' : ''} · còn <b data-hen="${bd}"></b>` };
+    if (Date.now() < bd) return { den: loi.length ? 'vang' : 'xanh', chu: dau + `${kt.ten} lúc <b>${gioStr(new Date(bd))}</b>${LA_CAO && !_gh ? ' (nếu Máy Giao chưa đăng)' : ''} · còn <b data-hen="${bd}"></b>` };
     return { den: 'vang', nhay: true, chu: dau + `Đến giờ ${kt.ten} — đang chuẩn bị…` };
   }
   function thieuNgay() { // (6.26) chỉ 2 ngày tới (ngày mai + ngày kia) còn thiếu nội dung — hôm nay đã có báo lỗi từng bài

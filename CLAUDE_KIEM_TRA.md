@@ -506,3 +506,10 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 
 ## Bản 6.36 — Bình luận đầu page phụ
 - lich.json mỗi bài có thể có "cmt": [{"anh": "tệp.jpg"}, {"text": "..."}]; script gửi theo thứ tự sau khi đăng (như comment kênh 1). Bài không có "cmt" thì không bình luận.
+
+## Bản 6.37
+- Nhận địa chỉ page phụ dạng /people/<tên>/<id> (hết vòng lặp tải lại trang khi Chrome dùng nick cá nhân).
+- Page phụ đăng đúng giờ (không chờ Máy Giao 25 phút, cả bảng hiển thị).
+- Đọc lich.json page phụ 30–45 phút/lần.
+- Canh tài khoản: Facebook bị đăng xuất / chờ xác minh, hoặc đang dùng nick khác (không phải Nguyễn Hoàng Giang / tên trang) → báo nhóm Lark Cao hệ thống (mỗi loại 1 lần/ngày). Ban đêm: xem nhật ký có dòng "ĐĂNG XUẤT" hoặc "đang dùng nick" không.
+- Tự trả lời bình luận: bỏ câu "Đã ghi nhận lượt tham gia/size" (minigame dừng).
