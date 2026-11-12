@@ -26,3 +26,4 @@
 
 ## Nhật ký
 - (11/11) Tuần 2 (14–20/11): 21 bài/ngày 3 khung 07:30 ảnh sáng nhẹ nhàng, 11:30 chuỗi "30 ngày hiểu trầm" Ngày 1–7/30, 19:30 Reels video thật (lam_anh_t2.py, lam_reel_t2.py). Tuần 3 tiếp từ Ngày 8/30. Clip đã dùng tuần 2: 108,17,9,40,4,27,49,96,15,23,84,65,13,68,53,26,42,57,88,1,16,75,46,14,18,29,71. Tránh clip soi gương (chữ trên áo bị ngược): 33,34,36,38,44,52,80,83,86,93,104,112.
+- (12/11) Các dòng cũ về minigame và "cmt nhắc minigame" đã hết hiệu lực từ 11/11 (Cao dừng minigame): bình luận đầu chỉ ảnh thật + mẹo. Reels nói rõ chủ đề ngay giây đầu để người xem dễ bấm "Quan tâm" trong tính năng "Your Algorithm" của Meta (suy ra từ https://techcrunch.com/2026/10/13/facebook-is-giving-users-more-control-over-their-algorithm/, chưa có nguồn xác nhận tác động).
