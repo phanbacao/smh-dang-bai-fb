@@ -14,6 +14,8 @@
 - Chữ tiêu đề lớn trên ảnh nền có hoa văn/vòng (VD "Tặng 3 chuỗi 108 hạt trầm hương") phải có viền mảnh hoặc bóng đổ nhẹ để nổi bật; không để chữ trơn.
 - Làm xong ảnh phải tự xem lại một lượt: chữ có lệch không, có đủ nổi không, có che vòng/mặt không — rồi mới đưa vào lịch.
 
+- (16/11) Giữ ảnh trong cơ cấu, đừng bỏ ảnh để chỉ làm Reels: Buffer cho Facebook ảnh 5,2% > video 4,84% > văn bản 4,76% > link 4,43% (tỷ lệ tương tác, tham khảo). Không đặt link trong bài. (https://buffer.com/resources/data-best-content-format-social-media/)
+
 ## Bình luận đầu (Cao 07/11)
 - Mọi bài page phụ phải có "cmt": 1 ảnh + 1 câu nhắc minigame (khi minigame còn mở), không link, không rao bán.
 - (09/11) Reels phải tự quay (hạt/vòng thật, có tay người), không dùng lại clip có watermark hay clip của người khác: Meta giảm phân phối nội dung không gốc từ 3/2026. Mỗi Reels có phụ đề + hook trong 3 giây đầu. (https://www.socialpilot.co/blog/facebook-algorithm — nguồn tham khảo)
