@@ -286,6 +286,18 @@
       "moTa": "Nút 'Quan trọng' ở Nhật ký thực ra hiện tất cả (lọc 'qt' khác 'quan')",
       "trangThai": "đã sửa 6.33",
       "ngay": "2026-11-06"
+    },
+    {
+      "ma": "lark-web-tab-null",
+      "moTa": "Tab Lark (trợ lý đọc sheet) báo 'tab null không có khối dữ liệu' trên Máy Giao: kênh 5 page phụ không có tab Lark nhưng vẫn bị đưa vào danh sách tab cần đọc",
+      "trangThai": "đã sửa 6.37.1",
+      "ngay": "2026-11-18"
+    },
+    {
+      "ma": "k1-chua-xet-cot-G",
+      "moTa": "Script đăng Bài 1–3 kênh 1 không xét cột G (Chờ làm/Đã duyệt/Đã đăng)",
+      "trangThai": "đã sửa 6.37.1",
+      "ngay": "2026-11-18"
     }
   ],
   "danhGiaTuan": [],
@@ -401,6 +413,10 @@
     {
       "ngay": "2026-11-06",
       "tomTat": "Ra bản 6.33: tab Mức đặt (mức + giờ đăng, ô Z9/Z10), Hà Xá 13:30–14:00, kênh 1 mức 0 = đăng tay (không tự đăng/không báo, tự comment + gắn thẻ bài tay), gộp Hệ thống + Nhật ký, bỏ tab Lịch sử."
+    },
+    {
+      "ngay": "2026-11-18",
+      "tomTat": "Ra bản 6.37.1: comment riêng kênh 1, bỏ ảnh comment theo ngày Bài 3, đăng theo cột G (chỉ Đã duyệt), đọc lại ô G trước khi đăng, đăng bù hàng Đã duyệt 15–17/11 trong ngày 18/11, sửa lỗi tab Lark 'tab null', nhắc kiểm tra thẻ chỉ hiện ở Máy Cao."
     }
   ],
   "capNhat": "2026-10-24"

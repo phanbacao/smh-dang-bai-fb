@@ -513,3 +513,14 @@ Thư mục `D:\GOOGLE DRIVE\Claude\smh-dang-bai-fb\` (gọi tắt là **THƯ M�
 - Đọc lich.json page phụ 30–45 phút/lần.
 - Canh tài khoản: Facebook bị đăng xuất / chờ xác minh, hoặc đang dùng nick khác (không phải Nguyễn Hoàng Giang / tên trang) → báo nhóm Lark Cao hệ thống (mỗi loại 1 lần/ngày). Ban đêm: xem nhật ký có dòng "ĐĂNG XUẤT" hoặc "đang dùng nick" không.
 - Tự trả lời bình luận: bỏ câu "Đã ghi nhận lượt tham gia/size" (minigame dừng).
+
+
+## Bản 6.37.1 (18/11/2026)
+- Comment kênh 1 riêng: `CAI_DAT.CMT_K1`, cài đặt `cmt6.goc1` (ô Z3). Kênh 2, 3 vẫn `goc`; Hà Xá `gocHx`. Bài đăng tay (s.ngoai) dùng goc1. dongBoCmt: bản Z3 không có goc1 (máy bản cũ bấm Lưu) → giữ goc1 trong máy.
+- kiemCmtApi: các bản "comment thông tin trang" (goc1, goc, CMT_K1, CMT_BAI3 — so 60 ký tự đầu) coi là một → bài đăng trước khi đổi chữ không bị comment lại.
+- Ảnh comment: O2 + 1 ảnh ngẫu nhiên P2:P10 (K1) / Q2:Q10 (K2, K3); Bài 3 bỏ ảnh theo ngày (cột O–Q hàng hôm nay). Pool trống → chỉ O2.
+- Cột G tab "Bài viết kênh 1": hangCuaNgay có `duyet`, `daDang`. noiDungSlot b1–b3: "Đã đăng" → `daDangSheet` (đánh co_san, không đăng); chưa "Đã duyệt" → thiếu "hàng N cột G chưa Đã duyệt" (giữ chỗ, báo nhóm). Trước khi đăng đọc lại ô G:H của hàng (1 lượt Lark); đổi ngày → đọc lại sheet; không đọc được → dùng trạng thái vừa đọc.
+- Đăng bù: `CAI_DAT.BU_K1 = { tu: '15-11-2026', den: '17-11-2026', ngay: ['18-11-2026', '19-11-2026'] }` (19/11 chỉ để dự phòng nếu 18/11 máy chưa kịp lên bản). phanTich → `buTho` (hàng Đã duyệt trong khoảng), docDuLieu → `locBuK1(d)` hỏi Facebook bài từ ngày tu (ghép theo độ giống cao nhất trước), bài nào chưa có → thêm hàng vào `bais` hôm nay với `bu: {ngay, can:[j]}`; lichNgay chỉ thêm đúng bài thiếu (tên "Bài N (bù dd/mm)"), giờ xếp như bài thêm. Kết quả lưu `bu_k16` (bài đã bù vẫn giữ ô). Bù xong → báo nhóm Đăng bài fb kèm link (`baoBuXong`); báo cáo Z5/Z6 `slot` kèm link + "bu dd-mm-yyyy". Chỉ hỏi Facebook khi đang ở kênh 1; tự đọc sheet tối đa 6 lần nếu chưa có `bu_k16` hôm nay.
+- Tab Lark: bỏ tab rỗng (kênh 5 không có tab) → hết lỗi "tab null không có khối dữ liệu".
+- Nhắc "N ngày chưa kiểm tra thẻ" chỉ hiện ở Máy Cao.
+- Sim mới: k1cho, k1dadang, k1bo, k1bu, cmtcu (đều đạt); hồi quy đạt: ngay, haimay, cmt, k1tay, tay, bai4, thieu, kenh, hx, pagephu, mdui, bangthieu.
